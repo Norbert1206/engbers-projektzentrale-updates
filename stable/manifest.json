@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "published_at": "2026-09-11",
-  "min_bootstrap_version": "1.3.4",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_5_fix2.json",
+  "min_bootstrap_version": "1.3.5",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_6_tiny.json",
   "package_format": "base64-json",
-  "sha256": "9935cbdef958971af3540ae1071d283b816cdca7e26320b285d9d2b5170e6f85",
-  "notes": "Version 1.3.5 Fix 2: Die Statikansicht erkennt direkte Ordner unter Statik/mb-Software als eigenständige mb-AEC-Projekte. Der korrigierte Update-Start führt den Patch nach dem externen Updater aus und startet anschließend die tatsächlich aktualisierte Version.",
+  "sha256": "8ec11e18ad709a84e6028c03d98683966217187ef7fdb1eba377056c27c73215",
+  "notes": "Version 1.3.6: mb-AEC-Positionsleser. Nach Auswahl eines mb-Projekts liest die Projektzentrale die Positionen ausschließlich lesend aus STATIK/BSPos.mbdb und zeigt Reihenfolge, Positionsnummer, Bezeichnung, mb-Modul und Eintragstyp. Die mb-Datenbank wird mit SQLite mode=ro geöffnet und nicht verändert.",
   "update_available": true
 }
