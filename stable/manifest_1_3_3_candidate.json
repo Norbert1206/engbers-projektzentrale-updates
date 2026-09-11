@@ -1,0 +1,12 @@
+{
+  "app": "Engbers Projektzentrale",
+  "channel": "candidate",
+  "version": "1.3.3",
+  "published_at": "2026-09-11",
+  "min_bootstrap_version": "1.3.2",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_3_fixed.json",
+  "package_format": "base64-json",
+  "sha256": "5fc389d19b6ea147fa8856ce01f74f9fcf3c3190730e0ed5023af9386724477c",
+  "notes": "1.3.3 candidate; not active until transport verification completes.",
+  "update_available": false
+}
