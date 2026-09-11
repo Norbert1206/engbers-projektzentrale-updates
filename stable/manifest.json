@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "published_at": "2026-09-11",
-  "min_bootstrap_version": "1.3.2",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_3_tiny.json",
+  "min_bootstrap_version": "1.3.3",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_4_tiny.json",
   "package_format": "base64-json",
-  "sha256": "f93fbd6e5cbca148fe75d4d92216666220d9612f6082420a9eb489f6f2132e08",
-  "notes": "Version 1.3.3: sichtbare Dateibestand-Tabelle in der Projektakte, Scrollleisten, Doppelklick zum Öffnen der Originaldatei und saubere Dokumente-Zählung bei der Projektanalyse.",
+  "sha256": "804c03f347c1c5dc3b2c19128763eb206fba09207d4219062eadcf765ca253d8",
+  "notes": "Version 1.3.4: Projektstammdaten und Fachbereiche stehen in der Projektakte nebeneinander. Dadurch erhält der Dateibestand dauerhaft eine nutzbare Tabellenhöhe – auch bei kleinen Fenstern.",
   "update_available": true
 }
