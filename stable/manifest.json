@@ -4,9 +4,9 @@
   "version": "1.3.5",
   "published_at": "2026-09-11",
   "min_bootstrap_version": "1.3.4",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_5_tiny.json",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_5_fix2.json",
   "package_format": "base64-json",
-  "sha256": "cc57f30651f381ce19d743a184b6c318b4c778ff3f1b225e9016a1db904b9f26",
-  "notes": "Version 1.3.5: Die Statikansicht erkennt direkte Ordner unter Statik/mb-Software als eigenständige mb-AEC-Projekte. Interne mb-Dateien bleiben im technischen Index und werden in der fachlichen Statikansicht nicht einzeln dargestellt. Doppelklick öffnet den jeweiligen mb-Projektordner.",
+  "sha256": "9935cbdef958971af3540ae1071d283b816cdca7e26320b285d9d2b5170e6f85",
+  "notes": "Version 1.3.5 Fix 2: Die Statikansicht erkennt direkte Ordner unter Statik/mb-Software als eigenständige mb-AEC-Projekte. Der korrigierte Update-Start führt den Patch nach dem externen Updater aus und startet anschließend die tatsächlich aktualisierte Version.",
   "update_available": true
 }
