@@ -1,0 +1,11 @@
+{
+  "app": "Engbers Projektzentrale",
+  "channel": "stable",
+  "version": "1.2.2",
+  "published_at": "2026-09-11",
+  "min_bootstrap_version": "1.2.2",
+  "package_url": null,
+  "sha256": null,
+  "notes": "Updatekanal eingerichtet. Noch kein Online-Update freigegeben.",
+  "update_available": false
+}
