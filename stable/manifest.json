@@ -1,11 +1,11 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.3.2",
+  "version": "1.3.1",
   "published_at": "2026-09-11",
-  "min_bootstrap_version": "1.3.1",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_3_2_MIN.zip",
-  "sha256": "db2fcd7c1c8a5f4515da3aa62045cf14311120b7830c8bca4474a9b6416565aa",
-  "notes": "1.3.2: Projektanalyse indexiert den Dateibestand lokal nach Dateiname, Unterordner, Typ, Änderungsdatum und Fachbereich. Vorschau vor Übernahme; Originaldateien bleiben unverändert.",
-  "update_available": true
+  "min_bootstrap_version": "1.3.0",
+  "package_url": null,
+  "sha256": null,
+  "notes": "1.3.2 wurde wegen einer abweichenden Paket-Pruefsumme vorlaeufig zurueckgezogen. 1.3.1 bleibt der stabile Stand.",
+  "update_available": false
 }
