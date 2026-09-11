@@ -1,0 +1,7 @@
+Engbers Projektzentrale 1.3.0
+
+- Bestandsprojekte 2025 und 2026 read-only registrieren
+- vorhandene Projektordner werden nicht verschoben, umbenannt, kopiert oder gelöscht
+- GitHub-Stable-Updatekanal integriert
+- SHA-256-Prüfung für Online-Updatepakete
+- zentrale Projekt- und Backup-Pfade bleiben erhalten
