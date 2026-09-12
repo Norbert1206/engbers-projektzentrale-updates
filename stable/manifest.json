@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "published_at": "2026-09-12",
-  "min_bootstrap_version": "1.4.0",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_1_tiny.json",
+  "min_bootstrap_version": "1.4.1",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_2_tiny.json",
   "package_format": "base64-json",
-  "sha256": "d106fd5c84fb4c483cdb5b6ce94fcbd72431264419bdbc3db16ce4b28421ba3b",
-  "notes": "Version 1.4.1: Projekt-Explorer mit Detailbereich, zuletzt geänderten Dateien und manueller fachlicher Zuordnung per Rechtsklick oder Schaltfläche. Ordnerzuordnungen gelten automatisch für enthaltene Dateien, sofern keine genauere Zuordnung gesetzt ist. Die Baugrundsuche wurde erweitert und berücksichtigt manuell als Baugrund/Bodengutachten zugeordnete Dateien und Ordner. Alle Zuordnungen werden ausschließlich in der lokalen Projektzentrale-Datenbank gespeichert; Originaldateien und Projektordner bleiben unverändert.",
+  "sha256": "94e1b7eda157e401a63d68007f2e61d7149306a1b050d6933250bc2db782ae3e",
+  "notes": "Version 1.4.2: Mehrere vorhandene Windows-Projektordner können zu einer gemeinsamen Projektakte verknüpft werden, ohne Dateien zu verschieben oder zu kopieren. Der Projekt-Explorer zeigt Haupt- und verknüpfte Speicherorte gemeinsam und berücksichtigt beide bei 'Zuletzt geändert'. mb AEC Projektstart, mb-Projekterkennung und Baugrund/Bodengutachten-Suche arbeiten jetzt über alle verknüpften Speicherorte. Zusätzlich wurde die automatische Erkennung für Pläne und Bescheinigungen verbessert. Verknüpfungen können wieder gelöst werden; Originaldateien bleiben unverändert.",
   "update_available": true
 }
