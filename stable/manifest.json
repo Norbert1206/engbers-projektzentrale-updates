@@ -4,9 +4,9 @@
   "version": "1.3.9",
   "published_at": "2026-09-12",
   "min_bootstrap_version": "1.3.8",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_9_tiny.json",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_3_9_fixed.json",
   "package_format": "base64-json",
-  "sha256": "02c64c788267ebc6461864122603e78ab466f6ef3c70aaf897e2711620956485",
-  "notes": "Version 1.3.9: Positionsakte mit direktem read-only mb-Ausgabeviewer und mb-Projektstart. Eine markierte Position kann ihre gespeicherte mb-Ausgabe abschnittsweise innerhalb der Projektzentrale anzeigen. Die Darstellung bereitet mb-Steuerdaten nur lesbar auf; die Originaldatenbank bleibt unverändert. Zusätzlich kann das zugehörige .mbp-Projekt direkt aus der Positionsakte mit der Windows-Dateizuordnung geöffnet werden.",
+  "sha256": "a0058a5b8848334f16f6439b91e67dcf39ecfba21511843630cd5a74adf84f4c",
+  "notes": "Version 1.3.9: Positionsakte mit direktem read-only mb-Ausgabeviewer und mb-Projektstart. Zusätzlich korrigierter Update-Payload und Windows-Start über pythonw, sodass nach dem Update kein dauerhaft geöffnetes DOS-/CMD-Fenster mehr erforderlich ist. Die mb-Daten werden weiterhin ausschließlich read-only gelesen.",
   "update_available": true
 }
