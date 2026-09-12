@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "published_at": "2026-09-12",
-  "min_bootstrap_version": "1.4.1",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_2_tiny.json",
+  "min_bootstrap_version": "1.4.2",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_3_tiny.json",
   "package_format": "base64-json",
-  "sha256": "94e1b7eda157e401a63d68007f2e61d7149306a1b050d6933250bc2db782ae3e",
-  "notes": "Version 1.4.2: Mehrere vorhandene Windows-Projektordner können zu einer gemeinsamen Projektakte verknüpft werden, ohne Dateien zu verschieben oder zu kopieren. Der Projekt-Explorer zeigt Haupt- und verknüpfte Speicherorte gemeinsam und berücksichtigt beide bei 'Zuletzt geändert'. mb AEC Projektstart, mb-Projekterkennung und Baugrund/Bodengutachten-Suche arbeiten jetzt über alle verknüpften Speicherorte. Zusätzlich wurde die automatische Erkennung für Pläne und Bescheinigungen verbessert. Verknüpfungen können wieder gelöst werden; Originaldateien bleiben unverändert.",
+  "sha256": "68c235bb571729fb4c77db3649495497e2e33f97fad9b2de8e776706bc375a67",
+  "notes": "Version 1.4.3: Die mb-Positionsakte erhält eine Gesamtansicht über alle mb-Projekte der verknüpften Projektakte. Standardmäßig wird ALLE mb-PROJEKTE gewählt; Positionen werden gemeinsam gelistet und zeigen zusätzlich ihr Quell-mb-Projekt. Einzelne mb-Projekte bleiben weiterhin auswählbar. Detailansicht, mb-Ausgabe und Projektstart verwenden bei der Gesamtansicht weiterhin exakt die jeweilige Quelldatei. Alle mb-Daten werden ausschließlich read-only gelesen.",
   "update_available": true
 }
