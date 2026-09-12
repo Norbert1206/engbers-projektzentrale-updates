@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "published_at": "2026-09-12",
-  "min_bootstrap_version": "1.4.2",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_3_tiny.json",
+  "min_bootstrap_version": "1.4.3",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_4_tiny.json",
   "package_format": "base64-json",
-  "sha256": "68c235bb571729fb4c77db3649495497e2e33f97fad9b2de8e776706bc375a67",
-  "notes": "Version 1.4.3: Die mb-Positionsakte erhält eine Gesamtansicht über alle mb-Projekte der verknüpften Projektakte. Standardmäßig wird ALLE mb-PROJEKTE gewählt; Positionen werden gemeinsam gelistet und zeigen zusätzlich ihr Quell-mb-Projekt. Einzelne mb-Projekte bleiben weiterhin auswählbar. Detailansicht, mb-Ausgabe und Projektstart verwenden bei der Gesamtansicht weiterhin exakt die jeweilige Quelldatei. Alle mb-Daten werden ausschließlich read-only gelesen.",
+  "sha256": "c49e8f489acdf050fc0b990b3e1ab48760f31671c3495ebe502e058a18ea8b87",
+  "notes": "Version 1.4.4: Korrektur der mb-Gesamtakte. In einer verknüpften Projektakte zeigt die Positionsakte nun standardmäßig immer alle Positionen aus allen erkannten mb-Projekten, auch wenn oben ein einzelnes mb-Projekt markiert ist. Die Gesamtansicht wird nach dem Aufbau der Statikansicht nochmals deterministisch aktiviert; die Herkunft jeder Position bleibt über die Spalte mb-Projekt sichtbar. Originaldateien und mb-Daten bleiben unverändert und werden ausschließlich read-only gelesen.",
   "update_available": true
 }
