@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "published_at": "2026-09-12",
-  "min_bootstrap_version": "1.3.9",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_0_tiny.json",
+  "min_bootstrap_version": "1.4.0",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_1_tiny.json",
   "package_format": "base64-json",
-  "sha256": "751bbc0a18fb49892ede5d49ff6cc588b7f753ec0c9ea7448a272984a9dddcb3",
-  "notes": "Version 1.4.0: neuer read-only Projekt-Explorer mit echter Windows-Ordnerstruktur und direktem Öffnen der Originaldateien; feste Baugrund/Bodengutachten-Akte im Statikbereich mit automatischer Dateierkennung; neue Programmstarter-Leiste für Explorer, mb AEC, Allplan, Allmenu, IDEA StatiCa und Wärmeschutz. Nicht konfigurierte Programme fragen beim ersten Start nach der EXE-Datei und speichern nur diesen Programmpfad in den Einstellungen. Projektdateien werden nicht verschoben, kopiert, umbenannt oder gelöscht; mb-Daten bleiben read-only.",
+  "sha256": "d106fd5c84fb4c483cdb5b6ce94fcbd72431264419bdbc3db16ce4b28421ba3b",
+  "notes": "Version 1.4.1: Projekt-Explorer mit Detailbereich, zuletzt geänderten Dateien und manueller fachlicher Zuordnung per Rechtsklick oder Schaltfläche. Ordnerzuordnungen gelten automatisch für enthaltene Dateien, sofern keine genauere Zuordnung gesetzt ist. Die Baugrundsuche wurde erweitert und berücksichtigt manuell als Baugrund/Bodengutachten zugeordnete Dateien und Ordner. Alle Zuordnungen werden ausschließlich in der lokalen Projektzentrale-Datenbank gespeichert; Originaldateien und Projektordner bleiben unverändert.",
   "update_available": true
 }
