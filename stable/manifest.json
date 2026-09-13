@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "published_at": "2026-09-13",
-  "min_bootstrap_version": "1.4.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_5_tiny.json",
+  "min_bootstrap_version": "1.4.5",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_6_tiny.json",
   "package_format": "base64-json",
-  "sha256": "87d33ff38c0eab0e7325155a6a4c37f0411c46e1370aad5664fc2eb7e0c8e29f",
-  "notes": "Version 1.4.5: Universelle mb-AEC-Projekterkennung. Direkte Unterordner unter mb-Software werden als eigenständige mb-Projekte erkannt, BSPos.mbdb wird innerhalb jedes Projektordners automatisch gesucht und read-only ausgewertet. Die Auswahl eines einzelnen mb-Projekts zeigt dessen Positionen; ALLE mb-PROJEKTE zeigt die Gesamtakte. Öffnen erfolgt über den echten Quellordner bzw. die passende .mbp-Leitdatei. Originaldateien bleiben unverändert.",
+  "sha256": "3bfc1c775f972ab0f7be93893cc641999311a81a532a39e446eff6a980f149fe",
+  "notes": "Version 1.4.6: Positionsakte 2.0, erster Ausbauschritt. Die Anzeige unterscheidet jetzt klar zwischen gelesenen Datenbankeinträgen und tatsächlich sichtbaren Positionszeilen. Bei Auswahl einer mb-Position sucht die Projektzentrale zusätzlich rein lesend nach passenden Projektdateien anhand der Positionsnummer und zeigt gefundene Prüfstatik-, Plan-, Nachweis- und Dokumentdateien in der Positionsakte an. Die universelle mb-Projekterkennung aus 1.4.5 bleibt erhalten. Originaldateien und mb-Daten werden nicht verändert.",
   "update_available": true
 }
