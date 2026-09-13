@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "published_at": "2026-09-13",
-  "min_bootstrap_version": "1.4.6",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_7_fix1.json",
+  "min_bootstrap_version": "1.4.7",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_8_tiny.json",
   "package_format": "base64-json",
-  "sha256": "596f2139f3c48b240f308d4315f8741b7b4415f25221320e5f4f5c9c8bfbcd0d",
-  "notes": "Version 1.4.7: Positionsakte kompakt und direkt bedienbar. Die wichtigsten Positionsdaten und Verknüpfungen stehen jetzt oben im rechten Bereich. Das zugehörige mb-Projekt sowie automatisch gefundene Projektdateien lassen sich direkt per Doppelklick öffnen. Technische mb-Details bleiben darunter erhalten. Updatepaket neu und strikt Base64-validiert veröffentlicht. Die universelle Projekterkennung bleibt unverändert; Originaldateien und mb-Daten werden weiterhin ausschließlich read-only verwendet.",
+  "sha256": "2347c96679ea81944b79d8c89fc60f53290eb43c1dad9d1fae6ab042586fcf25",
+  "notes": "Version 1.4.8: Positionsakte 2.1. Korrigiert die Detailanzeige aus 1.4.7: mb-Modul, Fachgruppe und Berechnungsstatus werden jetzt aus den generischen Reader-Feldern korrekt übernommen. Verknüpfte Projektdateien werden zusätzlich nach Prüfstatik, Plänen/CAD, eigenen Nachweisen und Dokumenten gruppiert. Direkte Doppelklick-Verknüpfungen und universelle mb-Projekterkennung bleiben erhalten; alle mb-Daten werden weiterhin ausschließlich read-only verwendet.",
   "update_available": true
 }
