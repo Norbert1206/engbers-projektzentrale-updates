@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "published_at": "2026-09-13",
-  "min_bootstrap_version": "1.4.7",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_8_tiny.json",
+  "min_bootstrap_version": "1.4.8",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_9_tiny.json",
   "package_format": "base64-json",
-  "sha256": "2347c96679ea81944b79d8c89fc60f53290eb43c1dad9d1fae6ab042586fcf25",
-  "notes": "Version 1.4.8: Positionsakte 2.1. Korrigiert die Detailanzeige aus 1.4.7: mb-Modul, Fachgruppe und Berechnungsstatus werden jetzt aus den generischen Reader-Feldern korrekt übernommen. Verknüpfte Projektdateien werden zusätzlich nach Prüfstatik, Plänen/CAD, eigenen Nachweisen und Dokumenten gruppiert. Direkte Doppelklick-Verknüpfungen und universelle mb-Projekterkennung bleiben erhalten; alle mb-Daten werden weiterhin ausschließlich read-only verwendet.",
+  "sha256": "2860ed139dbeaf51ae87d1449362e888f36d6feb93e00223104427114346cdef",
+  "notes": "Version 1.4.9: ProjektManager und BauStatik werden in der Positionsakte sauber getrennt. Der bisherige Link heißt nun korrekt ProjektManager öffnen. Zusätzlich kann BauStatik.exe direkt gestartet werden; die Projektzentrale sucht die installierte mb WorkSuite automatisch, bevorzugt mb2026, und übergibt die Leitdatei des gewählten mb-Projekts. Diese Version dient zugleich als sicherer Praxistest für den direkten BauStatik-Start; Originaldateien und mb-Daten bleiben unverändert und read-only.",
   "update_available": true
 }
