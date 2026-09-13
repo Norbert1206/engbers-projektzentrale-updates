@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "published_at": "2026-09-13",
-  "min_bootstrap_version": "1.4.8",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_9_tiny.json",
+  "min_bootstrap_version": "1.4.9",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_10_tiny.json",
   "package_format": "base64-json",
-  "sha256": "9ca1e25e77840baba52fa2ec1d35f2b106e0deceaa6ea4aebe23eb6423b192e2",
-  "notes": "Version 1.4.9: ProjektManager und BauStatik werden in der Positionsakte sauber getrennt. Der bisherige Link heißt nun korrekt ProjektManager öffnen. Zusätzlich kann BauStatik.exe direkt gestartet werden; die Projektzentrale sucht die installierte mb WorkSuite automatisch, bevorzugt mb2026, und übergibt die Leitdatei des gewählten mb-Projekts. Zusätzlich wurde die Update-Prüfung gegen kurzzeitige Verbindungsabbrüche gehärtet: Feed und Paketabruf werden bei Windows/GitHub-Verbindungsresets automatisch mehrfach versucht. Originaldateien und mb-Daten bleiben unverändert und read-only.",
+  "sha256": "3a0bd4e1d0622434d3ee2810325ba0f17f69cb654db1775c854f175a797687b2",
+  "notes": "Version 1.4.10: Die direkte BauStatik-Erkennung wurde deutlich erweitert. Die Projektzentrale prüft jetzt Windows App Paths, installierte mb WorkSuite-Einträge in der Registry, Program-Files-Varianten sowie Unterordner wie x64/bin. Wird BauStatik.exe trotzdem nicht automatisch gefunden, kann sie über einen Dateidialog einmal manuell ausgewählt werden. ProjektManager- und BauStatik-Start bleiben getrennt; mb-Daten bleiben unverändert und read-only.",
   "update_available": true
 }
