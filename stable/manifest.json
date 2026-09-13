@@ -4,9 +4,9 @@
   "version": "1.4.10",
   "published_at": "2026-09-13",
   "min_bootstrap_version": "1.4.9",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_10_tiny.json",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_10_fix1.json",
   "package_format": "base64-json",
-  "sha256": "3a0bd4e1d0622434d3ee2810325ba0f17f69cb654db1775c854f175a797687b2",
-  "notes": "Version 1.4.10: Die direkte BauStatik-Erkennung wurde deutlich erweitert. Die Projektzentrale prüft jetzt Windows App Paths, installierte mb WorkSuite-Einträge in der Registry, Program-Files-Varianten sowie Unterordner wie x64/bin. Wird BauStatik.exe trotzdem nicht automatisch gefunden, kann sie über einen Dateidialog einmal manuell ausgewählt werden. ProjektManager- und BauStatik-Start bleiben getrennt; mb-Daten bleiben unverändert und read-only.",
+  "sha256": "51f154bdeae45f5c6438ee18a3da60acf75a58caba02da8a8a4bf7566cee2725",
+  "notes": "Version 1.4.10: Die direkte BauStatik-Erkennung wurde erweitert. Zusätzlich ist der 1.4.10-Starter korrigiert: patch_1410.py wird jetzt beim Neustart tatsächlich ausgeführt. Die Projektzentrale prüft Windows App Paths, installierte mb WorkSuite-Einträge in der Registry, Program-Files-Varianten sowie Unterordner wie x64/bin. Wird BauStatik.exe trotzdem nicht automatisch gefunden, kann sie über einen Dateidialog einmal manuell ausgewählt werden. ProjektManager- und BauStatik-Start bleiben getrennt; mb-Daten bleiben unverändert und read-only.",
   "update_available": true
 }
