@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "published_at": "2026-09-13",
-  "min_bootstrap_version": "1.4.9",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_10_fix1.json",
+  "min_bootstrap_version": "1.4.10",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_11_tiny.json",
   "package_format": "base64-json",
-  "sha256": "51f154bdeae45f5c6438ee18a3da60acf75a58caba02da8a8a4bf7566cee2725",
-  "notes": "Version 1.4.10: Die direkte BauStatik-Erkennung wurde erweitert. Zusätzlich ist der 1.4.10-Starter korrigiert: patch_1410.py wird jetzt beim Neustart tatsächlich ausgeführt. Die Projektzentrale prüft Windows App Paths, installierte mb WorkSuite-Einträge in der Registry, Program-Files-Varianten sowie Unterordner wie x64/bin. Wird BauStatik.exe trotzdem nicht automatisch gefunden, kann sie über einen Dateidialog einmal manuell ausgewählt werden. ProjektManager- und BauStatik-Start bleiben getrennt; mb-Daten bleiben unverändert und read-only.",
+  "sha256": "8a2bac712d170ae360160d03096159163a51d339ee5e67ad62219a64bb949b74",
+  "notes": "Version 1.4.11: mb-konformer Programmstart. Der direkte Start von BauStatik.exe wurde aus der Positionsakte entfernt, weil die BauStatik-Oberfläche laut mb ausschließlich aus dem ProjektManager geöffnet werden kann. Zusätzlich erkennt die Projektzentrale MicroFe-gekoppelte Positionen automatisch anhand der vorhandenen FEM-Projektdaten und zeigt pro Position die zuständige mb-Anwendung sowie den korrekten Startweg an. BSPos.mbdb und FEM-Datenbanken werden weiterhin ausschließlich read-only gelesen.",
   "update_available": true
 }
