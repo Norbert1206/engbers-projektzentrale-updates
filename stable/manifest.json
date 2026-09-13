@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "published_at": "2026-09-13",
-  "min_bootstrap_version": "1.4.5",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_6_tiny.json",
+  "min_bootstrap_version": "1.4.6",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_7_tiny.json",
   "package_format": "base64-json",
-  "sha256": "3bfc1c775f972ab0f7be93893cc641999311a81a532a39e446eff6a980f149fe",
-  "notes": "Version 1.4.6: Positionsakte 2.0, erster Ausbauschritt. Die Anzeige unterscheidet jetzt klar zwischen gelesenen Datenbankeinträgen und tatsächlich sichtbaren Positionszeilen. Bei Auswahl einer mb-Position sucht die Projektzentrale zusätzlich rein lesend nach passenden Projektdateien anhand der Positionsnummer und zeigt gefundene Prüfstatik-, Plan-, Nachweis- und Dokumentdateien in der Positionsakte an. Die universelle mb-Projekterkennung aus 1.4.5 bleibt erhalten. Originaldateien und mb-Daten werden nicht verändert.",
+  "sha256": "596f2139f3c48b240f308d4315f8741b7b4415f25221320e5f4f5c9c8bfbcd0d",
+  "notes": "Version 1.4.7: Positionsakte kompakt und direkt bedienbar. Die wichtigsten Positionsdaten und Verknüpfungen stehen jetzt oben im rechten Bereich. Das zugehörige mb-Projekt sowie automatisch gefundene Projektdateien lassen sich direkt per Doppelklick öffnen. Technische mb-Details bleiben darunter erhalten. Die universelle Projekterkennung bleibt unverändert; Originaldateien und mb-Daten werden weiterhin ausschließlich read-only verwendet.",
   "update_available": true
 }
