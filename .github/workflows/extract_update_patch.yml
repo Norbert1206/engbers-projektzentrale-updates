@@ -13,18 +13,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Extract 1.4.11 patch
+      - name: Extract update patches
         run: |
           python - <<'PY'
           import json, base64, zipfile, io, pathlib
-          j=json.loads(pathlib.Path('stable/update_1_4_11_tiny.json').read_text())
-          data=base64.b64decode(j['payload_b64'])
-          z=zipfile.ZipFile(io.BytesIO(data))
-          out=pathlib.Path('debug')
-          out.mkdir(exist_ok=True)
-          for name in z.namelist():
-              if name.endswith('.py') or name.endswith('.cmd'):
-                  (out/pathlib.Path(name).name).write_bytes(z.read(name))
+          out=pathlib.Path('debug'); out.mkdir(exist_ok=True)
+          for rel in ['stable/update_1_4_8_tiny.json','stable/update_1_4_11_tiny.json']:
+              j=json.loads(pathlib.Path(rel).read_text())
+              z=zipfile.ZipFile(io.BytesIO(base64.b64decode(j['payload_b64'])))
+              for name in z.namelist():
+                  if name.endswith('.py') or name.endswith('.cmd'):
+                      (out/pathlib.Path(name).name).write_bytes(z.read(name))
           PY
       - name: Commit extracted sources
         run: |
@@ -32,5 +31,5 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add debug/
           git diff --cached --quiet && exit 0
-          git commit -m 'Extract 1.4.11 patch sources for inspection'
+          git commit -m 'Extract update patch sources for inspection'
           git push
