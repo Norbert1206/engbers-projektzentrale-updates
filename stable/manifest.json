@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.25",
+  "version": "1.4.26",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.24",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_25_tiny.json",
+  "min_bootstrap_version": "1.4.25",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_26_tiny.json",
   "package_format": "base64-json",
-  "sha256": "e92434bca9c1e7d3411244fb9a494cbd1e6a031c09f0fd136a8f077928eed6e6",
-  "notes": "Version 1.4.25: Die Positionsakte durchsucht zusätzlich den gesamten Projektordner rekursiv nach Dateien mit exakt passender Positionskennung, gruppiert Treffer als Prüfstatik, Pläne/CAD, Eigene Nachweise oder Dokumente und entfernt Dubletten. Der mb-Start wurde auf den stabilen ProjektManager-Start mit automatischer BauStatik-/MicroFe-Registerwahl zurückgesetzt.",
+  "sha256": "2acff4457d8ad54c7cc46d0df305247463aa6c68ccecf8d756e08cb52a1460d1",
+  "notes": "Version 1.4.26: Die Positionsakte durchsucht nun den kompletten Engbers-Projektordner statt nur den mb-Unterordner. Zusätzlich werden textbasierte PDFs read-only nach der ausgewählten Position durchsucht; Schreibweisen wie E.01.DS2 und E.01.DS-2 werden gleich behandelt. So kann z. B. ein Positionsplan auch ohne Positionsnummer im Dateinamen zugeordnet werden.",
   "update_available": true
 }
