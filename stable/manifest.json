@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.13",
+  "version": "1.4.14",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.12",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_13_tiny.json",
+  "min_bootstrap_version": "1.4.13",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_14_tiny.json",
   "package_format": "base64-json",
-  "sha256": "d08e7700286ed49e811ac9a817e76f101bcbfbfbe443c4c53eae434a03ccc89b",
-  "notes": "Version 1.4.13: Die Positionsakte ermittelt zusätzlich die konkrete mb-Modellquelle je Position. MicroFe-Positionen werden der tatsächlich passenden FEM-Datenbank zugeordnet; bei BauStatik wird der Projekt-/Modellcontainer ausgewiesen und – wenn eindeutig lesbar – eine Modell-/Projektbezeichnung übernommen. Angezeigt werden mb-Modell und Modellquelle. Alles bleibt read-only; der Startweg über den mb ProjektManager bleibt unverändert.",
+  "sha256": "6cf57bbf818c47770bef9d7488d75686f13cf9a6b7bb9b1a6687a49bd95b6ace",
+  "notes": "Version 1.4.14: MicroFe-Modellquellen bleiben positionsgenau erkannt. Interne mb-Datei-IDs werden nicht mehr als vermeintlicher Modellname dargestellt, sondern separat als Modell-ID. BauStatik-Anzeige bleibt unverändert; alle mb-Daten werden ausschließlich read-only gelesen.",
   "update_available": true
 }
