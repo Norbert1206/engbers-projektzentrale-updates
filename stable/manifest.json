@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.14",
+  "version": "1.4.15",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.13",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_14_tiny.json",
+  "min_bootstrap_version": "1.4.14",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_15_tiny.json",
   "package_format": "base64-json",
-  "sha256": "6cf57bbf818c47770bef9d7488d75686f13cf9a6b7bb9b1a6687a49bd95b6ace",
-  "notes": "Version 1.4.14: MicroFe-Modellquellen bleiben positionsgenau erkannt. Interne mb-Datei-IDs werden nicht mehr als vermeintlicher Modellname dargestellt, sondern separat als Modell-ID. BauStatik-Anzeige bleibt unverändert; alle mb-Daten werden ausschließlich read-only gelesen.",
+  "sha256": "10375f0c1ff9eb62181cabdba328072b5f0a001d6830244cde9b083cafda94cc",
+  "notes": "Version 1.4.15: Read-only Startdiagnose für mb-Projekt- und Modelldateien. Die Positionsakte zeigt, welcher Windows/mb-Handler für .mbp bzw. .mbdb registriert ist. Damit wird der nächste gezielte Modellstart auf der echten Installation aufgebaut statt auf geratenen Kommandozeilenparametern. Registry und mb-Daten werden nicht verändert.",
   "update_available": true
 }
