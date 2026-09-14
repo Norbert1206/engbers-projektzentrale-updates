@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.24",
+  "version": "1.4.25",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.23",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_24_tiny.json",
+  "min_bootstrap_version": "1.4.24",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_25_tiny.json",
   "package_format": "base64-json",
-  "sha256": "239f0af5d3c96ea3b4eb7bfa793548bb1acafde50b77321ffb0cf8c202ff71bd",
-  "notes": "Version 1.4.24: Diagnose des MicroFe-Starts. Sichtbare UI-Elemente, Modellkandidaten und Verwenden-Schaltflächen werden protokolliert. Bei Fehlschlag entsteht auf dem Desktop Engbers_MB_MicroFe_Debug.txt. mb-Daten und Registry bleiben unverändert.",
+  "sha256": "e92434bca9c1e7d3411244fb9a494cbd1e6a031c09f0fd136a8f077928eed6e6",
+  "notes": "Version 1.4.25: Die Positionsakte durchsucht zusätzlich den gesamten Projektordner rekursiv nach Dateien mit exakt passender Positionskennung, gruppiert Treffer als Prüfstatik, Pläne/CAD, Eigene Nachweise oder Dokumente und entfernt Dubletten. Der mb-Start wurde auf den stabilen ProjektManager-Start mit automatischer BauStatik-/MicroFe-Registerwahl zurückgesetzt.",
   "update_available": true
 }
