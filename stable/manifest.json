@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.26",
+  "version": "1.4.27",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.25",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_26_tiny.json",
+  "min_bootstrap_version": "1.4.26",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_27_tiny.json",
   "package_format": "base64-json",
-  "sha256": "2acff4457d8ad54c7cc46d0df305247463aa6c68ccecf8d756e08cb52a1460d1",
-  "notes": "Version 1.4.26: Die Positionsakte durchsucht nun den kompletten Engbers-Projektordner statt nur den mb-Unterordner. Zusätzlich werden textbasierte PDFs read-only nach der ausgewählten Position durchsucht; Schreibweisen wie E.01.DS2 und E.01.DS-2 werden gleich behandelt. So kann z. B. ein Positionsplan auch ohne Positionsnummer im Dateinamen zugeordnet werden.",
+  "sha256": "37eca0fbc44f28e04f72f8fde322a5d8eb763fe3c8e1671159969e4416d1dd87",
+  "notes": "Version 1.4.27: Eindeutig benannte Positionspläne werden zusätzlich als mögliche Zuordnung zur gewählten Statikposition angezeigt, auch wenn ein CAD-PDF keinen auslesbaren Text enthält. Exakte Treffer bleiben höher bewertet; mögliche Zuordnungen sind gekennzeichnet.",
   "update_available": true
 }
