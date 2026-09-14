@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.18",
+  "version": "1.4.19",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.17",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_18_tiny.json",
+  "min_bootstrap_version": "1.4.18",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_19_tiny.json",
   "package_format": "base64-json",
-  "sha256": "140235541a23f446773e5445f414c3a5863c791671a27f6430a40d763b2b8c02",
-  "notes": "Version 1.4.18: mb-Projekte werden über den registrierten .mbp-Handler geöffnet; anschließend wird per Windows UI Automation automatisch das passende Register BauStatik oder MicroFe im ProjektManager gewählt. Der normale Projektstart bleibt als Fallback erhalten. mb-Daten und Registry werden nicht verändert.",
+  "sha256": "b2ddf17945e4fd4d1d91e29e294ffb11245b3fd635a2a4bf507113877580a22a",
+  "notes": "Version 1.4.19: Nach dem Öffnen des richtigen mb-Projekts und der Registerwahl versucht die Projektzentrale bei MicroFe zusätzlich, die Modellkarte der ausgewählten Position (z.B. E.01.D) per Windows UI Automation zu öffnen. BauStatik bleibt zunächst beim korrekten Register. Alle mb-Projekt- und Modelldaten bleiben unverändert.",
   "update_available": true
 }
