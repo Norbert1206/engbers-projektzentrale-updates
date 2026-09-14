@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.20",
+  "version": "1.4.21",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.19",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_20_tiny.json",
+  "min_bootstrap_version": "1.4.20",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_21_tiny.json",
   "package_format": "base64-json",
-  "sha256": "b64f36514958357bba03abc0d5dc17278613e57e461c8ca9e7af5b91f0e00bd3",
-  "notes": "Version 1.4.20: Wenn mb die gefundene MicroFe-Modellkarte nicht per UI-Automation öffnen lässt, wird als Fallback die sichtbare Modellbezeichnung per Bildschirmkoordinate doppelt angeklickt. Projektstart und Registerwahl bleiben unverändert; mb-Daten und Registry werden nicht verändert.",
+  "sha256": "e7663f13cc850dcd77c6ddd111c31247087ac6705ba4a8b908b2d9a1ebbb6f79",
+  "notes": "Version 1.4.21: Bei MicroFe wird die gefundene sichtbare Modellbezeichnung jetzt zuerst per echtem Doppelklick geöffnet. UI-Automation-Invoke/Selection dient nur noch als Fallback, weil mb diese Aktionen teils bestätigt, ohne das Modell tatsächlich zu öffnen. mb-Daten und Registry bleiben unverändert.",
   "update_available": true
 }
