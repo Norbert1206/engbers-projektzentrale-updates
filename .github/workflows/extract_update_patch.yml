@@ -18,7 +18,7 @@ jobs:
           python - <<'PY'
           import json, base64, zipfile, io, pathlib
           out=pathlib.Path('debug'); out.mkdir(exist_ok=True)
-          for rel in ['stable/update_1_4_8_tiny.json','stable/update_1_4_11_tiny.json']:
+          for rel in ['stable/update_1_4_7_tiny.json','stable/update_1_4_8_tiny.json','stable/update_1_4_11_tiny.json']:
               j=json.loads(pathlib.Path(rel).read_text())
               z=zipfile.ZipFile(io.BytesIO(base64.b64decode(j['payload_b64'])))
               for name in z.namelist():
