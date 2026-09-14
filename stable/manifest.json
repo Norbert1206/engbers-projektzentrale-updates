@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.12",
+  "version": "1.4.13",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.11",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_12_tiny.json",
+  "min_bootstrap_version": "1.4.12",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_13_tiny.json",
   "package_format": "base64-json",
-  "sha256": "d0e8da3ec1d14b44c6f2a194d09c9e877bd17b2ea83838c61bb4575c30a822d1",
-  "notes": "Version 1.4.12: Exakte Positionszuordnung in der Positionsakte. Kurze Positionen wie E.01.D werden nicht mehr mit E.01.DS-1, E.01.DS-2 usw. verwechselt; übliche Schreibweisen wie E01D, E_01_D und Pos E01 D bleiben kompatibel. Position und Bezeichnung stehen jetzt oben in der rechten Positionsakte. BauStatik/MicroFe-Erkennung bleibt unverändert und alle mb-Daten werden ausschließlich read-only gelesen.",
+  "sha256": "d08e7700286ed49e811ac9a817e76f101bcbfbfbe443c4c53eae434a03ccc89b",
+  "notes": "Version 1.4.13: Die Positionsakte ermittelt zusätzlich die konkrete mb-Modellquelle je Position. MicroFe-Positionen werden der tatsächlich passenden FEM-Datenbank zugeordnet; bei BauStatik wird der Projekt-/Modellcontainer ausgewiesen und – wenn eindeutig lesbar – eine Modell-/Projektbezeichnung übernommen. Angezeigt werden mb-Modell und Modellquelle. Alles bleibt read-only; der Startweg über den mb ProjektManager bleibt unverändert.",
   "update_available": true
 }
