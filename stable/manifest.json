@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.23",
+  "version": "1.4.24",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.22",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_23_tiny.json",
+  "min_bootstrap_version": "1.4.23",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_24_tiny.json",
   "package_format": "base64-json",
-  "sha256": "0b0335040bba3b3248470b0e41e15184fa3450b0435360485cfd5526300797ae",
-  "notes": "Version 1.4.23: Bei MicroFe wird die tatsächliche Kartenfläche angeklickt, anschließend der sichtbare Befehl Verwenden physisch ausgelöst und der Erfolg erst nach Erkennen eines geöffneten MicroFe-Fensters akzeptiert. Die Suche wartet außerdem länger auf die Modellkarten. mb-Daten und Registry bleiben unverändert.",
+  "sha256": "239f0af5d3c96ea3b4eb7bfa793548bb1acafde50b77321ffb0cf8c202ff71bd",
+  "notes": "Version 1.4.24: Diagnose des MicroFe-Starts. Sichtbare UI-Elemente, Modellkandidaten und Verwenden-Schaltflächen werden protokolliert. Bei Fehlschlag entsteht auf dem Desktop Engbers_MB_MicroFe_Debug.txt. mb-Daten und Registry bleiben unverändert.",
   "update_available": true
 }
