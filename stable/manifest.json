@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.16",
+  "version": "1.4.17",
   "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.15",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_16_tiny.json",
+  "min_bootstrap_version": "1.4.16",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_17_tiny.json",
   "package_format": "base64-json",
-  "sha256": "23dcdd5030b8eb03cdff148f8733c70e309ee4b06c653db47e3ccbf0f772ce69",
-  "notes": "Version 1.4.16: Fehlerkorrektur der Startdiagnose aus 1.4.15. Die Positionsakte zeigt wieder vollständig Anwendung, Modell/Modell-ID, Modellquelle und den registrierten Windows/mb-Handler für .mbp bzw. .mbdb. Registry und mb-Daten bleiben read-only.",
+  "sha256": "984e19bec16fa857bb689219ea5c499ea61a9c8a355a087ce3567b0aad5eb8c7",
+  "notes": "Version 1.4.17: Die Startdiagnose steht direkt im sichtbaren Kopf der Positionsakte. Zusätzlich wird das registrierte Windows/mb-Startkommando für .mbp bzw. .mbdb read-only angezeigt; doppelte Positionszeilen wurden entfernt. Registry und mb-Daten bleiben unverändert.",
   "update_available": true
 }
