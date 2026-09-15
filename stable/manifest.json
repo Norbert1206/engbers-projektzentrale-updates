@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.27",
-  "published_at": "2026-09-14",
-  "min_bootstrap_version": "1.4.26",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_27_tiny.json",
+  "version": "1.4.28",
+  "published_at": "2026-09-15",
+  "min_bootstrap_version": "1.4.27",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_28_tiny.json",
   "package_format": "base64-json",
-  "sha256": "37eca0fbc44f28e04f72f8fde322a5d8eb763fe3c8e1671159969e4416d1dd87",
-  "notes": "Version 1.4.27: Eindeutig benannte Positionspläne werden zusätzlich als mögliche Zuordnung zur gewählten Statikposition angezeigt, auch wenn ein CAD-PDF keinen auslesbaren Text enthält. Exakte Treffer bleiben höher bewertet; mögliche Zuordnungen sind gekennzeichnet.",
+  "sha256": "84d096bb72e6de3d12f71c8fe01965a210e6d7f375926877c29f29ec3521be88",
+  "notes": "Version 1.4.28: Plan-Kandidaten werden robuster erkannt. Auch Schreibweisen wie Pos.-Plan, Pos Plan und Positionsplan sowie Dateien in plan-/CAD-typischen Ordnern werden als mögliche Zuordnung angeboten. Exakte Treffer bleiben höher bewertet.",
   "update_available": true
 }
