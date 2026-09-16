@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.5.4",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_5_TINY.zip?rev=1505-actions",
+  "min_bootstrap_version": "1.5.5",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_6_TINY.zip?rev=1506-selection-loop",
   "package_format": "zip",
-  "sha256": "2b16da9dd2b0b6561694d079f38bd6105a883a170d7c5d41c0ec8b6957b4208a",
-  "notes": "Version 1.5.5: Saemtliche Dateisystem-I/O des Projekt-Explorers laeuft ausserhalb des Tk-Hauptthreads. Der Worker kommuniziert ausschliesslich ueber Queue; alle Tkinter-Aufrufe bleiben im Hauptthread. Grosse Ordner werden portionsweise dargestellt. Bei einer Blockade schreibt ein Hang-Waechter project_explorer_hang.log. Zusaetzlich wird START_PROJEKTZENTRALE_144.cmd ersetzt, falls ein alter Desktop-Shortcut noch darauf zeigt.",
+  "sha256": "5c6332fdd126d7968ea4b34070f51453e83e7fb673eb8c334cb3b9dfd15de42c",
+  "notes": "Version 1.5.6: Behebt den Projekt-Explorer-Haenger beim Anklicken eines Ordners. Die Auswahlroutine hat in <<TreeviewSelect>> dieselbe Auswahl erneut gesetzt und dadurch eine Endlosschleife erzeugt. 1.5.6 entfernt ausschliesslich diese rekursive Auswahl; die stabile Queue-I/O aus 1.5.5 bleibt unveraendert.",
   "update_available": true
 }
