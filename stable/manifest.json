@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.43",
+  "version": "1.4.44",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.40",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_43_tiny.json",
+  "min_bootstrap_version": "1.4.43",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_44_tiny.json",
   "package_format": "base64-json",
-  "sha256": "966a630df74a3bda526a5bf1d16c833a67bb3368fce66f13c32889f617766e67",
-  "notes": "Version 1.4.43: Reparatur auf Basis der tatsächlich installierten app.py 1.4.40. Der Suchergebnisbaum wird nun direkt gespeichert; Doppelklick und Enter auf einem Projekttreffer wechseln das aktive Projekt über project_map/project_id. Der aktuelle Fachbereich bleibt nach Möglichkeit erhalten.",
+  "sha256": "ba3bfbdef1be75c88f11dd5e17a4fc2a9bd49414cd3d3b25867de7f4053b829c",
+  "notes": "Version 1.4.44: Positionsakte kompakter und Statusdarstellung korrigiert; Statusfilter bleibt mit Suche/Gruppe kombiniert. Manuelle Positionsdateien erhalten eine Kategorieauswahl und aktualisieren sofort. Statik PDF nutzt den richtigen Projektordner und hat links einen Unterpunkt. Dokumenttreffer der globalen Suche lassen sich per Doppelklick öffnen.",
   "update_available": true
 }
