@@ -1,0 +1,62 @@
+name: Build Engbers Projektzentrale 1.4.48
+on:
+  push:
+    paths:
+      - 'build/1448/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate repair patch
+        run: |
+          python -m py_compile build/1448/patch_1448.py
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          p=Path('build/1448/patch_1448.py')
+          spec=importlib.util.spec_from_file_location('p1448',p); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          mini='''APP_VERSION = "1.4.45"\nclass Demo:\n    def sidebar(self):\n        self.statik_pdf_nav=tk.Button(self.sidebar,text='   ↳ Statik PDF',command=lambda:self.navigate('Statik',self.show_statik_pdf),anchor='w',bd=0,bg=DARK,fg='#b9b7b0',activebackground=DARK2,activeforeground='white',font=('Segoe UI',9),padx=30,pady=5,cursor='hand2')\n        tk.Frame(self.sidebar,bg=DARK).pack(fill='both',expand=True)\n    def show_statik_pdf(self):\n        # PZ_STATIK_PDF_VIEW_V1445: eigener, rein lesender Statik-PDF-Bereich.\n        self.clear()\n        tools=tk.Frame(self.content,bg=BG); tools.pack(fill='x',pady=(0,10))\n    def show_statics(self):\n        # 1.4.35: Statik-PDF Schnellzugriff. Nur lesender Zugriff auf vorhandene PDFs.\n        x=1\n        # Baugrund / Bodengutachten: rein lesende Dateisuche im bestehenden Projektordner.\n        y=2\n    def meta(self):\n        try:\n            meta.mkdir(parents=True,exist_ok=True)\n            if os.name=='nt':\n                try:subprocess.run(['attrib','+h',str(meta)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False)\n                except Exception:pass\n        except Exception:\n            return None\n'''
+          out=m.transform(mini)
+          compile(out,'synthetic_1448.py','exec')
+          assert 'PZ_STATIK_NAV_SEPARATE_V1448' in out
+          assert 'PZ_STATIK_QUICKACCESS_REMOVED_V1448' in out
+          assert 'command=self.show_statik_pdf' in out
+          assert "subprocess.run(['attrib','+h',str(meta)]" not in out
+          assert 'try:_attrs=' not in out
+          print('1.4.48 synthetic repair validation OK')
+          PY
+      - name: Build update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,base64,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_48_TINY.zip'
+          payload=[('build/1448/patch_1448.py','patch_1448.py'),('build/1448/START_PROJEKTZENTRALE.cmd','START_PROJEKTZENTRALE.cmd')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          data=zip_path.read_bytes(); sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.48','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_48_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.48','published_at':'2026-09-16','min_bootstrap_version':'1.4.45','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_48_tiny.json','package_format':'base64-json','sha256':sha,'notes':'Version 1.4.48: Reparaturupdate nach dem Syntaxfehler in 1.4.46/1.4.47. Statik öffnet wieder ausschließlich die mb-/Positionsansicht; Statik PDF bleibt separat. Der alte PDF-Schnellzugriff wird aus der normalen Statik entfernt und die .engbers-Markierung erfolgt ohne externen attrib-Prozess.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          raw=base64.b64decode(json.loads((root/'stable/update_1_4_48_tiny.json').read_text(encoding='utf-8'))['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_48_TINY.zip stable/update_1_4_48_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.48'
+          git pull --rebase origin main
+          git push origin main
