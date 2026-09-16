@@ -21,6 +21,8 @@ jobs:
           python - <<'PY'
           import importlib.util, pathlib, py_compile, sys, tempfile
           root=pathlib.Path('.')
+          sys.path.insert(0,str(root/'build/1600'))
+          sys.path.insert(0,str(root/'build/1601'))
           spec=importlib.util.spec_from_file_location('p1605',root/'build/1605/patch_1605.py')
           p5=importlib.util.module_from_spec(spec);spec.loader.exec_module(p5)
           spec=importlib.util.spec_from_file_location('p1606',root/'build/1606/patch_1606.py')
