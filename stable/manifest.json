@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.6.4",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_5_TINY.zip?rev=1605-name-address",
+  "min_bootstrap_version": "1.6.5",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_6_TINY.zip?rev=1606-runtime-name-project-address",
   "package_format": "zip",
-  "sha256": "9e20c2c6badbea4a9cfa5006540244298b621a7020fcb241aa85c55d826a7bd4",
-  "notes": "Version 1.6.5: Projektname und Bauvorhaben-Bezeichnung sind dauerhaft getrennt. Bereits versehentlich auf die Bauvorhaben-Bezeichnung umbenannte Projekte werden vorsichtig anhand des Projektordners zurueckgesetzt. Die Bauort-Erkennung kombiniert nun mehrzeilige CAD-Plankopf-Angaben, z. B. Strasse rechts neben Bauort und PLZ/Ort in der Folgezeile. Die Kachelansicht aus 1.6.4 bleibt unveraendert.",
+  "sha256": "d4d1afb6bfd9025acf73015e3f4ba5d3e1f86867ec952467991cff7e47c69881",
+  "notes": "Version 1.6.6: Der Projektname wird beim Öffnen der Projektakte robust aus dem echten Projektordner wiederhergestellt, falls er versehentlich der Bauvorhaben-Bezeichnung entspricht. Zusätzlich wird die Bauvorhaben-Adresse auch direkt unterhalb der Bauvorhaben-Bezeichnung erkannt, wie auf Statik-/Architektur-Titelblättern üblich. Die Kachelansicht bleibt unverändert.",
   "update_available": true
 }
