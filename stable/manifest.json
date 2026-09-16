@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.5.1",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_3_TINY.zip?rev=1503-safe-2",
+  "min_bootstrap_version": "1.5.3",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_4_TINY.zip?rev=1504-stable-explorer",
   "package_format": "zip",
-  "sha256": "2bafa826ed44c179039fb2c1624982242bc1423574501982aaadab2772335624",
-  "notes": "Version 1.5.3: Repariert den Projekt-Explorer auf Basis des echten 1.5.1-Stands und entfernt die Tkinter-Worker-Threads. Zusätzlich wird der Start-/Updateweg umgestellt: neuer unsichtbarer Launcher, keine dauerhaft offenen DOS-Fenster mehr. 1.5.3 ersetzt den nicht wirksam gestarteten 1.5.2-Hotfix.",
+  "sha256": "dbe35836649cf738c37cd7bc8b3798262afa808461b084bc22111b5589fcad68",
+  "notes": "Version 1.5.4: Projekt-Explorer komplett auf einen stabilen Ein-Ebenen-Loader umgestellt. Keine Threads, keine after()-Ketten und keine automatische Rekursion mehr. Zusätzlich wird ein Fatal-Log für native Tk/Python-Abstürze aktiviert. START_PROJEKTZENTRALE.cmd beendet sich jetzt vollständig, damit kein DOS-Fenster offen bleibt.",
   "update_available": true
 }
