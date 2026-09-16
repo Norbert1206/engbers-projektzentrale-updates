@@ -1,0 +1,69 @@
+name: Build Engbers Projektzentrale 1.4.43
+on:
+  push:
+    paths:
+      - 'build/1443/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and validate update
+        run: |
+          python -m py_compile build/1443/patch_1443.py
+          python - <<'PY'
+          import importlib.util, pathlib
+          p=pathlib.Path('build/1443/patch_1443.py')
+          spec=importlib.util.spec_from_file_location('p1443',p)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          src='''import re\nAPP_VERSION = "1.4.40"\nclass Demo:\n    def global_search(self):\n        frame=None; hits=[]\n        self.tree(frame,('Bereich','Treffer'),hits,[160,560])\n'''
+          out,ok=m._patch_search(src)
+          assert ok
+          assert 'PZ_SEARCH_OPEN_V1443' in out
+          assert 'result_tree=self.tree' in out
+          assert "result_tree.bind('<Double-1>',open_search_hit)" in out
+          assert 'self.project_id=pid' in out
+          compile(out,'synthetic_1443.py','exec')
+          print('synthetic 1.4.43 search test OK')
+          PY
+          python - <<'PY'
+          import pathlib, zipfile, hashlib, base64, json
+          root=pathlib.Path('.')
+          patch=root/'build/1443/patch_1443.py'
+          starter=root/'build/1443/START_PROJEKTZENTRALE.cmd'
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_43_TINY.zip'
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,'patch_1443.py')
+              z.write(starter,'START_PROJEKTZENTRALE.cmd')
+          data=zip_path.read_bytes(); sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.43','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_43_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.43','published_at':'2026-09-16',
+              'min_bootstrap_version':'1.4.40','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_43_tiny.json',
+              'package_format':'base64-json','sha256':sha,
+              'notes':'Version 1.4.43: Reparatur auf Basis der tatsächlich installierten app.py 1.4.40. Der Suchergebnisbaum wird nun direkt gespeichert; Doppelklick und Enter auf einem Projekttreffer wechseln das aktive Projekt über project_map/project_id. Der aktuelle Fachbereich bleibt nach Möglichkeit erhalten.',
+              'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          chk=json.loads((root/'stable/update_1_4_43_tiny.json').read_text(encoding='utf-8'))
+          raw=base64.b64decode(chk['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_43_TINY.zip stable/update_1_4_43_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.43'
+          git pull --rebase origin main
+          git push origin main
