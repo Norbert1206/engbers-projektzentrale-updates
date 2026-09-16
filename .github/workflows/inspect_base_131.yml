@@ -20,7 +20,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python - <<'PY'
-          import io, json, os, pathlib, urllib.request, zipfile, base64
+          import io, json, os, pathlib, urllib.request, zipfile, base64, struct, zlib
           root=pathlib.Path('.')
           outpath=root/'debug/base132_search_nav_snippets.txt'
           try:
@@ -28,20 +28,45 @@ jobs:
               req=urllib.request.Request(url,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
               payload=json.loads(urllib.request.urlopen(req,timeout=30).read().decode('utf-8'))
               data=base64.b64decode(payload['content'])
-              # Some historical release files were stored one extra base64 layer deep.
-              # Detect this safely instead of failing the workflow.
               if not data.startswith(b'PK'):
                   stripped=data.strip()
                   if stripped.startswith(b'UEs'):
                       data=base64.b64decode(stripped + b'='*((4-len(stripped)%4)%4))
               if not data.startswith(b'PK'):
                   raise RuntimeError('decoded file does not start with PK: '+repr(data[:80]))
-              with zipfile.ZipFile(io.BytesIO(data)) as z:
-                  names=z.namelist()
-                  app_name=next((n for n in names if n.lower().endswith('app.py')),None)
-                  if not app_name:
-                      raise RuntimeError('app.py not found in '+str(names))
-                  app=z.read(app_name).decode('utf-8')
+              app=None
+              try:
+                  with zipfile.ZipFile(io.BytesIO(data)) as z:
+                      names=z.namelist()
+                      app_name=next((n for n in names if n.lower().endswith('app.py')),None)
+                      if app_name:
+                          app=z.read(app_name).decode('utf-8')
+              except zipfile.BadZipFile:
+                  # Fallback for historical truncated archives: app.py is the first
+                  # local ZIP entry, so the central directory is not required.
+                  sig=b'PK\x03\x04'
+                  off=data.find(sig)
+                  if off<0 or len(data)<off+30:
+                      raise
+                  header=struct.unpack_from('<IHHHHHIIIHH',data,off)
+                  _sig,_ver,flags,method,_tm,_dt,_crc,csize,usize,nlen,xlen=header
+                  name_start=off+30
+                  name=data[name_start:name_start+nlen].decode('utf-8','replace')
+                  comp_start=name_start+nlen+xlen
+                  comp=data[comp_start:comp_start+csize]
+                  if len(comp)!=csize:
+                      raise RuntimeError(f'truncated local entry {name}: need {csize}, got {len(comp)}')
+                  if method==8:
+                      raw=zlib.decompress(comp,-15)
+                  elif method==0:
+                      raw=comp
+                  else:
+                      raise RuntimeError(f'unsupported compression method {method}')
+                  if not name.lower().endswith('app.py'):
+                      raise RuntimeError('first local ZIP entry is not app.py: '+name)
+                  app=raw.decode('utf-8')
+              if not app:
+                  raise RuntimeError('app.py could not be extracted')
               lines=app.splitlines()
               needles=['Suchergebnisse','Suchen','search','Statik','project_combo','Projekt','sidebar','nav','selected_project','current_project']
               hits=[]
