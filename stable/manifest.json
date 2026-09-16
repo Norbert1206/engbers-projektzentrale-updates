@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.40",
+  "version": "1.4.41",
   "published_at": "2026-09-16",
   "min_bootstrap_version": "1.4.38",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_40_tiny.json",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_41_tiny.json",
   "package_format": "base64-json",
-  "sha256": "543d8534dcff581e755fbcae3a3200d42c3005ae1e36f597843cd1d6b7d1134f",
-  "notes": "Version 1.4.40: Reparaturupdate für 1.4.38/1.4.39. Der Versionswechsel ist nicht mehr von der Suchkorrektur abhängig. Die Projektnavigation aus der globalen Suche schließt das Suchfenster zuerst und sucht den Projektwähler anschließend generisch nach Projektnummer bzw. Projektbezeichnung. Bei einem echten Fehlschlag wird eine konkrete Meldung angezeigt.",
+  "sha256": "200d88d4afdd89827bd47e7c065fac59a4ab74af0029ae4c81a3d86597b7b6a4",
+  "notes": "Version 1.4.41: Die globale Projektsuche wechselt Projekte jetzt direkt über die interne Projektverwaltung der Projektzentrale (project_map/project_id) statt den Projektwähler in der Oberfläche zu suchen. Der aktuelle Fachbereich, z. B. Statik, bleibt beim Projektwechsel nach Möglichkeit erhalten.",
   "update_available": true
 }
