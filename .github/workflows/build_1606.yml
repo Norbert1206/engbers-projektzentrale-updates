@@ -1,0 +1,84 @@
+name: Build Engbers Projektzentrale 1.6.6
+on:
+  push:
+    paths:
+      - 'build/1606/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate sources and fixes
+        run: |
+          python -m py_compile build/1606/patch_1606.py build/1606/post_update.py
+          python - <<'PY'
+          import importlib.util, pathlib, py_compile, sys, tempfile
+          root=pathlib.Path('.')
+          spec=importlib.util.spec_from_file_location('p1605',root/'build/1605/patch_1605.py')
+          p5=importlib.util.module_from_spec(spec);spec.loader.exec_module(p5)
+          spec=importlib.util.spec_from_file_location('p1606',root/'build/1606/patch_1606.py')
+          p6=importlib.util.module_from_spec(spec);spec.loader.exec_module(p6)
+
+          cards=(root/'build/1604/masterdata_v1604.py').read_text(encoding='utf-8')
+          cards=p5.patch_cards(cards)
+          cards2=p6.patch_cards(cards)
+          assert 'PZ_MASTERDATA_RUNTIME_NAME_AND_PROJECT_ADDRESS_V1606' in cards2
+          assert "UPDATE projects SET title=? WHERE id=?" in cards2
+          assert p6.patch_cards(cards2)==cards2
+          ctmp=pathlib.Path(tempfile.gettempdir())/'masterdata_v1604_1606_test.py'
+          ctmp.write_text(cards2,encoding='utf-8');py_compile.compile(str(ctmp),doraise=True)
+
+          geom=(root/'build/1601/masterdata_v1601.py').read_text(encoding='utf-8')
+          geom=p5.patch_geometry(geom)
+          geom2=p6.patch_geometry(geom)
+          assert 'PZ_MASTERDATA_RUNTIME_NAME_AND_PROJECT_ADDRESS_V1606' in geom2
+          gtmp=pathlib.Path(tempfile.gettempdir())/'masterdata_v1601_1606_test.py'
+          gtmp.write_text(geom2,encoding='utf-8');py_compile.compile(str(gtmp),doraise=True)
+          spec2=importlib.util.spec_from_file_location('g1606',gtmp)
+          g=importlib.util.module_from_spec(spec2);spec2.loader.exec_module(g)
+          frags=[
+            {'page':0,'x':650.0,'y':130.0,'text':'Bauvorhaben:','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':760.0,'y':130.0,'text':'Errichtung eines Wohnhauses mit Garage','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':760.0,'y':108.0,'text':'Bayerstr. 4, 48429 Rheine','font':10.0,'W':1000.0,'H':800.0},
+          ]
+          d=g._parse_geometry(frags)
+          assert d.get('project_title','').startswith('Errichtung eines Wohnhauses mit Garage'),d
+          assert d.get('project_street')=='Bayerstr. 4',d
+          assert d.get('project_zip')=='48429',d
+          assert d.get('project_city')=='Rheine',d
+          print('1.6.6 fallback below Bauvorhaben OK:',d)
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_6_6_TINY.zip'
+          payload=[('build/1606/patch_1606.py','patch_1606.py'),('build/1606/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              assert set(z.namelist())=={x[1] for x in payload}
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.6.6','published_at':'2026-09-16','min_bootstrap_version':'1.6.5','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_6_TINY.zip?rev=1606-runtime-name-project-address','package_format':'zip','sha256':sha,'notes':'Version 1.6.6: Der Projektname wird beim Öffnen der Projektakte robust aus dem echten Projektordner wiederhergestellt, falls er versehentlich der Bauvorhaben-Bezeichnung entspricht. Zusätzlich wird die Bauvorhaben-Adresse auch direkt unterhalb der Bauvorhaben-Bezeichnung erkannt, wie auf Statik-/Architektur-Titelblättern üblich. Die Kachelansicht bleibt unverändert.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert hashlib.sha256(zip_path.read_bytes()).hexdigest()==manifest['sha256']
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_6_6_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.6.6 runtime name and project address fix'
+          git pull --rebase origin main
+          git push origin main
