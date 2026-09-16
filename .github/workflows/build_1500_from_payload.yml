@@ -15,46 +15,75 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Repair, build and validate update package
+      - name: Recover files and build a fresh ZIP
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64, hashlib, json, zipfile, py_compile, shutil
+          import base64, hashlib, json, zipfile, py_compile, shutil, struct, zlib
           root=Path('.')
           src=root/'stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip.base64.txt'
-          # The original payload had excess '=' padding. Normalize it deterministically.
           b=''.join(src.read_text(encoding='utf-8').split()).rstrip('=')
           b += '=' * ((4-len(b)%4)%4)
           raw=base64.b64decode(b, validate=True)
-          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip'
-          zip_path.write_bytes(raw)
-          sha=hashlib.sha256(raw).hexdigest()
+          assert raw[:4] == b'PK\x03\x04', raw[:16]
+
+          # Recover complete local ZIP entries even if the central directory/tail is broken.
+          files={}
+          pos=0
+          while pos + 30 <= len(raw) and raw[pos:pos+4] == b'PK\x03\x04':
+              sig,ver,flag,method,mtime,mdate,crc,csize,usize,nlen,xlen = struct.unpack_from('<IHHHHHIIIHH', raw, pos)
+              if flag & 0x08:
+                  raise RuntimeError('Unsupported data-descriptor ZIP entry')
+              name_start=pos+30
+              name_end=name_start+nlen
+              data_start=name_end+xlen
+              data_end=data_start+csize
+              if data_end > len(raw):
+                  print('Truncated entry:', raw[name_start:name_end])
+                  break
+              name=raw[name_start:name_end].decode('utf-8')
+              comp=raw[data_start:data_end]
+              if method == 0:
+                  data=comp
+              elif method == 8:
+                  data=zlib.decompress(comp, -15)
+              else:
+                  raise RuntimeError(f'Unsupported ZIP method {method} for {name}')
+              assert len(data)==usize, (name,len(data),usize)
+              files[name]=data
+              print('Recovered',name,len(data))
+              pos=data_end
+
+          required={'patch_1500.py','START_PROJEKTZENTRALE.cmd'}
+          assert required <= set(files), ('Recovered only',sorted(files))
+
           temp=root/'_validate1500'
           shutil.rmtree(temp, ignore_errors=True); temp.mkdir()
-          with zipfile.ZipFile(zip_path) as z:
-              bad=z.testzip()
-              assert bad is None, bad
-              names=set(z.namelist())
-              assert {'patch_1500.py','START_PROJEKTZENTRALE.cmd'} <= names, names
-              z.extractall(temp)
+          for name,data in files.items():
+              p=temp/name; p.parent.mkdir(parents=True,exist_ok=True); p.write_bytes(data)
           py_compile.compile(str(temp/'patch_1500.py'), doraise=True)
           patch=(temp/'patch_1500.py').read_text(encoding='utf-8')
           for token in ('APP_VERSION = "1.4.49"','APP_VERSION = "1.5.0"','PZ_COCKPIT_V1500','PZ_PROJECT_EXPLORER_V1500','PZ_MB_LAUNCHER_V1500'):
               assert token in patch, token
+
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip'
+          with zipfile.ZipFile(zip_path,'w',compression=zipfile.ZIP_DEFLATED) as z:
+              for name in sorted(files):
+                  z.writestr(name,files[name])
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              assert required <= set(z.namelist())
+          raw_new=zip_path.read_bytes()
+          sha=hashlib.sha256(raw_new).hexdigest()
           manifest={
-            'app':'Engbers Projektzentrale',
-            'channel':'stable',
-            'version':'1.5.0',
-            'published_at':'2026-09-16',
-            'min_bootstrap_version':'1.4.49',
-            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip?v=1500-fixed-1',
-            'package_format':'zip',
-            'sha256':sha,
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.5.0','published_at':'2026-09-16','min_bootstrap_version':'1.4.49',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip?v=1500-fixed-2',
+            'package_format':'zip','sha256':sha,
             'notes':'Version 1.5.0: Neues Projekt-Cockpit mit MB-Versionsübersicht, Haupt-MB-Projekt, PDF-Status und Projektprüfung. Der Projekt-Explorer wurde komplett auf eine echte Explorer-Logik mit Unterordnern, Suche, F5, Kontextmenü, Pfadkopie sowie Auf-/Zuklappen umgestellt. Der MB-Start berücksichtigt das gemerkte Hauptprojekt. Bestehende Projekt- und MB-Dateien bleiben unverändert.',
             'update_available':True
           }
           (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print('ZIP VALIDATED OK SHA256',sha)
+          print('FRESH ZIP VALIDATED OK SHA256',sha)
           PY
       - name: Upload verified update package
         uses: actions/upload-artifact@v4
@@ -69,6 +98,6 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip stable/manifest.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Repair and publish Projektzentrale 1.5.0 package'
+          git commit -m 'Recover and publish valid Projektzentrale 1.5.0 ZIP'
           git pull --rebase origin main
           git push origin main
