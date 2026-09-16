@@ -1,0 +1,106 @@
+name: Build Engbers Projektzentrale 1.7.2
+on:
+  push:
+    paths:
+      - 'build/1702/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate checkbox date and PDF feature
+        run: |
+          python -m py_compile build/1702/patch_1702.py build/1702/post_update.py
+          python - <<'PY'
+          import pathlib,runpy,tempfile,zipfile,types,sys,importlib.util,datetime,xml.etree.ElementTree as ET
+          root=pathlib.Path('.')
+          src=(root/'build/1700/wordforms_v1700.py').read_text(encoding='utf-8')
+          p1=runpy.run_path(str(root/'build/1701/patch_1701.py'),run_name='defs1701')
+          for a,b in [('OLD_FILL','NEW_FILL'),('OLD_RETURN','NEW_RETURN'),('OLD_SELECTED','NEW_SELECTED'),('OLD_OPEN','NEW_OPEN'),('OLD_BUTTON','NEW_BUTTON')]:
+              assert p1[a] in src,a
+              src=src.replace(p1[a],p1[b],1)
+          p2=runpy.run_path(str(root/'build/1702/patch_1702.py'),run_name='defs1702')
+          pairs=[
+              ('IMPORT_OLD','IMPORT_NEW'),('CLASSIFY_OLD','CLASSIFY_NEW'),('VALUES_OLD','VALUES_NEW'),
+              ('FILL_ANCHOR','FILL_HELPER'),('FILL_OLD','FILL_NEW'),('OUT_OLD','OUT_NEW'),
+              ('DOCS_OLD','DOCS_NEW'),('FILL_UI_OLD','FILL_UI_NEW'),('FILL_UI_BODY_OLD','FILL_UI_BODY_NEW'),
+              ('MSG_OLD','MSG_NEW'),('OPEN_OLD','OPEN_NEW'),('BUTTON_OLD','BUTTON_NEW')]
+          for a,b in pairs:
+              assert p2[a] in src,a
+              src=src.replace(p2[a],p2[b],1)
+          compile(src,'wordforms_v1700.py','exec')
+          assert 'PZ_WORD_DATE_CHECKBOX_PDF_V1702' in src
+          assert 'ExportAsFixedFormat' in src and 'cscript.exe' in src
+          assert "text='PDF ÖFFNEN'" in src
+
+          tmp=pathlib.Path(tempfile.mkdtemp())
+          modpath=tmp/'wordforms_v1700.py'; modpath.write_text(src,encoding='utf-8')
+          stub=types.ModuleType('masterdata_v1604')
+          stub._masterdata_row=lambda app:{}
+          stub._base=types.SimpleNamespace(_env=lambda app:(None,None,'#fff','#fff','#111','#777','#b08b49','#222'))
+          sys.modules['masterdata_v1604']=stub
+          spec=importlib.util.spec_from_file_location('wf',modpath)
+          wf=importlib.util.module_from_spec(spec);spec.loader.exec_module(wf)
+          W='http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+          def textfield(name):
+              return f'''<w:r><w:fldChar w:fldCharType="begin"><w:ffData><w:name w:val="{name}"/><w:textInput/></w:ffData></w:fldChar></w:r><w:r><w:instrText> FORMTEXT </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>xxxxx</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r>'''
+          def checkbox(name):
+              return f'''<w:r><w:fldChar w:fldCharType="begin"><w:ffData><w:name w:val="{name}"/><w:checkBox><w:sizeAuto/><w:default w:val="0"/></w:checkBox></w:ffData></w:fldChar></w:r><w:r><w:instrText> FORMCHECKBOX </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r>'''
+          xml=f'''<?xml version="1.0" encoding="UTF-8"?><w:document xmlns:w="{W}"><w:body><w:tbl>
+          <w:tr><w:tc><w:p><w:r><w:t>II. Ergebnis der Prüfung</w:t></w:r></w:p>
+          <w:p>{checkbox('K1')}<w:r><w:t> Die von mir aufgestellten energetischen Nachweise entsprechen den geltenden Vorschriften.</w:t></w:r></w:p>
+          <w:p>{checkbox('K2')}<w:r><w:t> Die von der Fachplanerin/dem Fachplaner aufgestellten und von mir geprüften Nachweise entsprechen den Vorschriften.</w:t></w:r></w:p></w:tc></w:tr>
+          <w:tr><w:tc><w:p><w:r><w:t>III. Unterschrift</w:t></w:r></w:p><w:p>{textfield('Ort')}</w:p><w:p>{textfield('Datum')}</w:p></w:tc><w:tc><w:p/></w:tc><w:tc><w:p/></w:tc></w:tr>
+          </w:tbl></w:body></w:document>'''
+          srcdoc=tmp/'template.docx'; dstdoc=tmp/'filled.docx'
+          with zipfile.ZipFile(srcdoc,'w') as z:z.writestr('word/document.xml',xml)
+          n=wf.fill_docx(srcdoc,dstdoc,{'engineer_city':'Lingen'})
+          assert n==3,n
+          with zipfile.ZipFile(dstdoc) as z: outxml=z.read('word/document.xml')
+          out=ET.fromstring(outxml)
+          Q=lambda n:f'{{{W}}}{n}'
+          text=''.join((t.text or '') for t in out.iter(Q('t')))
+          assert 'Lingen' in text
+          assert datetime.date.today().strftime('%d.%m.%Y') in text
+          parents={c:p for p in out.iter() for c in p}
+          states=[]
+          for ff in out.iter(Q('ffData')):
+              cb=ff.find(Q('checkBox'))
+              if cb is None: continue
+              default=cb.find(Q('default')); checked=cb.find(Q('checked'))
+              states.append((default.get(Q('val')) if default is not None else None,checked.get(Q('val')) if checked is not None else None))
+          assert states[0]==('1','1'),states
+          assert states[1][0]=='0' and states[1][1] in (None,'0'),states
+          print('1.7.2 validation OK; checkbox/date fields=',n)
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_2_TINY.zip'
+          payload=[('build/1702/patch_1702.py','patch_1702.py'),('build/1702/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.7.2','published_at':'2026-09-16','min_bootstrap_version':'1.7.1','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_2_TINY.zip?rev=1702-checkbox-date-pdf','package_format':'zip','sha256':sha,'notes':'Version 1.7.2: Bescheinigungen erweitert. Das erste fachliche Kontrollkästchen wird automatisch markiert, Ort und Tagesdatum werden im Unterschriftsbereich gesetzt und zu jeder ausgefüllten Word-Datei wird automatisch eine PDF-Kopie über Microsoft Word erzeugt. Word und PDF liegen unter Bescheinigungen/Ausgefüllt. Stempel und Unterschrift werden erst nach bewusster Freigabe und Hinterlegung der echten Grafik ergänzt.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_7_2_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.7.2 checkbox date PDF'
+          git pull --rebase origin main
+          git push origin main
