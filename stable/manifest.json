@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.5.6",
+  "version": "1.6.0",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.5.5",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_6_TINY.zip?rev=1506-selection-loop",
+  "min_bootstrap_version": "1.5.6",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_0_TINY.zip?rev=1600-masterdata",
   "package_format": "zip",
-  "sha256": "5c6332fdd126d7968ea4b34070f51453e83e7fb673eb8c334cb3b9dfd15de42c",
-  "notes": "Version 1.5.6: Behebt den Projekt-Explorer-Haenger beim Anklicken eines Ordners. Die Auswahlroutine hat in <<TreeviewSelect>> dieselbe Auswahl erneut gesetzt und dadurch eine Endlosschleife erzeugt. 1.5.6 entfernt ausschliesslich diese rekursive Auswahl; die stabile Queue-I/O aus 1.5.5 bleibt unveraendert.",
+  "sha256": "195433b73b5225eea75740449d7a8e8bc7dcd99311ee8c858a4092746fe94b23",
+  "notes": "Version 1.6.0: Projektstammdaten 2.0. Architektenplaene werden anhand von Ordner und Dateinamen (Grundriss, Ansichten, Schnitte, Ausfuehrungsplan, Bauantrag usw.) priorisiert und im Hintergrund rein lesend ausgewertet. Bauvorhaben, Bauherr, Architekt und Tragwerksplanung erhalten getrennte Adress-, Telefon- und E-Mail-Felder. Erkannte Werte sind nur Vorschlaege und werden erst nach Bestaetigung gespeichert. Originaldateien bleiben unveraendert. Grundlage fuer die kommende automatische Word-Befuellung.",
   "update_available": true
 }
