@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.29",
+  "version": "1.4.30",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.28",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_29_tiny.json",
+  "min_bootstrap_version": "1.4.29",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_30_tiny.json",
   "package_format": "base64-json",
-  "sha256": "bd37c68a9d150065fb314b4ca8ec9f083d0b4d1e03ee1b00fd5054428507736c",
-  "notes": "Version 1.4.29: Positionspläne können pro Geschoss einmal manuell und dauerhaft zugeordnet werden. Die Zuordnung wird projektbezogen in einer eigenen Projektzentrale-Metadatei gespeichert, allen Positionen des Geschosses angeboten und kann wieder entfernt werden. mb-Daten bleiben unverändert.",
+  "sha256": "7630c531f9d0539a6a03d013bba48c8b47428c25216431f884b3eb11788a1d3c",
+  "notes": "Version 1.4.30: Die Positionsakte erhält mehrere Arbeitsschritte auf einmal: Dateien können dauerhaft mit der exakten mb-Position verknüpft und wieder gelöst werden, jede Position bekommt einen Bearbeitungsstatus sowie eine kurze Notiz. Alles wird projektbezogen in einer eigenen Projektzentrale-Metadatei gespeichert; mb-Daten bleiben unverändert.",
   "update_available": true
 }
