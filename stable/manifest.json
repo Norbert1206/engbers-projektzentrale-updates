@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.38",
+  "version": "1.4.39",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.35",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_38_tiny.json",
+  "min_bootstrap_version": "1.4.38",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_39_tiny.json",
   "package_format": "base64-json",
-  "sha256": "fabe9baf4e8877f5cf80c26d3526425c24d2765cd460a627d35e5cd4b0fdbe32",
-  "notes": "Version 1.4.38: Die globale Projektsuche bindet den Doppelklick erst nach vollständigem Aufbau des Suchfensters und wählt das Zielprojekt anhand der Projektnummer robust im Projektwähler. Gleichzeitig wird die Positionsliste kompakter aufgebaut, sodass Position, Status, Bezeichnung, mb-Modul und Kennwert ohne notwendiges horizontales Scrollen sichtbar bleiben.",
+  "sha256": "b2094dbb17cde1ed8d288a058faa4e9da553ea00fcf6c2116375aba457822b6d",
+  "notes": "Version 1.4.39: Korrektur der Projektnavigation aus der globalen Suche. Das Suchfenster wird beim Doppelklick zuerst vollständig geschlossen; erst danach wird der Projektwechsel im Hauptfenster ausgelöst. Dadurch kann ein modales Suchfenster den Wechsel nicht mehr blockieren oder anschließend überschreiben.",
   "update_available": true
 }
