@@ -4,9 +4,9 @@
   "version": "1.5.5",
   "published_at": "2026-09-16",
   "min_bootstrap_version": "1.5.4",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_5_TINY.zip?rev=1505-queue-io",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_5_TINY.zip?rev=1505-actions",
   "package_format": "zip",
-  "sha256": "24f57ea7cdac4e00c8b8b6376431b7593ad0d40a4f670d98414d699f0ea43e66",
-  "notes": "Version 1.5.5: Explorer-Haenger behoben, indem saemtliche Dateisystem-I/O aus dem Tk-Hauptthread entfernt wird. Der Worker kommuniziert ausschliesslich ueber eine Queue; alle Tkinter-Aufrufe bleiben im Hauptthread. Grosse Ordner werden portionsweise dargestellt. Zusaetzlich schreibt ein Hang-Waechter bei einer Blockade project_explorer_hang.log. Auch START_PROJEKTZENTRALE_144.cmd wird ersetzt, falls ein alter Desktop-Shortcut noch darauf zeigt.",
+  "sha256": "2b16da9dd2b0b6561694d079f38bd6105a883a170d7c5d41c0ec8b6957b4208a",
+  "notes": "Version 1.5.5: Saemtliche Dateisystem-I/O des Projekt-Explorers laeuft ausserhalb des Tk-Hauptthreads. Der Worker kommuniziert ausschliesslich ueber Queue; alle Tkinter-Aufrufe bleiben im Hauptthread. Grosse Ordner werden portionsweise dargestellt. Bei einer Blockade schreibt ein Hang-Waechter project_explorer_hang.log. Zusaetzlich wird START_PROJEKTZENTRALE_144.cmd ersetzt, falls ein alter Desktop-Shortcut noch darauf zeigt.",
   "update_available": true
 }
