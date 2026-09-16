@@ -70,6 +70,7 @@ jobs:
           PY
       - name: Commit release files
         run: |
+          git checkout -- build/1441/patch_1441.py
           git config user.name 'engbers-update-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add stable/Engbers_Projektzentrale_UPDATE_1_4_41_TINY.zip stable/update_1_4_41_tiny.json stable/manifest.json
