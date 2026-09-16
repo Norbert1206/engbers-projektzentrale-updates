@@ -1,0 +1,103 @@
+name: Build Engbers Projektzentrale 1.6.7
+on:
+  push:
+    paths:
+      - 'build/1607/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate conservative masterdata parser
+        run: |
+          python -m py_compile build/1607/patch_1607.py build/1607/post_update.py
+          python - <<'PY'
+          import importlib.util, pathlib, py_compile, sys, tempfile
+          root=pathlib.Path('.')
+          sys.path.insert(0,str(root/'build/1600'))
+          def load(name,path):
+              spec=importlib.util.spec_from_file_location(name,path)
+              m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+          p5=load('p1605',root/'build/1605/patch_1605.py')
+          p6=load('p1606',root/'build/1606/patch_1606.py')
+          p7=load('p1607',root/'build/1607/patch_1607.py')
+          geom=(root/'build/1601/masterdata_v1601.py').read_text(encoding='utf-8')
+          geom=p5.patch_geometry(geom)
+          geom=p6.patch_geometry(geom)
+          geom=geom.rstrip()+p7.SAFE_BLOCK+'\n'
+          assert 'PZ_MASTERDATA_CONSERVATIVE_V1607' in geom
+          gtmp=pathlib.Path(tempfile.gettempdir())/'masterdata_v1601_1607_test.py'
+          gtmp.write_text(geom,encoding='utf-8');py_compile.compile(str(gtmp),doraise=True)
+          g=load('g1607',gtmp)
+
+          # Fall Werning: Bauherrenadresse steht im nahen Plankopf, aber KEIN Bauort.
+          # Sie darf niemals als Bauvorhaben-Adresse uebernommen werden.
+          frags=[
+            {'page':0,'x':100.0,'y':500.0,'text':'Bauvorhaben:','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':200.0,'y':500.0,'text':'Errichtung eines Wohnhauses mit Garage','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':200.0,'y':480.0,'text':'Planteil: Grundrisse, Ansichten, Schnitt','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':100.0,'y':420.0,'text':'Bauherr:','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':200.0,'y':420.0,'text':'Norbert u. Mariele Werning','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':100.0,'y':400.0,'text':'Anschrift:','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':200.0,'y':400.0,'text':'Wehrstr. 39b, 48429 Rheine','font':10.0,'W':1000.0,'H':800.0},
+          ]
+          d=g._parse_geometry(frags)
+          assert d.get('project_title')=='Errichtung eines Wohnhauses mit Garage',d
+          assert not d.get('project_street'),d
+          assert not d.get('project_zip'),d
+          assert not d.get('project_city'),d
+          assert d.get('client_street')=='Wehrstr. 39b',d
+          assert d.get('client_zip')=='48429',d
+          assert d.get('client_city')=='Rheine',d
+
+          # Eindeutiger Bauort darf weiterhin erkannt werden.
+          frags2=frags+[
+            {'page':0,'x':100.0,'y':340.0,'text':'Bauort:','font':10.0,'W':1000.0,'H':800.0},
+            {'page':0,'x':200.0,'y':340.0,'text':'Bayerstr. 4, 48429 Rheine','font':10.0,'W':1000.0,'H':800.0},
+          ]
+          d2=g._parse_geometry(frags2)
+          assert d2.get('project_street')=='Bayerstr. 4',d2
+          assert d2.get('project_zip')=='48429',d2
+          assert d2.get('project_city')=='Rheine',d2
+          print('1.6.7 conservative parser OK:',d,d2)
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_6_7_TINY.zip'
+          payload=[('build/1607/patch_1607.py','patch_1607.py'),('build/1607/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              assert set(z.namelist())=={x[1] for x in payload}
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.6.7','published_at':'2026-09-16',
+            'min_bootstrap_version':'1.6.6',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_7_TINY.zip?rev=1607-conservative-masterdata',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.6.7: Sichere Stammdatenerkennung. Planteil/Plannummer/Datum werden nicht mehr an die Bauvorhaben-Bezeichnung angehaengt. Eine Bauvorhaben-Adresse wird nur noch aus eindeutig beschriftetem Bauort/Grundstueck uebernommen. Bauherrenadressen werden nicht mehr als Bauvorhaben-Adresse fehlinterpretiert. Im Zweifel bleibt das Feld leer.',
+            'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert hashlib.sha256(zip_path.read_bytes()).hexdigest()==manifest['sha256']
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_6_7_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.6.7 safe masterdata parsing'
+          git pull --rebase origin main
+          git push origin main
