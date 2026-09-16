@@ -1,0 +1,75 @@
+name: Build Engbers Projektzentrale 1.6.8
+on:
+  push:
+    paths:
+      - 'build/1608/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate architect Bauort parser
+        run: |
+          python -m py_compile build/1608/patch_1608.py build/1608/post_update.py
+          python - <<'PY'
+          import importlib.util, pathlib, py_compile, sys, tempfile
+          root=pathlib.Path('.')
+          sys.path.insert(0,str((root/'build/1600').resolve()))
+          def load(name,path):
+              s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+          p7=load('p7',root/'build/1607/patch_1607.py')
+          p8=load('p8',root/'build/1608/patch_1608.py')
+          geom=(root/'build/1601/masterdata_v1601.py').read_text(encoding='utf-8').rstrip()+p7.SAFE_BLOCK+p8.BLOCK+'\n'
+          tmp=pathlib.Path(tempfile.gettempdir())/'masterdata_v1608_test.py'
+          tmp.write_text(geom,encoding='utf-8');py_compile.compile(str(tmp),doraise=True)
+          g=load('g1608',tmp)
+          W=1000.0;H=700.0
+          frags=[
+            {'page':0,'x':100.0,'y':120.0,'text':'Bauort:','font':10.0,'W':W,'H':H},
+            {'page':0,'x':220.0,'y':120.0,'text':'Bayerstr.','font':10.0,'W':W,'H':H},
+            {'page':0,'x':285.0,'y':120.0,'text':'4,','font':10.0,'W':W,'H':H},
+            {'page':0,'x':310.0,'y':120.0,'text':'48429','font':10.0,'W':W,'H':H},
+            {'page':0,'x':360.0,'y':120.0,'text':'Rheine','font':10.0,'W':W,'H':H},
+          ]
+          a=g._pz_architect_bauort_v1608(frags,{'client_street':'Wehrstr. 39b','client_zip':'48429','client_city':'Rheine'})
+          assert a=={'street':'Bayerstr. 4','zip':'48429','city':'Rheine'},a
+          bad=[
+            {'page':0,'x':100.0,'y':120.0,'text':'Bauort:','font':10.0,'W':W,'H':H},
+            {'page':0,'x':220.0,'y':120.0,'text':'Wehrstr. 39b, 48429 Rheine','font':10.0,'W':W,'H':H},
+          ]
+          b=g._pz_architect_bauort_v1608(bad,{'client_street':'Wehrstr. 39b','client_zip':'48429','client_city':'Rheine'})
+          assert b=={},b
+          print('1.6.8 architect Bauort tests OK',a)
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_6_8_TINY.zip'
+          payload=[('build/1608/patch_1608.py','patch_1608.py'),('build/1608/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.6.8','published_at':'2026-09-16','min_bootstrap_version':'1.6.7','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_8_TINY.zip?rev=1608-architect-bauort','package_format':'zip','sha256':sha,'notes':'Version 1.6.8: Bauort wird direkt aus dem Architekten-Plankopf gelesen. Allplan/CAD-PDFs koennen die sichtbare Bauort-Zeile intern in mehrere Textfragmente zerlegen; diese werden jetzt wieder zu einer Adresse zusammengesetzt. Die Bauherrenadresse bleibt als Bauort ausgeschlossen.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_6_8_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.6.8 architect Bauort fix'
+          git pull --rebase origin main
+          git push origin main
