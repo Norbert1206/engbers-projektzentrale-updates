@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.35",
+  "version": "1.4.36",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.33",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_35_tiny.json",
+  "min_bootstrap_version": "1.4.35",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_36_tiny.json",
   "package_format": "base64-json",
-  "sha256": "bb7a3e3df22e2914dc14cb227ed5195d96b0685872e71e78b2c4c74618446582",
-  "notes": "Version 1.4.35: Reparaturupdate für die fehlgeschlagene 1.4.34-Installation. Das Update kann direkt von 1.4.33 oder 1.4.34 installiert werden, beendet die wiederholte Update-Anzeige und übernimmt die kompakte Statusspalte, Projektnavigation aus der globalen Suche sowie den Statik-PDF-Schnellzugriff, soweit die vorhandene Installation die jeweiligen sicheren Einfügepunkte enthält.",
+  "sha256": "42c6e5f457fad21ec0d5f8dc86bf5c6627e704a117740d31780f1f8689909691",
+  "notes": "Version 1.4.36: Korrektur der globalen Projektsuche. Ein Doppelklick auf einen Projekttreffer wie „25-027 · Klee“ wird jetzt direkt auf der tatsächlich angeklickten Ergebniszeile ausgewertet; anschließend wird das passende Projekt im Projektwähler gesetzt und geöffnet.",
   "update_available": true
 }
