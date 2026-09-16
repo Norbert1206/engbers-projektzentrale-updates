@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.6.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_4_TINY.zip?rev=1604-cards",
+  "min_bootstrap_version": "1.6.4",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_5_TINY.zip?rev=1605-name-address",
   "package_format": "zip",
-  "sha256": "87fcf48ccb3f0a3cb70253ebac587ede4e6e8276c27c98a574121b4169b410a2",
-  "notes": "Version 1.6.4: Projektstammdaten werden in Projektakte und Plananalyse als vier übersichtliche Kacheln dargestellt: Bauvorhaben, Bauherr, Architekt und Tragwerksplanung. Alle gespeicherten Adress-, Telefon- und E-Mail-Felder sind direkt sichtbar. Die eigenen Tragwerksplanerdaten stammen verbindlich aus dem Büroprofil und werden nicht mehr durch PDF-Treffer überschrieben.",
+  "sha256": "9e20c2c6badbea4a9cfa5006540244298b621a7020fcb241aa85c55d826a7bd4",
+  "notes": "Version 1.6.5: Projektname und Bauvorhaben-Bezeichnung sind dauerhaft getrennt. Bereits versehentlich auf die Bauvorhaben-Bezeichnung umbenannte Projekte werden vorsichtig anhand des Projektordners zurueckgesetzt. Die Bauort-Erkennung kombiniert nun mehrzeilige CAD-Plankopf-Angaben, z. B. Strasse rechts neben Bauort und PLZ/Ort in der Folgezeile. Die Kachelansicht aus 1.6.4 bleibt unveraendert.",
   "update_available": true
 }
