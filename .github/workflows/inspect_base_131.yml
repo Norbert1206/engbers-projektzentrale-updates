@@ -18,25 +18,22 @@ jobs:
       - name: Extract focused snippets
         run: |
           python - <<'PY'
-          import base64, io, pathlib, zipfile, re
+          import pathlib, zipfile
           root=pathlib.Path('.')
-          raw=(root/'stable/Engbers_Projektzentrale_UPDATE_1_3_1.zip.b64').read_text(encoding='utf-8').strip()
-          data=base64.b64decode(raw)
-          with zipfile.ZipFile(io.BytesIO(data)) as z:
-              app=z.read('app.py').decode('utf-8')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_3_2_MIN.zip'
+          with zipfile.ZipFile(zp) as z:
+              names=z.namelist()
+              app_name=next((n for n in names if n.lower().endswith('app.py')),None)
+              if not app_name:
+                  raise SystemExit('app.py not found in '+str(names))
+              app=z.read(app_name).decode('utf-8')
           lines=app.splitlines()
           needles=['Suchergebnisse','Suchen','search','Statik','project_combo','Projekt','sidebar','nav','selected_project','current_project']
           hits=[]
-          seen=set()
           for i,line in enumerate(lines):
               low=line.casefold()
               if any(n.casefold() in low for n in needles):
-                  a=max(0,i-12); b=min(len(lines),i+28)
-                  key=(a,b)
-                  if key in seen: continue
-                  seen.add(key)
-                  hits.append((a,b))
-          # merge overlaps and cap to relevant first chunks around likely search/nav code
+                  hits.append((max(0,i-14),min(len(lines),i+32)))
           merged=[]
           for a,b in sorted(hits):
               if merged and a<=merged[-1][1]+3:
@@ -49,13 +46,13 @@ jobs:
               if any(x in chunk for x in ('Suchergebnisse','search_entry','search_var','Suchen','nav_items','Projekt-Explorer','Projektakte','Statik')):
                   out.append(chunk)
           text='\n\n===== CHUNK =====\n\n'.join(out)
-          (root/'debug/base131_search_nav_snippets.txt').write_text(text[:120000],encoding='utf-8')
+          (root/'debug/base132_search_nav_snippets.txt').write_text(text[:160000],encoding='utf-8')
           PY
       - name: Commit snippets
         run: |
           git config user.name 'engbers-update-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add debug/base131_search_nav_snippets.txt
+          git add debug/base132_search_nav_snippets.txt
           git diff --cached --quiet && exit 0
           git commit -m 'Inspect base app search and navigation snippets'
           git pull --rebase origin main
