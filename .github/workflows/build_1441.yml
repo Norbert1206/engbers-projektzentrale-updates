@@ -17,6 +17,15 @@ jobs:
           python-version: '3.12'
       - name: Build and validate update
         run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('build/1441/patch_1441.py')
+          s=p.read_text(encoding='utf-8')
+          old="    return s[:start]+new_block+s[end:], True\n"
+          new="    end_line_start=s.rfind('\\n',0,end)+1\n    return s[:line_start]+new_block+s[end_line_start:], True\n"
+          assert old in s
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
           python -m py_compile build/1441/patch_1441.py
           python - <<'PY'
           import importlib.util, pathlib
