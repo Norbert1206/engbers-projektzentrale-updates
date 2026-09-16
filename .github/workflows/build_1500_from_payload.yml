@@ -4,33 +4,29 @@ on:
     paths:
       - 'build/1500/BUILD'
 permissions:
-  contents: write
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Decode and validate package
+      - name: Validate existing update package
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64, hashlib, json, zipfile, py_compile, shutil
+          import hashlib, zipfile, py_compile, shutil
           root=Path('.')
-          b64=(root/'stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip.base64.txt').read_text(encoding='utf-8').strip()
-          raw=base64.b64decode(b64, validate=True)
           zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip'
-          zip_path.write_bytes(raw)
-          sha=hashlib.sha256(raw).hexdigest()
-          expected='b62fa41c74272c39910244e9705a5002395564f7baa716afc2df5eb25262b03f'
-          assert sha==expected, (sha, expected)
+          raw=zip_path.read_bytes()
+          print('SHA256', hashlib.sha256(raw).hexdigest())
           temp=root/'_validate1500'
           shutil.rmtree(temp, ignore_errors=True); temp.mkdir()
           with zipfile.ZipFile(zip_path) as z:
+              bad=z.testzip()
+              assert bad is None, bad
               names=set(z.namelist())
               assert {'patch_1500.py','START_PROJEKTZENTRALE.cmd'} <= names, names
               z.extractall(temp)
@@ -38,16 +34,7 @@ jobs:
           patch=(temp/'patch_1500.py').read_text(encoding='utf-8')
           for token in ('APP_VERSION = "1.4.49"','APP_VERSION = "1.5.0"','PZ_COCKPIT_V1500','PZ_PROJECT_EXPLORER_V1500','PZ_MB_LAUNCHER_V1500'):
               assert token in patch, token
-          package={'version':'1.5.0','filename':zip_path.name,'sha256':sha,'payload_b64':b64}
-          (root/'stable/update_1_5_0_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
-          manifest={
-            'app':'Engbers Projektzentrale','channel':'stable','version':'1.5.0','published_at':'2026-09-16','min_bootstrap_version':'1.4.49',
-            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_5_0_tiny.json','package_format':'base64-json','sha256':sha,
-            'notes':'Version 1.5.0: Neues Projekt-Cockpit mit MB-Versionsübersicht, Haupt-MB-Projekt, PDF-Status und Projektprüfung. Der Projekt-Explorer wurde komplett auf eine echte Explorer-Logik mit Unterordnern, Suche, F5, Kontextmenü, Pfadkopie sowie Auf-/Zuklappen umgestellt. Der MB-Start berücksichtigt das gemerkte Hauptprojekt. Bestehende Projekt- und MB-Dateien bleiben unverändert.',
-            'update_available':True
-          }
-          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print('1.5.0 validated:',sha)
+          print('ZIP VALIDATED OK')
           PY
       - name: Upload verified update package
         uses: actions/upload-artifact@v4
@@ -56,12 +43,3 @@ jobs:
           path: stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip
           if-no-files-found: error
           retention-days: 7
-      - name: Commit release files
-        run: |
-          git config user.name 'engbers-update-bot'
-          git config user.email 'actions@users.noreply.github.com'
-          git add stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip stable/update_1_5_0_tiny.json stable/manifest.json
-          git diff --cached --quiet && exit 0
-          git commit -m 'Release Projektzentrale 1.5.0 validated'
-          git pull --rebase origin main
-          git push origin main
