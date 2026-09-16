@@ -19,7 +19,6 @@ jobs:
           import json, base64, zipfile, io, pathlib
           out=pathlib.Path('debug'); out.mkdir(exist_ok=True)
           for rel in [
-              'stable/update_1_4_4_tiny.json',
               'stable/update_1_4_5_tiny.json',
               'stable/update_1_4_6_tiny.json',
               'stable/update_1_4_7_tiny.json',
@@ -28,7 +27,11 @@ jobs:
           ]:
               j=json.loads(pathlib.Path(rel).read_text())
               b=j['payload_b64'].strip(); b += '=' * ((4-len(b)%4)%4)
-              z=zipfile.ZipFile(io.BytesIO(base64.b64decode(b)))
+              try:
+                  z=zipfile.ZipFile(io.BytesIO(base64.b64decode(b)))
+              except zipfile.BadZipFile:
+                  print('skip legacy non-zip',rel)
+                  continue
               for name in z.namelist():
                   if name.endswith('.py') or name.endswith('.cmd'):
                       (out/pathlib.Path(name).name).write_bytes(z.read(name))
@@ -40,4 +43,5 @@ jobs:
           git add debug/
           git diff --cached --quiet && exit 0
           git commit -m 'Extract update patch sources for inspection'
-          git push
+          git pull --rebase origin main
+          git push origin main
