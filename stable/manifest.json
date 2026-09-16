@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.32",
+  "version": "1.4.33",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.31",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_32_tiny.json",
+  "min_bootstrap_version": "1.4.32",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_33_tiny.json",
   "package_format": "base64-json",
-  "sha256": "8b23a193964962a443f8446399b3a4770e3aa70e6c8313c7bb03fd305b2bbf8e",
-  "notes": "Version 1.4.32: Status und Positionsnotiz werden nach dem Speichern sofort im sichtbaren Bearbeitungsblock aktualisiert. Ein erneutes Anklicken der Position ist nicht mehr nötig. Die gespeicherte Positionsakte bleibt unverändert erhalten.",
+  "sha256": "74798f7e824ea67235f303c616da4d6764c5d79e241fd2be81f25c45429f8400",
+  "notes": "Version 1.4.33: Bearbeitungsstatus steht direkt in der Positionsliste, kann separat gefiltert werden und wird mit Stückzahlen zusammengefasst. Statusänderungen aktualisieren Detail, Liste, Filter und Zähler sofort; die aktuelle Position bleibt soweit sichtbar ausgewählt.",
   "update_available": true
 }
