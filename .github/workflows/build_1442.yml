@@ -1,0 +1,69 @@
+name: Build Engbers Projektzentrale 1.4.42
+on:
+  push:
+    paths:
+      - 'build/1442/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and validate update
+        run: |
+          python -m py_compile build/1442/patch_1442.py
+          python - <<'PY'
+          import importlib.util, pathlib
+          p=pathlib.Path('build/1442/patch_1442.py')
+          spec=importlib.util.spec_from_file_location('p1442',p)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          src='''APP_VERSION = "1.4.40"\nclass Demo:\n    def global_search(self):\n        title = "Suchergebnisse"\n        result_tree = ttk.Treeview(None, columns=("bereich","treffer"))\n        result_tree.bind("<Double-1>", lambda e: None)\n        return result_tree\n'''
+          out,ok=m._patch_search_end_binding(src)
+          assert ok
+          assert 'PZ_SEARCH_DIRECT_V1442' in out
+          assert "self.project_id=_pid" in out
+          assert "self.show_dashboard()" in out
+          assert "result_tree.bind('<Double-1>',_pz_1442_open_project)" in out
+          compile(out,'synthetic_1442.py','exec')
+          print('synthetic 1.4.42 test OK')
+          PY
+          python - <<'PY'
+          import pathlib, zipfile, hashlib, base64, json
+          root=pathlib.Path('.')
+          patch=root/'build/1442/patch_1442.py'
+          starter=root/'build/1442/START_PROJEKTZENTRALE.cmd'
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_42_TINY.zip'
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,'patch_1442.py')
+              z.write(starter,'START_PROJEKTZENTRALE.cmd')
+          data=zip_path.read_bytes(); sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.42','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_42_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.42','published_at':'2026-09-16',
+              'min_bootstrap_version':'1.4.38','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_42_tiny.json',
+              'package_format':'base64-json','sha256':sha,
+              'notes':'Version 1.4.42: Reparatur der globalen Projektsuche. Die neue Bindung wird direkt am Ende des realen Suchfensters eingebaut und ersetzt ältere Doppelklick-Handler. Der Projektwechsel erfolgt direkt über die interne Projektverwaltung und lädt anschließend stabil die Projektübersicht.',
+              'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          chk=json.loads((root/'stable/update_1_4_42_tiny.json').read_text(encoding='utf-8'))
+          raw=base64.b64decode(chk['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_42_TINY.zip stable/update_1_4_42_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.42'
+          git pull --rebase --autostash origin main
+          git push origin main
