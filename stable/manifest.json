@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.45",
+  "version": "1.4.46",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.44",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_45_tiny.json",
+  "min_bootstrap_version": "1.4.45",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_46_tiny.json",
   "package_format": "base64-json",
-  "sha256": "040f7831cf97cce5a03199831a090f251a362192a104f480333c3e9f9785bc43",
-  "notes": "Version 1.4.45: Projekt-Explorer öffnet Dateien zuverlässig per Doppelklick/Enter und kann sie im Windows-Explorer zeigen. Statik PDF ist ein eigener Unterbereich mit PDF-Liste, Suche und Ordnerzugriff. Die Positionsakte erhält klare Spaltenköpfe und blendet im Einzelprojekt die horizontale Leiste aus. Projektzentrale-Metadaten werden in den versteckten Ordner .engbers migriert. Die globale Suche findet zusätzlich indexierte Projektdateien und öffnet deren Originale.",
+  "sha256": "1200a2d0bcb5fe56163df2d182044d02971432fcf8023e311d5c0df1936cfb93",
+  "notes": "Version 1.4.46: Stabilitätsfix für Statik. Der versteckte .engbers-Ordner wird nicht mehr über wiederholt gestartete attrib-Prozesse markiert; dadurch verschwindet das Fensterflackern beim Öffnen der Statik. Alle Funktionen aus 1.4.45 bleiben erhalten.",
   "update_available": true
 }
