@@ -1,0 +1,61 @@
+name: Build Engbers Projektzentrale 1.7.1
+on:
+  push:
+    paths:
+      - 'build/1701/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Word output fix
+        run: |
+          python -m py_compile build/1701/patch_1701.py build/1701/post_update.py
+          python - <<'PY'
+          from pathlib import Path
+          src=Path('build/1700/wordforms_v1700.py').read_text(encoding='utf-8')
+          p=Path('build/1701/patch_1701.py').read_text(encoding='utf-8')
+          ns={}
+          exec(compile(p,'patch_1701.py','exec'),ns)
+          for name in ('OLD_FILL','OLD_RETURN','OLD_SELECTED','OLD_OPEN','OLD_BUTTON'):
+              needle=ns[name]
+              assert needle in src, name
+          out=src.replace(ns['OLD_FILL'],ns['NEW_FILL'],1).replace(ns['OLD_RETURN'],ns['NEW_RETURN'],1).replace(ns['OLD_SELECTED'],ns['NEW_SELECTED'],1).replace(ns['OLD_OPEN'],ns['NEW_OPEN'],1).replace(ns['OLD_BUTTON'],ns['NEW_BUTTON'],1)
+          compile(out,'wordforms_v1700.py','exec')
+          assert 'PZ_WORD_OUTPUT_DIRECT_V1701' in out
+          assert "AUSGEFÜLLTE DATEI ÖFFNEN" in out
+          assert 'os.startfile(str(path))' in out
+          assert 'return success' in out
+          print('1.7.1 Word output patch validation OK')
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_1_TINY.zip'
+          payload=[('build/1701/patch_1701.py','patch_1701.py'),('build/1701/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.7.1','published_at':'2026-09-16','min_bootstrap_version':'1.7.0','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_1_TINY.zip?rev=1701-word-output-direct','package_format':'zip','sha256':sha,'notes':'Version 1.7.1: Word-Ausgabe-Fix. Bei MARKIERTE AUSFÜLLEN wird die erzeugte Kopie direkt geöffnet; AUSGEFÜLLTE DATEI ÖFFNEN öffnet ausdrücklich die Datei unter Bescheinigungen/Ausgefüllt. Die Feldanzahl zählt nur tatsächlich geschriebene Formularfelder. Originale bleiben unverändert.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_7_1_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.7.1 Word output fix'
+          git pull --rebase origin main
+          git push origin main
