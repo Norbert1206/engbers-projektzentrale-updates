@@ -15,11 +15,14 @@ jobs:
       - name: Extract and inspect legacy app
         run: |
           python - <<'PY'
-          import base64, subprocess, zipfile, io, ast
-          raw=subprocess.check_output(['git','show','origin/release-1.3.2:stable/Engbers_Projektzentrale_UPDATE_1_3_1.zip.b64'])
-          data=base64.b64decode(raw)
-          with zipfile.ZipFile(io.BytesIO(data)) as z:
-              src=z.read('app.py').decode('utf-8')
+          import subprocess, zipfile, io, ast
+          raw=subprocess.check_output(['git','show','origin/release-1.3.2:stable/Engbers_Projektzentrale_UPDATE_1_3_2_MIN.zip'])
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              print('ZIP_NAMES',z.namelist())
+              candidates=[n for n in z.namelist() if n.lower().endswith('app.py')]
+              if not candidates:
+                  raise SystemExit('No app.py in legacy MIN zip')
+              src=z.read(candidates[0]).decode('utf-8')
           print('APP_LEN',len(src))
           tree=ast.parse(src)
           for node in ast.walk(tree):
