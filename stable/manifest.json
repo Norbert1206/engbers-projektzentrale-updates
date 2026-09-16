@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "published_at": "2026-09-16",
   "min_bootstrap_version": "1.5.1",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_2_TINY.zip?rev=1502-safe-1",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_3_TINY.zip?rev=1503-safe-2",
   "package_format": "zip",
-  "sha256": "7663f47d7531db65f08da48e17a6a67b2cf836c8c9e9d5a6e610915f2ba6c54e",
-  "notes": "Version 1.5.2: Stabilitäts-Hotfix für den Projekt-Explorer. Keine Tkinter-Aufrufe mehr aus Hintergrundthreads; Ordner werden in kleinen Portionen über die normale Ereignisschleife geladen. Projektweite Suche arbeitet ebenfalls ohne Worker-Thread. Das Öffnen von Dateien wird zusätzlich abgefangen und bei Fehlern protokolliert. Sonstige Funktionen aus 1.5.0/1.5.1 bleiben unverändert.",
+  "sha256": "2bafa826ed44c179039fb2c1624982242bc1423574501982aaadab2772335624",
+  "notes": "Version 1.5.3: Repariert den Projekt-Explorer auf Basis des echten 1.5.1-Stands und entfernt die Tkinter-Worker-Threads. Zusätzlich wird der Start-/Updateweg umgestellt: neuer unsichtbarer Launcher, keine dauerhaft offenen DOS-Fenster mehr. 1.5.3 ersetzt den nicht wirksam gestarteten 1.5.2-Hotfix.",
   "update_available": true
 }
