@@ -34,35 +34,37 @@ def _patch_search_click(s):
         return s, False
 
     block=m.group(0)
-    # Treeview-Variablenname aus der ersten .selection()-Zeile ermitteln.
-    tm=re.search(r"(?m)^[ \t]*_sel=(?P<tree>[A-Za-z_]\w*)\.selection\(\)",block)
+    # Treeview-Variablenname und tatsächliche Einrückung aus der selection()-Zeile ermitteln.
+    tm=re.search(r"(?m)^(?P<bi>[ \t]+)_sel=(?P<tree>[A-Za-z_]\w*)\.selection\(\)\n",block)
     if not tm:
         return s, False
     tree=tm.group('tree')
+    bi=tm.group('bi')
+    ci=bi+'    '
 
     old=(
-        f"        _sel={tree}.selection()\n"
-        f"        if not _sel:\n"
-        f"            return\n"
-        f"        _vals={tree}.item(_sel[0],'values')\n"
+        f"{bi}_sel={tree}.selection()\n"
+        f"{bi}if not _sel:\n"
+        f"{ci}return\n"
+        f"{bi}_vals={tree}.item(_sel[0],'values')\n"
     )
     if old not in block:
         return s, False
 
     new=(
-        f"        # PZ_SEARCH_CLICK_V1437: immer die tatsächlich angeklickte Zeile verwenden.\n"
-        f"        _iid=''\n"
-        f"        if _evt is not None:\n"
-        f"            try:_iid={tree}.identify_row(_evt.y)\n"
-        f"            except Exception:_iid=''\n"
-        f"        if not _iid:\n"
-        f"            _sel={tree}.selection()\n"
-        f"            if _sel:_iid=_sel[0]\n"
-        f"        if not _iid:\n"
-        f"            return\n"
-        f"        try:{tree}.selection_set(_iid)\n"
-        f"        except Exception:pass\n"
-        f"        _vals={tree}.item(_iid,'values')\n"
+        f"{bi}# PZ_SEARCH_CLICK_V1437: immer die tatsächlich angeklickte Zeile verwenden.\n"
+        f"{bi}_iid=''\n"
+        f"{bi}if _evt is not None:\n"
+        f"{ci}try:_iid={tree}.identify_row(_evt.y)\n"
+        f"{ci}except Exception:_iid=''\n"
+        f"{bi}if not _iid:\n"
+        f"{ci}_sel={tree}.selection()\n"
+        f"{ci}if _sel:_iid=_sel[0]\n"
+        f"{bi}if not _iid:\n"
+        f"{ci}return\n"
+        f"{bi}try:{tree}.selection_set(_iid)\n"
+        f"{bi}except Exception:pass\n"
+        f"{bi}_vals={tree}.item(_iid,'values')\n"
     )
     block2=block.replace(old,new,1)
     if block2==block:
