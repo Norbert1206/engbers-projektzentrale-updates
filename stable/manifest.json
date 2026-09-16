@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.6.7",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_8_TINY.zip?rev=1608-architect-bauort",
+  "min_bootstrap_version": "1.6.8",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_9_TINY.zip?rev=1609-bauort-flex",
   "package_format": "zip",
-  "sha256": "d1013bf4951a1741e3aaa3d82d4d44e26e49a757b2dcf96e62a9c127b6a70755",
-  "notes": "Version 1.6.8: Bauort wird direkt aus dem Architekten-Plankopf gelesen. Allplan/CAD-PDFs koennen die sichtbare Bauort-Zeile intern in mehrere Textfragmente zerlegen; diese werden jetzt wieder zu einer Adresse zusammengesetzt. Die Bauherrenadresse bleibt als Bauort ausgeschlossen.",
+  "sha256": "40491a086185b30929bfe5e2592b4932eca70c92794c56c6f521321621cd91e3",
+  "notes": "Version 1.6.9: Bauort im Architekten-Plankopf wird sowohl mit als auch ohne Hausnummer erkannt. Beispiele: Bayernstr. 48429 Rheine sowie Bayernstr. 4, 48429 Rheine. Die Bauherrenadresse bleibt als Bauort ausgeschlossen.",
   "update_available": true
 }
