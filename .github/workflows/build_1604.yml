@@ -1,0 +1,57 @@
+name: Build Engbers Projektzentrale 1.6.4
+on:
+  push:
+    paths:
+      - 'build/1604/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate sources
+        run: |
+          python -m py_compile build/1604/patch_1604.py build/1604/masterdata_v1604.py build/1604/post_update.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('build/1604/masterdata_v1604.py').read_text(encoding='utf-8')
+          for token in ('BAUVORHABEN','BAUHERR','ARCHITEKT','TRAGWERKSPLANUNG','render_project_masterdata_cards','engineer_name'):
+              assert token in p,token
+          q=Path('build/1604/patch_1604.py').read_text(encoding='utf-8')
+          assert 'PZ_MASTERDATA_CARDS_V1604' in q
+          assert 'render_project_masterdata_cards' in q
+          print('1.6.4 card UI sources OK')
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_6_4_TINY.zip'
+          payload=[('build/1604/patch_1604.py','patch_1604.py'),('build/1604/masterdata_v1604.py','masterdata_v1604.py'),('build/1604/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              assert set(z.namelist())=={x[1] for x in payload}
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.6.4','published_at':'2026-09-16','min_bootstrap_version':'1.6.3','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_4_TINY.zip?rev=1604-cards','package_format':'zip','sha256':sha,'notes':'Version 1.6.4: Projektstammdaten werden in Projektakte und Plananalyse als vier übersichtliche Kacheln dargestellt: Bauvorhaben, Bauherr, Architekt und Tragwerksplanung. Alle gespeicherten Adress-, Telefon- und E-Mail-Felder sind direkt sichtbar. Die eigenen Tragwerksplanerdaten stammen verbindlich aus dem Büroprofil und werden nicht mehr durch PDF-Treffer überschrieben.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert hashlib.sha256(zip_path.read_bytes()).hexdigest()==manifest['sha256']
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_6_4_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.6.4 masterdata cards'
+          git pull --rebase origin main
+          git push origin main
