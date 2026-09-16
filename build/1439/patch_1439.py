@@ -1,6 +1,7 @@
 from pathlib import Path
 import datetime
 import py_compile
+import re
 import shutil
 
 APP=Path(__file__).resolve().parent/'app.py'
@@ -20,14 +21,6 @@ def _patch_search_order(s):
     if 'PZ_SEARCH_ORDER_V1439' in s:
         return s, True
 
-    old="""        if _pz_1438_activate_project(str(_vals[1]).strip()):
-            try:{TOP}.after(70,{TOP}.destroy)
-            except Exception:pass
-            return 'break'
-"""
-
-    # top-level variable is generated into the installed app. Detect it from the
-    # existing 1.4.38 function body instead of guessing names.
     marker="def _pz_1438_open_project(_evt=None):"
     start=s.find(marker)
     if start<0:
@@ -37,43 +30,54 @@ def _patch_search_order(s):
         return s, False
     block=s[start:end]
 
-    # Find the concrete Toplevel variable from the current destroy call.
-    import re
-    m=re.search(r"try:(?P<top>[A-Za-z_]\w*)\.after\(70,(?P=top)\.destroy\)",block)
+    # Preserve the real indentation from the installed app. The search function
+    # is nested, therefore hard-coded spaces are intentionally avoided here.
+    pat=re.compile(
+        r"(?P<indent>^[ \t]*)if _pz_1438_activate_project\(str\(_vals\[1\]\)\.strip\(\)\):\n"
+        r"(?P=indent)[ \t]+try:(?P<top>[A-Za-z_]\w*)\.after\(70,(?P=top)\.destroy\)\n"
+        r"(?P=indent)[ \t]+except Exception:pass\n"
+        r"(?P=indent)[ \t]+return 'break'\n",
+        flags=re.M,
+    )
+    m=pat.search(block)
     if not m:
         return s, False
+    indent=m.group('indent')
     top=m.group('top')
-    concrete=old.replace('{TOP}',top)
-    if concrete not in block:
-        return s, False
+    child=indent+'    '
 
-    new=f"""        # PZ_SEARCH_ORDER_V1439: Suchfenster zuerst schließen, dann Projekt wechseln.
-        # Damit ist ein evtl. modales wait_window/grab vollständig beendet, bevor
-        # der Projektwähler sein <<ComboboxSelected>> verarbeitet.
-        _target=str(_vals[1]).strip()
-        try:
-            _main={top}
-            while getattr(_main,'master',None) is not None:
-                _main=_main.master
-        except Exception:
-            _main=None
-        try:{top}.destroy()
-        except Exception:pass
-        def _pz_1439_switch_after_close():
-            try:
-                _pz_1438_activate_project(_target)
-            except Exception:
-                pass
-        try:
-            if _main is not None:
-                _main.after(120,_pz_1439_switch_after_close)
-            else:
-                _pz_1439_switch_after_close()
-        except Exception:
-            _pz_1439_switch_after_close()
-        return 'break'
-"""
-    block2=block.replace(concrete,new,1)
+    new=(
+        indent+"# PZ_SEARCH_ORDER_V1439: Suchfenster zuerst schließen, dann Projekt wechseln.\n"
+        +indent+"# Damit ist ein modales wait_window/grab beendet, bevor der Projektwähler reagiert.\n"
+        +indent+"_target=str(_vals[1]).strip()\n"
+        +indent+"try:\n"
+        +child+f"_main={top}\n"
+        +child+"while getattr(_main,'master',None) is not None:\n"
+        +child+"    _main=_main.master\n"
+        +indent+"except Exception:\n"
+        +child+"_main=None\n"
+        +indent+f"try:{top}.destroy()\n"
+        +indent+"except Exception:pass\n"
+        +indent+"def _pz_1439_switch_after_close():\n"
+        +child+"try:\n"
+        +child+"    _ok=_pz_1438_activate_project(_target)\n"
+        +child+"    if not _ok:\n"
+        +child+"        try:\n"
+        +child+"            from tkinter import messagebox as _pz_mbx\n"
+        +child+"            _pz_mbx.showwarning('Projekt öffnen','Der Projekttreffer wurde erkannt, aber der Projektwähler konnte nicht umgeschaltet werden.')\n"
+        +child+"        except Exception:pass\n"
+        +child+"except Exception:\n"
+        +child+"    pass\n"
+        +indent+"try:\n"
+        +child+"if _main is not None:\n"
+        +child+"    _main.after(120,_pz_1439_switch_after_close)\n"
+        +child+"else:\n"
+        +child+"    _pz_1439_switch_after_close()\n"
+        +indent+"except Exception:\n"
+        +child+"_pz_1439_switch_after_close()\n"
+        +indent+"return 'break'\n"
+    )
+    block2=block[:m.start()]+new+block[m.end():]
     return s[:start]+block2+s[end:], True
 
 
