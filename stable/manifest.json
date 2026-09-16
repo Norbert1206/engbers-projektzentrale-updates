@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.31",
+  "version": "1.4.32",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.30",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_31_tiny.json",
+  "min_bootstrap_version": "1.4.31",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_32_tiny.json",
   "package_format": "base64-json",
-  "sha256": "c905ff5a0136df49a63940f37ef54cba3184b53487a6c32bee66392e7be60e7e",
-  "notes": "Version 1.4.31: Der Positionsstatus wird jetzt über fünf direkt anklickbare Schaltflächen gewählt. Die zusätzliche Bestätigung nach Status- oder Notizspeicherung entfällt; nur Fehler werden noch gemeldet. Die vorhandene Positionsakte bleibt unverändert erhalten.",
+  "sha256": "8b23a193964962a443f8446399b3a4770e3aa70e6c8313c7bb03fd305b2bbf8e",
+  "notes": "Version 1.4.32: Status und Positionsnotiz werden nach dem Speichern sofort im sichtbaren Bearbeitungsblock aktualisiert. Ein erneutes Anklicken der Position ist nicht mehr nötig. Die gespeicherte Positionsakte bleibt unverändert erhalten.",
   "update_available": true
 }
