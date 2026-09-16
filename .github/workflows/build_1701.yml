@@ -22,7 +22,7 @@ jobs:
           from pathlib import Path
           src=Path('build/1700/wordforms_v1700.py').read_text(encoding='utf-8')
           p=Path('build/1701/patch_1701.py').read_text(encoding='utf-8')
-          ns={}
+          ns={'__file__':'build/1701/patch_1701.py','__name__':'validation'}
           exec(compile(p,'patch_1701.py','exec'),ns)
           for name in ('OLD_FILL','OLD_RETURN','OLD_SELECTED','OLD_OPEN','OLD_BUTTON'):
               needle=ns[name]
