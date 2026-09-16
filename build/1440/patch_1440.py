@@ -30,7 +30,6 @@ def _patch_search(s):
         return s, False
     block=s[start:end]
 
-    # Treeview-Variable aus identify_row()/selection()-Aufrufen ableiten.
     tm=re.search(r'(?P<tree>[A-Za-z_]\w*)\.identify_row\(_evt\.y\)',block)
     if not tm:
         tm=re.search(r'(?P<tree>[A-Za-z_]\w*)\.selection\(\)',block)
@@ -38,7 +37,6 @@ def _patch_search(s):
         return s, False
     tree=tm.group('tree')
 
-    # Toplevel-Variable aus der vorhandenen Schließen-Logik ermitteln.
     top=None
     for pat in (
         r'(?P<top>[A-Za-z_]\w*)\.after\(70,(?P=top)\.destroy\)',
@@ -50,9 +48,9 @@ def _patch_search(s):
     if not top:
         return s, False
 
-    # Einrückung der verschachtelten Funktion beibehalten.
     line_start=s.rfind('\n',0,start)+1
-    indent=re.match(r'^[ \t]*',s[line_start:start]).group(0)
+    end_line_start=s.rfind('\n',0,end)+1
+    indent=s[line_start:start]
     body=f'''def _pz_1438_open_project(_evt=None):
     # PZ_SEARCH_NAV_V1440
     # Suchfenster vollständig schließen und erst danach den Projektwähler
@@ -164,7 +162,7 @@ def _patch_search(s):
 
 '''
     new_block=''.join((indent+ln if ln.strip() else ln) for ln in body.splitlines(keepends=True))
-    return s[:start]+new_block+s[end:], True
+    return s[:line_start]+new_block+s[end_line_start:], True
 
 
 def main():
@@ -195,7 +193,6 @@ def main():
     except Exception as exc:
         report.append('Projektsuche/Doppelklick: übersprungen ('+str(exc)+')')
 
-    # Wichtig: optionale Suchlogik darf den Versionswechsel nicht mehr blockieren.
     _compile_text(s,'app.py.1440.final.check')
     stamp=datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     bak=APP.with_name(f'app.py.vor_1440_{stamp}.bak')
