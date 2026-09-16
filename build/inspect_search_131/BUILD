@@ -1,1 +1,1 @@
-inspect search legacy
+inspect search legacy retry 2
