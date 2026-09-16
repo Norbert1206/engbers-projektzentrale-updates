@@ -4,8 +4,8 @@
   "version": "1.5.0",
   "published_at": "2026-09-16",
   "min_bootstrap_version": "1.4.49",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip?rev=1500b",
-  "package_format": "zip",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_5_0_tiny.json?rev=1500c",
+  "package_format": "base64-json",
   "sha256": "b62fa41c74272c39910244e9705a5002395564f7baa716afc2df5eb25262b03f",
   "notes": "Version 1.5.0: Neues Projekt-Cockpit mit MB-Versionsübersicht, Haupt-MB-Projekt, PDF-Status und Projektprüfung. Der Projekt-Explorer wurde komplett auf eine echte Explorer-Logik mit Unterordnern, Suche, F5, Kontextmenü, Pfadkopie sowie Auf-/Zuklappen umgestellt. Der MB-Start berücksichtigt das gemerkte Hauptprojekt. Bestehende Projekt- und MB-Dateien bleiben unverändert.",
   "update_available": true
