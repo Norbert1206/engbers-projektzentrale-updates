@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.6.0",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_1_TINY.zip?rev=1601-titleblock",
+  "min_bootstrap_version": "1.6.1",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_2_TINY.zip?rev=1602-fitz",
   "package_format": "zip",
-  "sha256": "e404fc272754f3fda6866f57b393ddc7649ed4536bbb8a0a36ad96afb287f33d",
-  "notes": "Version 1.6.1: Stammdatenerkennung deutlich erweitert. Architektenplaene werden nicht mehr nur als normaler Text gelesen, sondern anhand der Textkoordinaten im Plankopf ausgewertet. Bauvorhaben, Bauort, Bauherr und Anschrift werden raeumlich den Beschriftungen zugeordnet. Architektenkontakt wird aus dem Plankopf erkannt; Statik-PDFs duerfen nur fehlende Werte ergaenzen. Originaldateien bleiben unveraendert.",
+  "sha256": "f57adf3496bcaceac5d6a90382e155d6dd55ec197d1e9403f1d3e1262884d5b3",
+  "notes": "Version 1.6.2: Allplan- und CAD-PDFs werden fuer die Projektstammdaten zuerst mit PyMuPDF/Fitz ausgewertet. Damit werden die echten Textkoordinaten im Plankopf verwendet; pypdf dient nur noch als Fallback. Das behebt die leeren Stammdaten bei PDFs, bei denen pypdf zwar Text, aber unbrauchbare Koordinaten lieferte. Originaldateien bleiben unveraendert.",
   "update_available": true
 }
