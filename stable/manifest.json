@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.6.2",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_3_TINY.zip?rev=1603-localfitz",
+  "min_bootstrap_version": "1.6.3",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_4_TINY.zip?rev=1604-cards",
   "package_format": "zip",
-  "sha256": "5059cbe5924c68d991d9331a1b52914d9bcea60c07178c8b8e5c032e1fd1ea73",
-  "notes": "Version 1.6.3: PyMuPDF wird beim Update einmalig lokal im Programmordner (_vendor) installiert und anschließend mit demselben Python geprüft, das die Projektzentrale ausführt. Die Stammdatenerkennung verwendet damit zuverlässig echte CAD-/Allplan-Textkoordinaten. Ein fehlender CAD-PDF-Reader wird nicht mehr still durch die ungenauere pypdf-Methode ersetzt, sondern klar gemeldet. Originaldateien bleiben unverändert.",
+  "sha256": "87fcf48ccb3f0a3cb70253ebac587ede4e6e8276c27c98a574121b4169b410a2",
+  "notes": "Version 1.6.4: Projektstammdaten werden in Projektakte und Plananalyse als vier übersichtliche Kacheln dargestellt: Bauvorhaben, Bauherr, Architekt und Tragwerksplanung. Alle gespeicherten Adress-, Telefon- und E-Mail-Felder sind direkt sichtbar. Die eigenen Tragwerksplanerdaten stammen verbindlich aus dem Büroprofil und werden nicht mehr durch PDF-Treffer überschrieben.",
   "update_available": true
 }
