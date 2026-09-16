@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.48",
+  "version": "1.4.49",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.45",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_48_tiny.json",
+  "min_bootstrap_version": "1.4.48",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_49_tiny.json",
   "package_format": "base64-json",
-  "sha256": "dfafe6b2a04de66aef3f33a85d8d9b0b3a6949cd360eb04cd883be5c2c05e38a",
-  "notes": "Version 1.4.48: Reparaturupdate nach dem Syntaxfehler in 1.4.46/1.4.47. Statik öffnet wieder ausschließlich die mb-/Positionsansicht; Statik PDF bleibt separat. Der alte PDF-Schnellzugriff wird aus der normalen Statik entfernt und die .engbers-Markierung erfolgt ohne externen attrib-Prozess.",
+  "sha256": "ff74cff71fe8d293d17f9b32a79364d4a0d19472c5405bdb230dabec8e800e59",
+  "notes": "Version 1.4.49: Statik PDF zeigt die echte Ordnerstruktur wie ein kleiner Explorer, mit Suche, Auf-/Zuklappen, Doppelklick, Windows-Explorer und Pfadkopie. Der Projekt-Explorer erhält Pfadkopie, Auf-/Zuklappen und F5. Die Positionsakte wird in Gesamt- und Einzelansicht ohne horizontales Scrollen kompakter, bekommt ein Rechtsklick-Menü für häufige Positionsaktionen, merkt das zuletzt gewählte mb-Projekt und die globale Projektsuche hält die Statik-PDF-Ansicht beim Projektwechsel.",
   "update_available": true
 }
