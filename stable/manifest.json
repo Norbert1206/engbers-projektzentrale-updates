@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.6.9",
+  "version": "1.7.0",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.6.8",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_9_TINY.zip?rev=1609-bauort-flex",
+  "min_bootstrap_version": "1.6.9",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_0_TINY.zip?rev=1700-word-bescheinigungen",
   "package_format": "zip",
-  "sha256": "40491a086185b30929bfe5e2592b4932eca70c92794c56c6f521321621cd91e3",
-  "notes": "Version 1.6.9: Bauort im Architekten-Plankopf wird sowohl mit als auch ohne Hausnummer erkannt. Beispiele: Bayernstr. 48429 Rheine sowie Bayernstr. 4, 48429 Rheine. Die Bauherrenadresse bleibt als Bauort ausgeschlossen.",
+  "sha256": "68e8e097abcbaf4d49a31ca920c4f4a290af6344448411e8b6115bf88ef2ffb0",
+  "notes": "Version 1.7.0: Word-Bescheinigungen. Die Projektzentrale erkennt DOCX-Dateien im Ordner Bescheinigungen und erzeugt unter Bescheinigungen/Ausgefüllt Kopien mit den zentralen Projektstammdaten. Originaldateien bleiben unverändert. Automatisch gefüllt werden u.a. Bauvorhaben, Bauort, Bauherr, Architekt, Fachplaner sowie Büro-/saSV-Daten; Prüfnummern, Häkchen und Unterschriften bleiben manuell.",
   "update_available": true
 }
