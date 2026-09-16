@@ -15,8 +15,8 @@ jobs:
       - name: Extract and inspect legacy app
         run: |
           python - <<'PY'
-          import base64, pathlib, subprocess, zipfile, io, ast
-          raw=subprocess.check_output(['git','show','release-1.3.2:stable/Engbers_Projektzentrale_UPDATE_1_3_1.zip.b64'])
+          import base64, subprocess, zipfile, io, ast
+          raw=subprocess.check_output(['git','show','origin/release-1.3.2:stable/Engbers_Projektzentrale_UPDATE_1_3_1.zip.b64'])
           data=base64.b64decode(raw)
           with zipfile.ZipFile(io.BytesIO(data)) as z:
               src=z.read('app.py').decode('utf-8')
