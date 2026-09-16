@@ -18,7 +18,14 @@ jobs:
           python - <<'PY'
           import json, base64, zipfile, io, pathlib
           out=pathlib.Path('debug'); out.mkdir(exist_ok=True)
-          for rel in ['stable/update_1_4_7_tiny.json','stable/update_1_4_8_tiny.json','stable/update_1_4_11_tiny.json']:
+          for rel in [
+              'stable/update_1_4_4_tiny.json',
+              'stable/update_1_4_5_tiny.json',
+              'stable/update_1_4_6_tiny.json',
+              'stable/update_1_4_7_tiny.json',
+              'stable/update_1_4_8_tiny.json',
+              'stable/update_1_4_11_tiny.json',
+          ]:
               j=json.loads(pathlib.Path(rel).read_text())
               b=j['payload_b64'].strip(); b += '=' * ((4-len(b)%4)%4)
               z=zipfile.ZipFile(io.BytesIO(base64.b64decode(b)))
