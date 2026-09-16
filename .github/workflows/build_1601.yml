@@ -1,0 +1,61 @@
+name: Build Engbers Projektzentrale 1.6.1
+on:
+  push:
+    paths:
+      - 'build/1601/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate sources
+        run: |
+          python -m py_compile build/1601/patch_1601.py build/1601/masterdata_v1601.py build/1601/post_update.py
+          python - <<'PY'
+          import sys
+          sys.path.insert(0,'build/1600'); sys.path.insert(0,'build/1601')
+          import masterdata_v1601 as m
+          W,H=3344.88,2267.72
+          F=lambda x,y,t:{'page':0,'x':x,'y':y,'text':t,'font':10.0,'W':W,'H':H}
+          fr=[F(2834,320,'Bauherr:'),F(2910,320,'Norbert u. Mariele Werning'),F(2834,295,'Anschrift:'),F(2910,295,'Wehrstr. 39b, 48429 Rheine'),F(2834,267,'Bauvorhaben: Errichtung eines Wohnhauses mit Garage'),F(2834,233,'Bauort: Bayerstr. 4, 48429 Rheine'),F(3076,372,'Dieselstr. 3 48485 Neuenkirchen'),F(3076,397,'Ing.-Büro Architektur Bauunternehmen'),F(2834,391,'Engelshove'),F(3076,358,'Tel 05973-90923-0')]
+          d=m._parse_geometry(fr)
+          assert d['project_title']=='Errichtung eines Wohnhauses mit Garage',d
+          assert d['project_zip']=='48429' and d['project_city']=='Rheine',d
+          assert 'Werning' in d['client_name'] and d['client_zip']=='48429',d
+          assert d['architect_zip']=='48485',d
+          print('Geometry parser OK')
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_6_1_TINY.zip'
+          payload=[('build/1601/patch_1601.py','patch_1601.py'),('build/1601/masterdata_v1601.py','masterdata_v1601.py'),('build/1601/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              assert set(z.namelist())=={x[1] for x in payload}
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.6.1','published_at':'2026-09-16','min_bootstrap_version':'1.6.0','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_1_TINY.zip?rev=1601-titleblock','package_format':'zip','sha256':sha,'notes':'Version 1.6.1: Stammdatenerkennung deutlich erweitert. Architektenplaene werden nicht mehr nur als normaler Text gelesen, sondern anhand der Textkoordinaten im Plankopf ausgewertet. Bauvorhaben, Bauort, Bauherr und Anschrift werden raeumlich den Beschriftungen zugeordnet. Architektenkontakt wird aus dem Plankopf erkannt; Statik-PDFs duerfen nur fehlende Werte ergaenzen. Originaldateien bleiben unveraendert.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert hashlib.sha256(zip_path.read_bytes()).hexdigest()==manifest['sha256']
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_6_1_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.6.1 title-block recognition'
+          git pull --rebase origin main
+          git push origin main
