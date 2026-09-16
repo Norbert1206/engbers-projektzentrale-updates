@@ -1,0 +1,40 @@
+name: Validate Projektzentrale 1.5.0 release
+on:
+  push:
+    paths:
+      - 'build/1500/VALIDATE'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate published feed and package
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, base64, hashlib, io, zipfile, tempfile, py_compile
+          root=Path('.')
+          manifest=json.loads((root/'stable/manifest.json').read_text(encoding='utf-8'))
+          payload=json.loads((root/'stable/update_1_5_0_tiny.json').read_text(encoding='utf-8'))
+          assert manifest['version']=='1.5.0'
+          assert manifest['package_format']=='base64-json'
+          raw=base64.b64decode(payload['payload_b64'], validate=True)
+          sha=hashlib.sha256(raw).hexdigest()
+          assert sha==payload['sha256']==manifest['sha256'], (sha,payload['sha256'],manifest['sha256'])
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              assert {'patch_1500.py','START_PROJEKTZENTRALE.cmd'} <= names, names
+              with tempfile.TemporaryDirectory() as td:
+                  z.extractall(td)
+                  py_compile.compile(str(Path(td)/'patch_1500.py'), doraise=True)
+                  text=(Path(td)/'patch_1500.py').read_text(encoding='utf-8')
+                  for token in ('1.4.49','1.5.0','PZ_COCKPIT_V1500','PZ_PROJECT_EXPLORER_V1500','PZ_MB_LAUNCHER_V1500','PZ_UPDATE_CACHEBUSTER_V1500'):
+                      assert token in text, token
+          print('VALID 1.5.0',sha,len(raw))
+          PY
