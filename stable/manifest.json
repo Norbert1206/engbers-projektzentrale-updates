@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.5.6",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_0_TINY.zip?rev=1600-masterdata",
+  "min_bootstrap_version": "1.6.0",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_1_TINY.zip?rev=1601-titleblock",
   "package_format": "zip",
-  "sha256": "195433b73b5225eea75740449d7a8e8bc7dcd99311ee8c858a4092746fe94b23",
-  "notes": "Version 1.6.0: Projektstammdaten 2.0. Architektenplaene werden anhand von Ordner und Dateinamen (Grundriss, Ansichten, Schnitte, Ausfuehrungsplan, Bauantrag usw.) priorisiert und im Hintergrund rein lesend ausgewertet. Bauvorhaben, Bauherr, Architekt und Tragwerksplanung erhalten getrennte Adress-, Telefon- und E-Mail-Felder. Erkannte Werte sind nur Vorschlaege und werden erst nach Bestaetigung gespeichert. Originaldateien bleiben unveraendert. Grundlage fuer die kommende automatische Word-Befuellung.",
+  "sha256": "e404fc272754f3fda6866f57b393ddc7649ed4536bbb8a0a36ad96afb287f33d",
+  "notes": "Version 1.6.1: Stammdatenerkennung deutlich erweitert. Architektenplaene werden nicht mehr nur als normaler Text gelesen, sondern anhand der Textkoordinaten im Plankopf ausgewertet. Bauvorhaben, Bauort, Bauherr und Anschrift werden raeumlich den Beschriftungen zugeordnet. Architektenkontakt wird aus dem Plankopf erkannt; Statik-PDFs duerfen nur fehlende Werte ergaenzen. Originaldateien bleiben unveraendert.",
   "update_available": true
 }
