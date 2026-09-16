@@ -1,0 +1,57 @@
+name: Build Engbers Projektzentrale 1.4.33
+on:
+  push:
+    paths:
+      - 'build/1433/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and validate update
+        run: |
+          python -m py_compile build/1433/patch_1433.py
+          python - <<'PY'
+          import pathlib, zipfile, hashlib, base64, json
+          root=pathlib.Path('.')
+          patch=root/'build/1433/patch_1433.py'
+          starter=root/'build/1433/START_PROJEKTZENTRALE.cmd'
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_33_TINY.zip'
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,'patch_1433.py')
+              z.write(starter,'START_PROJEKTZENTRALE.cmd')
+          data=zip_path.read_bytes()
+          sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.33','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_33_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.33','published_at':'2026-09-16',
+              'min_bootstrap_version':'1.4.32','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_33_tiny.json',
+              'package_format':'base64-json','sha256':sha,
+              'notes':'Version 1.4.33: Bearbeitungsstatus steht direkt in der Positionsliste, kann separat gefiltert werden und wird mit Stückzahlen zusammengefasst. Statusänderungen aktualisieren Detail, Liste, Filter und Zähler sofort; die aktuelle Position bleibt soweit sichtbar ausgewählt.',
+              'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          again=json.loads((root/'stable/update_1_4_33_tiny.json').read_text(encoding='utf-8'))
+          raw=base64.b64decode(again['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          with zipfile.ZipFile(zip_path) as z:
+              assert set(z.namelist())=={'patch_1433.py','START_PROJEKTZENTRALE.cmd'}
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_33_TINY.zip stable/update_1_4_33_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.33'
+          git pull --rebase origin main
+          git push origin main
