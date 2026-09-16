@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.30",
+  "version": "1.4.31",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.29",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_30_tiny.json",
+  "min_bootstrap_version": "1.4.30",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_31_tiny.json",
   "package_format": "base64-json",
-  "sha256": "7630c531f9d0539a6a03d013bba48c8b47428c25216431f884b3eb11788a1d3c",
-  "notes": "Version 1.4.30: Die Positionsakte erhält mehrere Arbeitsschritte auf einmal: Dateien können dauerhaft mit der exakten mb-Position verknüpft und wieder gelöst werden, jede Position bekommt einen Bearbeitungsstatus sowie eine kurze Notiz. Alles wird projektbezogen in einer eigenen Projektzentrale-Metadatei gespeichert; mb-Daten bleiben unverändert.",
+  "sha256": "c905ff5a0136df49a63940f37ef54cba3184b53487a6c32bee66392e7be60e7e",
+  "notes": "Version 1.4.31: Der Positionsstatus wird jetzt über fünf direkt anklickbare Schaltflächen gewählt. Die zusätzliche Bestätigung nach Status- oder Notizspeicherung entfällt; nur Fehler werden noch gemeldet. Die vorhandene Positionsakte bleibt unverändert erhalten.",
   "update_available": true
 }
