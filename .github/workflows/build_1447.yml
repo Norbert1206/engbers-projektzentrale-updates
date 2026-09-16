@@ -1,0 +1,56 @@
+name: Build Engbers Projektzentrale 1.4.47
+on:
+  push:
+    paths:
+      - 'build/1447/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate patch
+        run: |
+          python -m py_compile build/1447/patch_1447.py
+          python - <<'PY'
+          from pathlib import Path
+          import ast
+          txt=Path('build/1447/patch_1447.py').read_text(encoding='utf-8')
+          for marker in ('PZ_STATIK_NAV_SEPARATE_V1447','← ZURÜCK ZUR STATIK','GetFileAttributesW','SetFileAttributesW'):
+              assert marker in txt, marker
+          ast.parse(txt)
+          print('1.4.47 patch validation OK')
+          PY
+      - name: Build update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,base64,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_47_TINY.zip'
+          payload=[('build/1447/patch_1447.py','patch_1447.py'),('build/1447/START_PROJEKTZENTRALE.cmd','START_PROJEKTZENTRALE.cmd')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          data=zip_path.read_bytes(); sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.47','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_47_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.47','published_at':'2026-09-16','min_bootstrap_version':'1.4.45','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_47_tiny.json','package_format':'base64-json','sha256':sha,'notes':'Version 1.4.47: Reparatur der Statik-Navigation. Der Hauptpunkt Statik öffnet wieder ausschließlich die normale Statikansicht mit mb-Projekten und Positionsakte. Statik PDF bleibt ein separater Unterbereich und erhält einen sichtbaren Zurück-zur-Statik-Button. Zusätzlich wird das Fensterflackern aus 1.4.45 beseitigt.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          raw=base64.b64decode(json.loads((root/'stable/update_1_4_47_tiny.json').read_text(encoding='utf-8'))['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_47_TINY.zip stable/update_1_4_47_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.47'
+          git pull --rebase origin main
+          git push origin main
