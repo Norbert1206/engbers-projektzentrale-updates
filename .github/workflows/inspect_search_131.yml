@@ -12,7 +12,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: true
       - name: Extract and inspect legacy app
         shell: bash
         run: |
@@ -20,13 +19,13 @@ jobs:
           rm -rf /tmp/legacy132
           git worktree add /tmp/legacy132 origin/release-1.3.2
           cd /tmp/legacy132
-          git lfs pull
           python - <<'PY'
-          import pathlib, zipfile, ast
+          import pathlib, zipfile, ast, base64, io
           p=pathlib.Path('stable/Engbers_Projektzentrale_UPDATE_1_3_2_MIN.zip')
           print('FILE_SIZE',p.stat().st_size if p.exists() else -1)
           try:
-              with zipfile.ZipFile(p) as z:
+              raw=base64.b64decode(p.read_bytes(),validate=False)
+              with zipfile.ZipFile(io.BytesIO(raw)) as z:
                   print('ZIP_NAMES',z.namelist())
                   candidates=[n for n in z.namelist() if n.lower().endswith('app.py')]
                   if not candidates:
@@ -42,11 +41,11 @@ jobs:
                   low=seg.casefold()
                   if 'suchergebnisse' in low or ('combobox' in low and ('project' in low or 'projekt' in low)):
                       print('\n===== FUNCTION',node.name,'lines',node.lineno,getattr(node,'end_lineno',None),'=====')
-                      print(seg[:24000])
+                      print(seg[:30000])
           print('\n===== PROJECT/SEARCH LINES =====')
           for i,line in enumerate(src.splitlines(),1):
               low=line.casefold()
-              if any(x in low for x in ('combobox','suchergebnisse','project_var','projekt_var','current_project','selected_project','projekt gewählt','projekt gewechselt')):
+              if any(x in low for x in ('combobox','suchergebnisse','project_var','projekt_var','current_project','selected_project','projekt gewählt','projekt gewechselt','load_project','select_project')):
                   print(f'{i}: {line}')
           PY
           exit 0
