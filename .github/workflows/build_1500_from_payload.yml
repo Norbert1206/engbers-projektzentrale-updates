@@ -49,6 +49,13 @@ jobs:
           (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print('1.5.0 validated:',sha)
           PY
+      - name: Upload verified update package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Engbers_Projektzentrale_UPDATE_1_5_0_TINY
+          path: stable/Engbers_Projektzentrale_UPDATE_1_5_0_TINY.zip
+          if-no-files-found: error
+          retention-days: 7
       - name: Commit release files
         run: |
           git config user.name 'engbers-update-bot'
