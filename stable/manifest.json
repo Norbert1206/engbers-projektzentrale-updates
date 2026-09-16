@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.7.0",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_1_TINY.zip?rev=1701-word-output-direct",
+  "min_bootstrap_version": "1.7.1",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_2_TINY.zip?rev=1702-checkbox-date-pdf",
   "package_format": "zip",
-  "sha256": "609d996638a6b10dfbd7dfc598595ceba5692943efe156f8262a268f692967bb",
-  "notes": "Version 1.7.1: Word-Ausgabe-Fix. Bei MARKIERTE AUSFÜLLEN wird die erzeugte Kopie direkt geöffnet; AUSGEFÜLLTE DATEI ÖFFNEN öffnet ausdrücklich die Datei unter Bescheinigungen/Ausgefüllt. Die Feldanzahl zählt nur tatsächlich geschriebene Formularfelder. Originale bleiben unverändert.",
+  "sha256": "16de680e3e009cb046be96d99b85ed6fff64f2216ba04ee62f709ed4579ed965",
+  "notes": "Version 1.7.2: Bescheinigungen erweitert. Das erste fachliche Kontrollkästchen wird automatisch markiert, Ort und Tagesdatum werden im Unterschriftsbereich gesetzt und zu jeder ausgefüllten Word-Datei wird automatisch eine PDF-Kopie über Microsoft Word erzeugt. Word und PDF liegen unter Bescheinigungen/Ausgefüllt. Stempel und Unterschrift werden erst nach bewusster Freigabe und Hinterlegung der echten Grafik ergänzt.",
   "update_available": true
 }
