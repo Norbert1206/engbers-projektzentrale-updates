@@ -5,19 +5,8 @@ import shutil
 
 APP=Path(__file__).resolve().parent/'app.py'
 
-OLD_HIDE="""                if os.name=='nt':
-                    try:subprocess.run(['attrib','+h',str(meta)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False)
-                    except Exception:pass
-"""
-NEW_HIDE="""                if os.name=='nt':
-                    try:
-                        _k32=__import__('ctypes').windll.kernel32
-                        _attrs=_k32.GetFileAttributesW(str(meta))
-                        if _attrs not in (-1, 0xFFFFFFFF) and not (_attrs & 0x2):
-                            _k32.SetFileAttributesW(str(meta), _attrs | 0x2)
-                    except Exception:
-                        pass
-"""
+OLD_ATTRIB="subprocess.run(['attrib','+h',str(meta)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False)"
+NEW_ATTRIB="__import__('ctypes').windll.kernel32.SetFileAttributesW(str(meta), __import__('ctypes').windll.kernel32.GetFileAttributesW(str(meta)) | 0x2)"
 
 
 def compile_text(text,name):
@@ -31,23 +20,13 @@ def compile_text(text,name):
 
 
 def transform(s):
-    # 1) Die fehlerhafte 1.4.46/1.4.47-Ersetzung wird nicht mehr benutzt.
-    # Statt nur den subprocess-Aufruf zu ersetzen, ersetzen wir den kompletten try-Block.
-    if OLD_HIDE in s:
-        s=s.replace(OLD_HIDE,NEW_HIDE,1)
-
-    # Falls eine teilweise 1.4.46/1.4.47-Fassung vorhanden ist, auf den sicheren Block zurückführen.
-    broken="""                if os.name=='nt':
-                    try:_attrs=__import__('ctypes').windll.kernel32.GetFileAttributesW(str(meta))
-                    if _attrs not in (-1, 0xFFFFFFFF) and not (_attrs & 0x2):
-                        __import__('ctypes').windll.kernel32.SetFileAttributesW(str(meta), _attrs | 0x2)
-                    except Exception:pass
-"""
-    if broken in s:
-        s=s.replace(broken,NEW_HIDE,1)
+    # 1) Fensterflackern sicher beseitigen. Wichtig: nur der eine Ausdruck in der
+    # bestehenden einzeiligen try-Anweisung wird ersetzt; dadurch bleibt die Syntax gültig.
+    if OLD_ATTRIB in s:
+        s=s.replace(OLD_ATTRIB,NEW_ATTRIB,1)
 
     # 2) Alten Statik-PDF-Schnellzugriff aus der normalen Statikseite entfernen.
-    # Statik PDF hat seit 1.4.45 einen eigenen Unterbereich und soll die mb-Ansicht nicht mehr beeinflussen.
+    # Statik PDF hat seit 1.4.45 einen eigenen Unterbereich und soll die mb-Ansicht nicht beeinflussen.
     qstart=s.find('        # 1.4.35: Statik-PDF Schnellzugriff. Nur lesender Zugriff auf vorhandene PDFs.\n')
     qend=s.find('        # Baugrund / Bodengutachten:',qstart) if qstart>=0 else -1
     if qstart>=0 and qend>qstart:
@@ -99,7 +78,7 @@ def transform(s):
 """,1)
 
     # Sicherheitsprüfungen: kein externer attrib-Prozess, klare Trennung vorhanden.
-    if "subprocess.run(['attrib','+h',str(meta)]" in s:
+    if OLD_ATTRIB in s:
         raise RuntimeError('1.4.48: externer attrib-Prozess ist noch vorhanden.')
     if 'PZ_STATIK_NAV_SEPARATE_V1448' not in s:
         raise RuntimeError('1.4.48: Statik-Hauptnavigation wurde nicht eingebaut.')
