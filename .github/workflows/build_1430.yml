@@ -1,0 +1,57 @@
+name: Build Engbers Projektzentrale 1.4.30
+on:
+  push:
+    paths:
+      - 'build/1430/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and validate update
+        run: |
+          python -m py_compile build/1430/patch_1430.py
+          python - <<'PY'
+          import pathlib, zipfile, hashlib, base64, json
+          root=pathlib.Path('.')
+          patch=root/'build/1430/patch_1430.py'
+          starter=root/'build/1430/START_PROJEKTZENTRALE.cmd'
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_30_TINY.zip'
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,'patch_1430.py')
+              z.write(starter,'START_PROJEKTZENTRALE.cmd')
+          data=zip_path.read_bytes()
+          sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.30','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_30_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.30','published_at':'2026-09-16',
+              'min_bootstrap_version':'1.4.29','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_30_tiny.json',
+              'package_format':'base64-json','sha256':sha,
+              'notes':'Version 1.4.30: Die Positionsakte erhält mehrere Arbeitsschritte auf einmal: Dateien können dauerhaft mit der exakten mb-Position verknüpft und wieder gelöst werden, jede Position bekommt einen Bearbeitungsstatus sowie eine kurze Notiz. Alles wird projektbezogen in einer eigenen Projektzentrale-Metadatei gespeichert; mb-Daten bleiben unverändert.',
+              'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          again=json.loads((root/'stable/update_1_4_30_tiny.json').read_text(encoding='utf-8'))
+          raw=base64.b64decode(again['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          with zipfile.ZipFile(zip_path) as z:
+              assert set(z.namelist())=={'patch_1430.py','START_PROJEKTZENTRALE.cmd'}
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_30_TINY.zip stable/update_1_4_30_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.30'
+          git pull --rebase origin main
+          git push origin main
