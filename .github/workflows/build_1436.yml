@@ -1,0 +1,69 @@
+name: Build Engbers Projektzentrale 1.4.36
+on:
+  push:
+    paths:
+      - 'build/1436/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and validate update
+        run: |
+          python -m py_compile build/1436/patch_1436.py
+          python - <<'PY'
+          import importlib.util, pathlib
+          p=pathlib.Path('build/1436/patch_1436.py')
+          spec=importlib.util.spec_from_file_location('p1436',p)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          src='''APP_VERSION = "1.4.35"\nclass Demo:\n    def search(self):\n        top=tk.Toplevel(self)\n        top.title('Suchergebnisse für „Klee“')\n        frame=ttk.Frame(top)\n        result_tree=ttk.Treeview(frame,columns=('bereich','treffer'),show='headings')\n        result_tree.insert('', 'end', values=('Projekt','25-027 · Klee'))\n        result_tree.pack()\n'''
+          out=m._patch_search_navigation(src)
+          assert 'PZ_SEARCH_NAV_V1436' in out
+          assert 'identify_row(_evt.y)' in out
+          assert "event_generate('<<ComboboxSelected>>'" in out
+          compile(out,'synthetic_1436.py','exec')
+          print('synthetic search navigation test OK')
+          PY
+          python - <<'PY'
+          import pathlib, zipfile, hashlib, base64, json
+          root=pathlib.Path('.')
+          patch=root/'build/1436/patch_1436.py'
+          starter=root/'build/1436/START_PROJEKTZENTRALE.cmd'
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_36_TINY.zip'
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,'patch_1436.py')
+              z.write(starter,'START_PROJEKTZENTRALE.cmd')
+          data=zip_path.read_bytes(); sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.36','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_36_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.36','published_at':'2026-09-16',
+              'min_bootstrap_version':'1.4.35','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_36_tiny.json',
+              'package_format':'base64-json','sha256':sha,
+              'notes':'Version 1.4.36: Korrektur der globalen Projektsuche. Ein Doppelklick auf einen Projekttreffer wie „25-027 · Klee“ wird jetzt direkt auf der tatsächlich angeklickten Ergebniszeile ausgewertet; anschließend wird das passende Projekt im Projektwähler gesetzt und geöffnet.',
+              'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          chk=json.loads((root/'stable/update_1_4_36_tiny.json').read_text(encoding='utf-8'))
+          raw=base64.b64decode(chk['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          with zipfile.ZipFile(zip_path) as z:
+              assert set(z.namelist())=={'patch_1436.py','START_PROJEKTZENTRALE.cmd'}
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_36_TINY.zip stable/update_1_4_36_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.36'
+          git pull --rebase origin main
+          git push origin main
