@@ -1,0 +1,78 @@
+name: Build Engbers Projektzentrale 1.7.0
+on:
+  push:
+    paths:
+      - 'build/1700/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Word Bescheinigungen engine
+        run: |
+          python -m py_compile build/1700/patch_1700.py build/1700/post_update.py build/1700/wordforms_v1700.py
+          python - <<'PY'
+          import importlib.util, pathlib, sys, types, tempfile, zipfile
+          root=pathlib.Path('.')
+          stub=types.ModuleType('masterdata_v1604')
+          stub._masterdata_row=lambda app:{}
+          stub._base=types.SimpleNamespace(_env=lambda app:(None,None,'#fff','#fff','#111','#777','#b08b49','#222'))
+          sys.modules['masterdata_v1604']=stub
+          spec=importlib.util.spec_from_file_location('wf',root/'build/1700/wordforms_v1700.py')
+          wf=importlib.util.module_from_spec(spec);spec.loader.exec_module(wf)
+          W='http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+          def field(name='Text1'):
+              return f'''<w:r><w:fldChar w:fldCharType="begin"><w:ffData><w:name w:val="{name}"/><w:textInput/></w:ffData></w:fldChar></w:r><w:r><w:instrText> FORMTEXT </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>xxxxx</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r>'''
+          xml=f'''<?xml version="1.0" encoding="UTF-8"?><w:document xmlns:w="{W}"><w:body>
+          <w:tbl>
+            <w:tr><w:tc><w:p><w:r><w:t>Vor- und Nachname der/des saSV</w:t></w:r></w:p></w:tc><w:tc><w:p>{field('A')}</w:p></w:tc></w:tr>
+            <w:tr><w:tc><w:p><w:r><w:t>Bürobezeichnung</w:t></w:r></w:p></w:tc><w:tc><w:p>{field('B')}</w:p></w:tc></w:tr>
+            <w:tr><w:tc><w:p><w:r><w:t>Anschrift</w:t></w:r></w:p></w:tc><w:tc><w:p>{field('C')}</w:p></w:tc></w:tr>
+            <w:tr><w:tc><w:p><w:r><w:t>1. Genaue Bezeichnung:</w:t></w:r></w:p><w:p>{field('D')}</w:p></w:tc></w:tr>
+            <w:tr><w:tc><w:p><w:r><w:t>2. Bauort:</w:t></w:r></w:p><w:p>{field('E')}</w:p></w:tc></w:tr>
+            <w:tr><w:tc><w:p><w:r><w:t>3. Bauherrschaft</w:t></w:r></w:p><w:p>{field('F')}</w:p><w:p><w:r><w:t>(Name, Vorname)</w:t></w:r></w:p><w:p>{field('G')}</w:p><w:p><w:r><w:t>(Anschrift)</w:t></w:r></w:p></w:tc></w:tr>
+            <w:tr><w:tc><w:p><w:r><w:t>4. Entwurfsverfassende</w:t></w:r></w:p><w:p>{field('H')}</w:p><w:p><w:r><w:t>(Name, Vorname)</w:t></w:r></w:p><w:p>{field('I')}</w:p><w:p><w:r><w:t>(Anschrift)</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>5. Fachplanerin/Fachplaner</w:t></w:r></w:p><w:p>{field('J')}</w:p><w:p><w:r><w:t>(Name, Vorname)</w:t></w:r></w:p><w:p>{field('K')}</w:p><w:p><w:r><w:t>(Anschrift)</w:t></w:r></w:p></w:tc></w:tr>
+          </w:tbl></w:body></w:document>'''
+          tmp=pathlib.Path(tempfile.mkdtemp())
+          src=tmp/'template.docx';dst=tmp/'filled.docx'
+          with zipfile.ZipFile(src,'w') as z:z.writestr('word/document.xml',xml)
+          data=dict(project_title='Errichtung eines Wohnhauses mit Garage',project_street='Bayernstraße',project_zip='48429',project_city='Rheine',client_name='Norbert u. Mariele Werning',client_street='Wehrstr. 39b',client_zip='48429',client_city='Rheine',architect_name='Dipl.-Ing. Jochen Engelshove',architect_street='Dieselstr. 3',architect_zip='48485',architect_city='Neuenkirchen',engineer_name='Dipl.-Ing. Norbert Engbers',engineer_firm='Engbers Ingenieurbau',engineer_street='Kiesbahn 6',engineer_zip='49809',engineer_city='Lingen')
+          n=wf.fill_docx(src,dst,data)
+          assert n==11,n
+          assert src.read_bytes()!=dst.read_bytes()
+          with zipfile.ZipFile(dst) as z:out=z.read('word/document.xml').decode('utf-8')
+          for expected in ('Errichtung eines Wohnhauses mit Garage','Bayernstraße, 48429 Rheine','Norbert u. Mariele Werning','Wehrstr. 39b, 48429 Rheine','Dipl.-Ing. Jochen Engelshove','Dipl.-Ing. Norbert Engbers','Engbers Ingenieurbau','Kiesbahn 6, 49809 Lingen'):
+              assert expected in out, expected
+          print('1.7.0 Word form tests OK; fields=',n)
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_0_TINY.zip'
+          payload=[('build/1700/patch_1700.py','patch_1700.py'),('build/1700/post_update.py','post_update.py'),('build/1700/wordforms_v1700.py','wordforms_v1700.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={'app':'Engbers Projektzentrale','channel':'stable','version':'1.7.0','published_at':'2026-09-16','min_bootstrap_version':'1.6.9','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_0_TINY.zip?rev=1700-word-bescheinigungen','package_format':'zip','sha256':sha,'notes':'Version 1.7.0: Word-Bescheinigungen. Die Projektzentrale erkennt DOCX-Dateien im Ordner Bescheinigungen und erzeugt unter Bescheinigungen/Ausgefüllt Kopien mit den zentralen Projektstammdaten. Originaldateien bleiben unverändert. Automatisch gefüllt werden u.a. Bauvorhaben, Bauort, Bauherr, Architekt, Fachplaner sowie Büro-/saSV-Daten; Prüfnummern, Häkchen und Unterschriften bleiben manuell.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_7_0_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.7.0 Word Bescheinigungen'
+          git pull --rebase origin main
+          git push origin main
