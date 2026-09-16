@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.37",
+  "version": "1.4.38",
   "published_at": "2026-09-16",
   "min_bootstrap_version": "1.4.35",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_37_tiny.json",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_38_tiny.json",
   "package_format": "base64-json",
-  "sha256": "cd6e88495320331a4e870e32b763c56a70d15d112691200ebae7661b39fe2c32",
-  "notes": "Version 1.4.37: Repariert die fehlgeschlagene 1.4.36-Installation ohne erneut von empfindlichen UI-Markern abhängig zu sein. Die installierte 1.4.35/1.4.36 wird sicher auf 1.4.37 angehoben. Zusätzlich wird der bereits vorhandene Suchhandler so korrigiert, dass beim Doppelklick die tatsächlich angeklickte Projektzeile ausgewertet wird.",
+  "sha256": "fabe9baf4e8877f5cf80c26d3526425c24d2765cd460a627d35e5cd4b0fdbe32",
+  "notes": "Version 1.4.38: Die globale Projektsuche bindet den Doppelklick erst nach vollständigem Aufbau des Suchfensters und wählt das Zielprojekt anhand der Projektnummer robust im Projektwähler. Gleichzeitig wird die Positionsliste kompakter aufgebaut, sodass Position, Status, Bezeichnung, mb-Modul und Kennwert ohne notwendiges horizontales Scrollen sichtbar bleiben.",
   "update_available": true
 }
