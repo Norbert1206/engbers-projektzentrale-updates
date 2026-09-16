@@ -1,0 +1,69 @@
+name: Build Engbers Projektzentrale 1.5.6
+on:
+  push:
+    paths:
+      - 'build/1506/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate patch source
+        run: |
+          python -m py_compile build/1506/patch_1506.py
+          grep -q 'PZ_PROJECT_EXPLORER_SELECT_FIX_V1506' build/1506/patch_1506.py
+          grep -q 'rekursive Treeview-Auswahl entfernt' build/1506/patch_1506.py
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib, zipfile, hashlib, json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_5_6_TINY.zip'
+          payload=[
+              ('build/1506/patch_1506.py','patch_1506.py'),
+              ('build/1506/post_update.py','post_update.py'),
+              ('build/1505/pz_launcher.vbs','pz_launcher.vbs'),
+              ('build/1505/updater.py','updater.py'),
+              ('build/1505/START_PROJEKTZENTRALE.cmd','START_PROJEKTZENTRALE.cmd'),
+              ('build/1505/START_PROJEKTZENTRALE_144.cmd','START_PROJEKTZENTRALE_144.cmd'),
+          ]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:
+                  z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for _,dst in payload: assert dst in names, dst
+          data=zip_path.read_bytes(); sha=hashlib.sha256(data).hexdigest()
+          manifest={
+              'app':'Engbers Projektzentrale',
+              'channel':'stable',
+              'version':'1.5.6',
+              'published_at':'2026-09-16',
+              'min_bootstrap_version':'1.5.5',
+              'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_6_TINY.zip?rev=1506-selection-loop',
+              'package_format':'zip',
+              'sha256':sha,
+              'notes':'Version 1.5.6: Behebt den Projekt-Explorer-Haenger beim Anklicken eines Ordners. Die Auswahlroutine hat in <<TreeviewSelect>> dieselbe Auswahl erneut gesetzt und dadurch eine Endlosschleife erzeugt. 1.5.6 entfernt ausschliesslich diese rekursive Auswahl; die stabile Queue-I/O aus 1.5.5 bleibt unveraendert.',
+              'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert hashlib.sha256(zip_path.read_bytes()).hexdigest()==manifest['sha256']
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_5_6_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.5.6 selection-loop hotfix'
+          git pull --rebase origin main
+          git push origin main
