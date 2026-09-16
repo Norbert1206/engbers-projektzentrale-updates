@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.46",
+  "version": "1.4.47",
   "published_at": "2026-09-16",
   "min_bootstrap_version": "1.4.45",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_46_tiny.json",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_47_tiny.json",
   "package_format": "base64-json",
-  "sha256": "1200a2d0bcb5fe56163df2d182044d02971432fcf8023e311d5c0df1936cfb93",
-  "notes": "Version 1.4.46: Stabilitätsfix für Statik. Der versteckte .engbers-Ordner wird nicht mehr über wiederholt gestartete attrib-Prozesse markiert; dadurch verschwindet das Fensterflackern beim Öffnen der Statik. Alle Funktionen aus 1.4.45 bleiben erhalten.",
+  "sha256": "4ff2e5c7baaaa3ca5d2d20d01d917e2c010067e6c31ac6f7fb4a7f9b21c9cce1",
+  "notes": "Version 1.4.47: Reparatur der Statik-Navigation. Der Hauptpunkt Statik öffnet wieder ausschließlich die normale Statikansicht mit mb-Projekten und Positionsakte. Statik PDF bleibt ein separater Unterbereich und erhält einen sichtbaren Zurück-zur-Statik-Button. Zusätzlich wird das Fensterflackern aus 1.4.45 beseitigt.",
   "update_available": true
 }
