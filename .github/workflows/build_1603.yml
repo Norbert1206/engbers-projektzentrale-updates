@@ -1,0 +1,84 @@
+name: Build Engbers Projektzentrale 1.6.3
+on:
+  push:
+    paths:
+      - 'build/1603/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validation dependency
+        run: pip install pymupdf
+      - name: Validate sources and CAD reader
+        run: |
+          python -m py_compile build/1603/patch_1603.py build/1603/masterdata_v1603.py build/1603/post_update.py
+          python - <<'PY'
+          import sys,tempfile
+          from pathlib import Path
+          import fitz
+          sys.path.insert(0,'build/1600')
+          sys.path.insert(0,'build/1601')
+          sys.path.insert(0,'build/1602')
+          sys.path.insert(0,'build/1603')
+          import masterdata_v1603 as m
+          ok,info=m.engine_status()
+          assert ok,info
+          p=Path(tempfile.gettempdir())/'pz1603_test.pdf'
+          d=fitz.open(); page=d.new_page(width=1200,height=800)
+          page.insert_text((760,560),'Bauherr:',fontsize=10)
+          page.insert_text((850,560),'Norbert u. Mariele Werning',fontsize=10)
+          page.insert_text((760,585),'Anschrift:',fontsize=10)
+          page.insert_text((850,585),'Wehrstr. 39b, 48429 Rheine',fontsize=10)
+          page.insert_text((760,620),'Bauvorhaben:',fontsize=10)
+          page.insert_text((850,620),'Errichtung eines Wohnhauses mit Garage',fontsize=10)
+          page.insert_text((760,645),'Bauort:',fontsize=10)
+          page.insert_text((850,645),'Bayerstr. 4, 48429 Rheine',fontsize=10)
+          d.save(str(p)); d.close()
+          fr,n=m._geometry(p)
+          assert fr and n>0,(len(fr),n)
+          data=m._prev._prev._parse_geometry(fr)
+          assert data.get('project_title')=='Errichtung eines Wohnhauses mit Garage',data
+          assert data.get('project_zip')=='48429' and data.get('project_city')=='Rheine',data
+          assert 'Werning' in data.get('client_name','') and data.get('client_zip')=='48429',data
+          print('1.6.3 CAD reader validation OK:',data)
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_6_3_TINY.zip'
+          payload=[('build/1603/patch_1603.py','patch_1603.py'),('build/1603/masterdata_v1603.py','masterdata_v1603.py'),('build/1603/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              assert set(z.namelist())=={x[1] for x in payload}
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.6.3','published_at':'2026-09-16','min_bootstrap_version':'1.6.2',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_6_3_TINY.zip?rev=1603-localfitz',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.6.3: PyMuPDF wird beim Update einmalig lokal im Programmordner (_vendor) installiert und anschließend mit demselben Python geprüft, das die Projektzentrale ausführt. Die Stammdatenerkennung verwendet damit zuverlässig echte CAD-/Allplan-Textkoordinaten. Ein fehlender CAD-PDF-Reader wird nicht mehr still durch die ungenauere pypdf-Methode ersetzt, sondern klar gemeldet. Originaldateien bleiben unverändert.',
+            'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert hashlib.sha256(zip_path.read_bytes()).hexdigest()==manifest['sha256']
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_6_3_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.6.3 local PyMuPDF bootstrap'
+          git pull --rebase origin main
+          git push origin main
