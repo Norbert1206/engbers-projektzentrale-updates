@@ -1,1 +1,1 @@
-INSPECTION ERROR (workflow kept successful): BadZipFile('File is not a zip file')
+INSPECTION ERROR (workflow kept successful): RuntimeError('truncated local entry app.py: need 17442, got 7465')
