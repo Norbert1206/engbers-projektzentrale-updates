@@ -1,0 +1,70 @@
+name: Build Engbers Projektzentrale 1.4.37
+on:
+  push:
+    paths:
+      - 'build/1437/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and validate update
+        run: |
+          python -m py_compile build/1437/patch_1437.py
+          python - <<'PY'
+          import importlib.util, pathlib
+          p=pathlib.Path('build/1437/patch_1437.py')
+          spec=importlib.util.spec_from_file_location('p1437',p)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          src='''APP_VERSION = "1.4.35"\nclass Demo:\n    def search(self):\n        result_tree=None\n        def _pz_open_search_project(_evt=None):\n            try:\n                _sel=result_tree.selection()\n                if not _sel:\n                    return\n                _vals=result_tree.item(_sel[0],'values')\n                if len(_vals)<2 or str(_vals[0]).strip().casefold()!='projekt':\n                    return\n            except Exception:\n                return\n        result_tree.bind('<Double-1>',_pz_open_search_project,add='+')\n'''
+          out,changed=m._patch_search_click(src)
+          assert changed
+          assert 'PZ_SEARCH_CLICK_V1437' in out
+          assert 'identify_row(_evt.y)' in out
+          assert "result_tree.item(_iid,'values')" in out
+          compile(out,'synthetic_app.py','exec')
+          print('synthetic search repair OK')
+          PY
+          python - <<'PY'
+          import pathlib, zipfile, hashlib, base64, json
+          root=pathlib.Path('.')
+          patch=root/'build/1437/patch_1437.py'
+          starter=root/'build/1437/START_PROJEKTZENTRALE.cmd'
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_4_37_TINY.zip'
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,'patch_1437.py')
+              z.write(starter,'START_PROJEKTZENTRALE.cmd')
+          data=zip_path.read_bytes(); sha=hashlib.sha256(data).hexdigest()
+          package={'version':'1.4.37','filename':zip_path.name,'sha256':sha,'payload_b64':base64.b64encode(data).decode('ascii')}
+          (root/'stable/update_1_4_37_tiny.json').write_text(json.dumps(package,separators=(',',':')),encoding='utf-8')
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.4.37','published_at':'2026-09-16',
+              'min_bootstrap_version':'1.4.35','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_37_tiny.json',
+              'package_format':'base64-json','sha256':sha,
+              'notes':'Version 1.4.37: Repariert die fehlgeschlagene 1.4.36-Installation ohne erneut von empfindlichen UI-Markern abhängig zu sein. Die installierte 1.4.35/1.4.36 wird sicher auf 1.4.37 angehoben. Zusätzlich wird der bereits vorhandene Suchhandler so korrigiert, dass beim Doppelklick die tatsächlich angeklickte Projektzeile ausgewertet wird.',
+              'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          chk=json.loads((root/'stable/update_1_4_37_tiny.json').read_text(encoding='utf-8'))
+          raw=base64.b64decode(chk['payload_b64'],validate=True)
+          assert hashlib.sha256(raw).hexdigest()==sha
+          with zipfile.ZipFile(zip_path) as z:
+              assert set(z.namelist())=={'patch_1437.py','START_PROJEKTZENTRALE.cmd'}
+          print(sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_4_37_TINY.zip stable/update_1_4_37_tiny.json stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.4.37'
+          git pull --rebase origin main
+          git push origin main
