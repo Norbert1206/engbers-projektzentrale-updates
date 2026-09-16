@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.4.33",
+  "version": "1.4.34",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.4.32",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_33_tiny.json",
+  "min_bootstrap_version": "1.4.33",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/update_1_4_34_tiny.json",
   "package_format": "base64-json",
-  "sha256": "74798f7e824ea67235f303c616da4d6764c5d79e241fd2be81f25c45429f8400",
-  "notes": "Version 1.4.33: Bearbeitungsstatus steht direkt in der Positionsliste, kann separat gefiltert werden und wird mit Stückzahlen zusammengefasst. Statusänderungen aktualisieren Detail, Liste, Filter und Zähler sofort; die aktuelle Position bleibt soweit sichtbar ausgewählt.",
+  "sha256": "628b6db6f5b360a76913bc04f6b35dabc4753cfe911470f8e3898f5aa5643c54",
+  "notes": "Version 1.4.34: Die Statik-Oberfläche wird kompakter: der Bearbeitungsstatus steht direkt bei der Position. Projekttreffer der globalen Suche wechseln per Doppelklick unmittelbar in das gefundene Projekt. Zusätzlich zeigt Statik den Projektordner „Statik PDF“ als PDF-Schnellzugriff mit Ordner öffnen, Aktualisieren und Doppelklick auf PDFs.",
   "update_available": true
 }
