@@ -1,0 +1,36 @@
+name: Inspect legacy search implementation
+on:
+  push:
+    paths:
+      - 'build/inspect_search_131/BUILD'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract and inspect legacy app
+        run: |
+          python - <<'PY'
+          import base64, pathlib, subprocess, zipfile, io, ast
+          raw=subprocess.check_output(['git','show','release-1.3.2:stable/Engbers_Projektzentrale_UPDATE_1_3_1.zip.b64'])
+          data=base64.b64decode(raw)
+          with zipfile.ZipFile(io.BytesIO(data)) as z:
+              src=z.read('app.py').decode('utf-8')
+          print('APP_LEN',len(src))
+          tree=ast.parse(src)
+          for node in ast.walk(tree):
+              if isinstance(node,(ast.FunctionDef,ast.AsyncFunctionDef)):
+                  seg=ast.get_source_segment(src,node) or ''
+                  if 'Suchergebnisse' in seg or ('Combobox' in seg and ('project' in seg.casefold() or 'projekt' in seg.casefold())):
+                      print('\n===== FUNCTION',node.name,'lines',node.lineno,getattr(node,'end_lineno',None),'=====')
+                      print(seg[:18000])
+          print('\n===== LINES WITH COMBOBOX / PROJECT SELECT / SEARCH =====')
+          for i,line in enumerate(src.splitlines(),1):
+              low=line.casefold()
+              if 'combobox' in low or 'suchergebnisse' in low or 'project_var' in low or 'projekt_var' in low or 'current_project' in low or 'selected_project' in low:
+                  print(f'{i}: {line}')
+          PY
