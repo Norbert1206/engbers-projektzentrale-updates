@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "published_at": "2026-09-16",
-  "min_bootstrap_version": "1.5.0",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_1_TINY.zip?rev=1501-fixed-3",
+  "min_bootstrap_version": "1.5.1",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_5_2_TINY.zip?rev=1502-safe-1",
   "package_format": "zip",
-  "sha256": "237d899a7d3d2688248fcc5a835139216cda8c82ba79f5115816cb7514e9fe1f",
-  "notes": "Version 1.5.1: Hotfix für den Projekt-Explorer. Ordnerinhalte werden jetzt asynchron und nur stufenweise geladen, damit die Oberfläche beim Öffnen von Statik PDF und anderen größeren Ordnern nicht mehr einfriert. Fachliche Zuordnungen werden im Explorer zwischengespeichert; Suche läuft verzögert im Hintergrund. Sonstige 1.5.0-Funktionen bleiben unverändert.",
+  "sha256": "7663f47d7531db65f08da48e17a6a67b2cf836c8c9e9d5a6e610915f2ba6c54e",
+  "notes": "Version 1.5.2: Stabilitäts-Hotfix für den Projekt-Explorer. Keine Tkinter-Aufrufe mehr aus Hintergrundthreads; Ordner werden in kleinen Portionen über die normale Ereignisschleife geladen. Projektweite Suche arbeitet ebenfalls ohne Worker-Thread. Das Öffnen von Dateien wird zusätzlich abgefangen und bei Fehlern protokolliert. Sonstige Funktionen aus 1.5.0/1.5.1 bleiben unverändert.",
   "update_available": true
 }
