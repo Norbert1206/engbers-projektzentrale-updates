@@ -4,9 +4,9 @@
   "version": "1.7.14",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.7.13",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_14_TINY.zip?rev=1714-altf-uia-click",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_14_TINY.zip?rev=1714-pdf-printer",
   "package_format": "zip",
-  "sha256": "83e4e7f830c88647ab74b3e233b7964831d9c0312183cd4e9d40eda4f69665cf",
-  "notes": "Version 1.7.14: Word-Datei/Backstage wird dreistufig geoeffnet: echtes Windows Alt+F, UIAutomation-Patterns und als letzter Fallback direkter Klick auf den sichtbaren Datei-Reiter. Nach jedem Versuch wird geprueft, ob Als Adobe PDF speichern wirklich sichtbar ist.",
+  "sha256": "3efb285b17470ef719ff57ff849768d38bf109cb383d4e997570018947da5637",
+  "notes": "Version 1.7.14: PDF-Erzeugung komplett auf Windows-PDF-Drucker umgestellt. Kein Word-Backstage und kein Adobe-Menueklick mehr. Microsoft Print to PDF wird bevorzugt, Adobe PDF dient als Fallback; der normale Windows-Speichern-Dialog schreibt die PDF direkt neben die Word-Datei.",
   "update_available": true
 }
