@@ -23,7 +23,9 @@ jobs:
           curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_13_TINY.zip?rev=1813-professional-billing-texts' -o /tmp/pz1814/base.zip
           unzip -q /tmp/pz1814/base.zip -d /tmp/pz1814/unpacked
           cp build/1814/correspondence_v1814.py /tmp/pz1814/unpacked/correspondence_v1814.py
-          cp build/1814/anschreiben_template.docx /tmp/pz1814/unpacked/anschreiben_template.docx
+          cp build/1814/contacts_v1814.py /tmp/pz1814/unpacked/contacts_v1814.py
+          cp build/1814/letter_template_v1814.py /tmp/pz1814/unpacked/letter_template_v1814.py
+          python build/1814/enhance_correspondence_1814.py /tmp/pz1814/unpacked
           python build/1814/patch_1814.py /tmp/pz1814/unpacked
       - name: Build update package and manifest
         run: |
@@ -40,15 +42,16 @@ jobs:
           with zipfile.ZipFile(zip_path) as z:
               assert z.testzip() is None
               names=set(z.namelist())
-              for req in ('app.py','commercial_v1890.py','post_update.py','correspondence_v1814.py','anschreiben_template.docx'):
+              for req in ('app.py','commercial_v1890.py','post_update.py','correspondence_v1814.py','contacts_v1814.py','letter_template_v1814.py'):
                   assert req in names, req
+              assert 'anschreiben_template.docx' not in names
           sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
           manifest={
             'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.14','published_at':'2026-09-17',
             'min_bootstrap_version':'1.8.3',
-            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip?rev=1814-project-correspondence',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip?rev=1814-private-letter-addressbook',
             'package_format':'zip','sha256':sha,
-            'notes':'Version 1.8.14: Das vorhandene Engbers-Standardanschreiben ist direkt in die Projektzentrale integriert. Unter Kommunikation steht jetzt ANSCHREIBEN ERSTELLEN zur Verfügung. Empfänger, Datum, Betreff, Anrede, bis zu fünf überreichte Unterlagen sowie die Optionen Kenntnisnahme, Prüfung, Genehmigung, Erledigung, Unterschrift, Rücksprache, Rücksendung, Angebot und Weiterleitung lassen sich im Dialog auswählen. Das Word-Dokument wird projektbezogen unter 08_Kommunikation/Anschreiben gespeichert, anschließend geöffnet und automatisch in der Kommunikationsakte registriert. Alle Funktionen aus Version 1.8.13 bleiben erhalten.',
+            'notes':'Version 1.8.14: Unter Kommunikation kommen ANSCHREIBEN ERSTELLEN und ADRESSBUCH hinzu. Das lokale Adressbuch speichert Firmen und Ansprechpartner mit Anschrift, Telefon, Mobil, E-Mail, Webseite, Quelle und Notiz; eine Dublettenpruefung ist vorbereitet. Beim Anschreiben kann der Empfaenger direkt aus dem Adressbuch uebernommen werden. Das vorhandene Engbers-Musteranschreiben wird beim ersten Einsatz einmal lokal ausgewaehlt und automatisch als private Arbeitsvorlage eingerichtet; der persoenliche Briefkopf und darin enthaltene Bueroangaben werden nicht im Update oder GitHub gespeichert. Das Word-Anschreiben wird projektbezogen unter 08_Kommunikation/Anschreiben gespeichert und in der Kommunikationsakte registriert. Die Adressstruktur ist fuer spaetere mobile Synchronisation vorbereitet. Alle Funktionen aus Version 1.8.13 bleiben erhalten.',
             'update_available':True}
           (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print('PACKAGE_SHA256='+sha)
@@ -59,6 +62,6 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip stable/manifest.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Release Projektzentrale 1.8.14 project correspondence'
+          git commit -m 'Release Projektzentrale 1.8.14 private correspondence and address book'
           git pull --rebase origin main
           git push origin main
