@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.9",
+  "version": "1.7.10",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.8",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_9_TINY.zip?rev=1709-adobe-ui",
+  "min_bootstrap_version": "1.7.9",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_10_TINY.zip?rev=1710-global-adobe-ui",
   "package_format": "zip",
-  "sha256": "22f303507b1814ac61b43c693e5cd527860094002a4b5ee9bddc9e63e658d982",
-  "notes": "Version 1.7.9: Die PDF-Erzeugung bildet den manuellen Word-Ablauf nach. Word wird sichtbar geoeffnet, der Word-Menuebefehl Als Adobe PDF speichern wird per Windows UI Automation angeklickt und der Speichern-Dialog automatisch mit dem PDF-Pfad ausgefuellt. Die direkte, undokumentierte PDFMaker-COM-Ansteuerung wurde entfernt.",
+  "sha256": "0e35e422e140719ff6213636a52a774e72e3cad98201e8cbff84c8809757307d",
+  "notes": "Version 1.7.10: Der sichtbare Word-Befehl Als Adobe PDF speichern wird nach dem Oeffnen der Datei jetzt im gesamten Windows-UI-Baum gesucht, weil Word den Backstage-Bereich technisch ausserhalb des normalen Dokumentfensters darstellen kann. Zusaetzlicher Fallback sucht nach jedem UI-Element, dessen Name Adobe PDF enthaelt.",
   "update_available": true
 }
