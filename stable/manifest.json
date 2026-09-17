@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.5",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_6_TINY.zip?rev=1706-powershell-word-pdf",
+  "min_bootstrap_version": "1.7.6",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_7_TINY.zip?rev=1707-export-safe-docx",
   "package_format": "zip",
-  "sha256": "94f99466ea1ce0eb5cdda238af21670c6b41adfdc885e89e99ace7a63a9cbf12",
-  "notes": "Version 1.7.6: PDF-Export fuer Word-Bescheinigungen wurde von VBScript/cscript auf PowerShell + Microsoft Word-COM umgestellt. Dadurch wird der auf dem Buero-PC beobachtete cscript-Rueckgabecode 1 umgangen. Word-Direktaktualisierung, erstes Kreuz sowie Ort/Datum bleiben unveraendert. PDF wird weiterhin zuerst temporaer erzeugt und danach sicher neben der Word-Datei abgelegt.",
+  "sha256": "7e46cd71a987351c88d8cca3a121919313c6915f79435aae9e57cd1122790f95",
+  "notes": "Version 1.7.7: PDF-Export nutzt eine temporaere export-sichere DOCX, in der nur fuer den Export die alten Text-Formularfelder in normalen Text umgewandelt werden. Die Projekt-DOCX selbst bleibt unveraendert mit Formularfeldern. Die temporaere DOCX wird nach dem PDF-Export geloescht. PowerShell + Word-COM exportiert nur die Zwischendatei.",
   "update_available": true
 }
