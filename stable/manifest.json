@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.16",
+  "version": "1.7.17",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.15",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_16_TINY.zip?rev=1716-save-keys",
+  "min_bootstrap_version": "1.7.16",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_17_TINY.zip?rev=1717-focused-filename",
   "package_format": "zip",
-  "sha256": "fee8e31d8b6eb5411e262b00532a0f34512a9690edb92fea590dedaf315e6a57",
-  "notes": "Version 1.7.16: Der funktionierende PDF-Druck bleibt unveraendert. Der Windows-Dialog Druckausgabe speichern unter wird nicht mehr ueber einzelne UI-Felder analysiert, sondern direkt per Tastatur bedient: richtiger Zielordner, richtiger PDF-Dateiname, Enter. Dadurch ist der zuletzt verwendete Speicherordner egal.",
+  "sha256": "4d1d1dd92799711e2b7866e4e33346bcf785b62f153228020931bdf8eafb00ad",
+  "notes": "Version 1.7.17: PDF-Druck bleibt unveraendert. Nach Alt+N wird der vollstaendige absolute PDF-Zielpfad direkt in das bereits fokussierte Dateiname-Feld geschrieben. Der aktuell angezeigte Ordner im Speichern-Dialog ist damit egal.",
   "update_available": true
 }
