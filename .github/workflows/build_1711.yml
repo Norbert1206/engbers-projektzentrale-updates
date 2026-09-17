@@ -1,0 +1,62 @@
+name: Build Engbers Projektzentrale 1.7.11
+on:
+  push:
+    paths:
+      - 'build/1711/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Word focus/backstage patch
+        run: |
+          python -m py_compile build/1711/patch_1711.py build/1711/post_update.py
+          python - <<'PY'
+          import runpy
+          p=runpy.run_path('build/1711/patch_1711.py',run_name='defs1711')
+          sample='HEAD\n'+p['OLD_START']+'''# PZ_ADOBE_UI_GLOBAL_SEARCH_V1710\n$adobe=Wait-Until { $root=Get-Root; return $null } 15000\nif(-not $adobe){ throw 'x' }\n'''+p['OLD_END']+'\nTAIL\n'
+          out=p['_patch_mod'](sample)
+          assert 'PZ_WORD_FOCUS_BACKSTAGE_V1711' in out
+          assert "$docName=[IO.Path]::GetFileNameWithoutExtension($DocxPath)" in out
+          assert "Find-ByName $targetWin @('Datei','File')" in out
+          assert 'Microsoft Word wurde waehrend der PDF-Erzeugung geschlossen.' in out
+          assert 'PZ_ADOBE_UI_GLOBAL_SEARCH_V1710' in out
+          print('1.7.11 focus/backstage patch validation OK')
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_11_TINY.zip'
+          payload=[('build/1711/patch_1711.py','patch_1711.py'),('build/1711/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.7.11','published_at':'2026-09-17',
+              'min_bootstrap_version':'1.7.10',
+              'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_11_TINY.zip?rev=1711-word-focus',
+              'package_format':'zip','sha256':sha,
+              'notes':'Version 1.7.11: Fuer den Adobe-PDF-Ablauf wird jetzt gezielt das Word-Fenster der aktuellen Bescheinigung anhand des Dokumentnamens aktiviert. Der Datei-Bereich wird gezielt ueber das sichtbare Datei-Element geoeffnet, mit Alt+F nur noch als Fallback. Wird Word waehrend der PDF-Erzeugung geschlossen, wird dies sauber als Fehler gemeldet statt den Ablauf abstuerzen zu lassen.',
+              'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_7_11_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.7.11 Word focus backstage fix'
+          git pull --rebase origin main
+          git push origin main
