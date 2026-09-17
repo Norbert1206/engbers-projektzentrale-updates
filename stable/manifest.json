@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.14",
+  "version": "1.7.15",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.13",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_14_TINY.zip?rev=1714-pdf-printer",
+  "min_bootstrap_version": "1.7.14",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_15_TINY.zip?rev=1715-save-dialog",
   "package_format": "zip",
-  "sha256": "3efb285b17470ef719ff57ff849768d38bf109cb383d4e997570018947da5637",
-  "notes": "Version 1.7.14: PDF-Erzeugung komplett auf Windows-PDF-Drucker umgestellt. Kein Word-Backstage und kein Adobe-Menueklick mehr. Microsoft Print to PDF wird bevorzugt, Adobe PDF dient als Fallback; der normale Windows-Speichern-Dialog schreibt die PDF direkt neben die Word-Datei.",
+  "sha256": "cf6838f6cf13c3cda49082990c4d835ba213eba291c3fd5dc8cc5bccff08006e",
+  "notes": "Version 1.7.15: PDF-Druck bleibt unveraendert. Der Windows-Dialog Druckausgabe speichern unter erkennt jetzt gezielt das echte Dateiname-Feld (FileNameControlHost) bzw. als Fallback das unterste Eingabefeld, traegt den vollstaendigen PDF-Zielpfad ein, verifiziert ihn und klickt erst danach auf Speichern.",
   "update_available": true
 }
