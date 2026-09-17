@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.17",
+  "version": "1.7.18",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.16",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_17_TINY.zip?rev=1717-focused-filename",
+  "min_bootstrap_version": "1.7.17",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_18_TINY.zip?rev=1718-word-printtofile-fixed",
   "package_format": "zip",
-  "sha256": "4d1d1dd92799711e2b7866e4e33346bcf785b62f153228020931bdf8eafb00ad",
-  "notes": "Version 1.7.17: PDF-Druck bleibt unveraendert. Nach Alt+N wird der vollstaendige absolute PDF-Zielpfad direkt in das bereits fokussierte Dateiname-Feld geschrieben. Der aktuell angezeigte Ordner im Speichern-Dialog ist damit egal.",
+  "sha256": "9eb411ad30f672bf8630de4a12b06a8c1db9be58d6d648e611e777666ef41aad",
+  "notes": "Version 1.7.18: Windows-Speicherdialog komplett entfernt. Word oeffnet das Formular normal und druckt danach direkt ueber Microsoft Print to PDF mit PrintToFile und festem OutputFileName in die PDF neben der Word-Datei.",
   "update_available": true
 }
