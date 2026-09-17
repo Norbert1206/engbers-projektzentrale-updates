@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.2",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_3_TINY.zip?rev=1703-inplace-word-fields",
+  "min_bootstrap_version": "1.7.1",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_4_TINY.zip?rev=1704-cumulative-bridge",
   "package_format": "zip",
-  "sha256": "6356e099791d46d17dfa64e82209d1fa80a74122308cadac48d07151b39bc9b0",
-  "notes": "Version 1.7.3: Word-Bescheinigungen werden direkt im vorhandenen Projektformular aktualisiert; es wird keine zusätzliche _ausgefüllt-Wordkopie mehr angelegt. Die Word-Formularfelder bleiben erhalten und können später erneut aktualisiert werden. Eine technische Sicherheitskopie liegt ausschließlich lokal außerhalb des Projektordners. Die PDF-Datei wird direkt neben der Word-Datei gespeichert. Kreuz sowie Ort und Tagesdatum bleiben automatisch.",
+  "sha256": "344b2dd3a540bf10df7de5cf2f61dd443ac2cc9621ca42543a494350aa8072fa",
+  "notes": "Version 1.7.4: Kumulatives Reparaturupdate für die Update-Kette. Installationen ab 1.7.1 werden automatisch über die fehlenden Zwischenschritte auf den aktuellen Stand gebracht. Enthalten bleiben: Kreuz und Ort/Datum automatisch, PDF direkt neben Word, vorhandenes Word-Formular direkt aktualisieren und Formularfelder erhalten.",
   "update_available": true
 }
