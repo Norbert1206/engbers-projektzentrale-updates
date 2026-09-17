@@ -11,7 +11,7 @@ OLD='1.7.5'
 NEW='1.7.6'
 MARK='PZ_PDF_POWERSHELL_WORD_V1706'
 
-NEW_EXPORT=r'''def _export_pdf_with_word(docx_path, pdf_path):
+NEW_EXPORT=r"""def _export_pdf_with_word(docx_path, pdf_path):
     # PZ_PDF_POWERSHELL_WORD_V1706
     # Export ueber PowerShell + Word-COM statt VBScript/cscript.
     # Erst temporaere PDF, danach atomar an Zielstelle ersetzen.
@@ -103,7 +103,7 @@ finally {
         if attempt<3:
             time.sleep(0.8)
     return False,(last_err or 'Unbekannter PowerShell-Word-PDF-Fehler')
-'''
+"""
 
 
 def _patch_mod(mod):
