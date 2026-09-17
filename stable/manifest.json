@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.12",
+  "version": "1.8.13",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_12_TINY.zip?rev=1812-lexware-m-workflow",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_13_TINY.zip?rev=1813-professional-billing-texts",
   "package_format": "zip",
-  "sha256": "c8a871d72db2573ebcc582f8cd018305d6afc9d1848a03ed792aab8abbd7be8c",
-  "notes": "Version 1.8.12: Lexware Office M wird ohne API praktisch angebunden. Angebote und Rechnungen koennen direkt in Lexware geoeffnet werden, der aktuelle Projektbezug kann in die Zwischenablage kopiert werden und exportierte Lexware-PDFs lassen sich direkt aus dem Downloads-Ordner als Kopie in das gewaehlte Ablageziel uebernehmen. Es werden keine Zugangsdaten gespeichert. Alle Funktionen aus Version 1.8.11 bleiben erhalten.",
+  "sha256": "3fd45fd9dfc8986bd3b7bb6608ad3a897c6bcb20ae4b3ebb45822ee1e8952743",
+  "notes": "Version 1.8.13: Die Textbausteine erhalten eine projektuebergreifende Standardbibliothek mit mehr als 30 professionellen Formulierungen fuer Tragwerksplanung/Statik, Waermeschutz/GEG, KfW/EEE, energetische Zusatz- und Variantenberechnungen sowie DGNB/QNG-Zertifizierung. Enthalten sind Rechnung, Abschlag, Schlussrechnung, Zusatzleistungen, Angebote und Zahlungstexte. Eigene vorhandene Textbausteine bleiben unveraendert; die Standardbibliothek wird nur einmal ergaenzt. Alle Funktionen aus Version 1.8.12 bleiben erhalten.",
   "update_available": true
 }
