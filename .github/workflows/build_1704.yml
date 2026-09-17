@@ -1,0 +1,78 @@
+name: Build Engbers Projektzentrale 1.7.4
+on:
+  push:
+    paths:
+      - 'build/1704/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate cumulative update chain
+        run: |
+          python -m py_compile build/1702/patch_1702.py build/1703/patch_1703.py build/1704/patch_1704.py build/1704/post_update.py
+          python - <<'PY'
+          import pathlib, tempfile, shutil, runpy, re
+          root=pathlib.Path('.')
+          tmp=pathlib.Path(tempfile.mkdtemp())
+          # Erzeuge einen realistischen 1.7.1-Stand aus der 1.7.0 Word-Engine + 1.7.1 Patchdefinitionen.
+          src=(root/'build/1700/wordforms_v1700.py').read_text(encoding='utf-8')
+          p1=runpy.run_path(str(root/'build/1701/patch_1701.py'),run_name='defs1701')
+          for a,b in [('OLD_FILL','NEW_FILL'),('OLD_RETURN','NEW_RETURN'),('OLD_SELECTED','NEW_SELECTED'),('OLD_OPEN','NEW_OPEN'),('OLD_BUTTON','NEW_BUTTON')]:
+              assert p1[a] in src,a
+              src=src.replace(p1[a],p1[b],1)
+          (tmp/'wordforms_v1700.py').write_text(src,encoding='utf-8')
+          (tmp/'app.py').write_text('APP_VERSION = "1.7.1"\nTITLE="Projektzentrale 1.7.1"\n',encoding='utf-8')
+          for p in ['build/1702/patch_1702.py','build/1703/patch_1703.py','build/1704/patch_1704.py','build/1704/post_update.py']:
+              shutil.copy2(root/p,tmp/pathlib.Path(p).name)
+          runpy.run_path(str(tmp/'post_update.py'),run_name='__main__')
+          app=(tmp/'app.py').read_text(encoding='utf-8')
+          mod=(tmp/'wordforms_v1700.py').read_text(encoding='utf-8')
+          assert 'APP_VERSION = "1.7.4"' in app,app
+          assert 'PZ_WORD_DATE_CHECKBOX_PDF_V1702' in mod
+          assert 'PZ_WORD_INPLACE_FIELDS_V1703' in mod
+          assert 'return Path(src)' in mod
+          assert "return Path(src).with_suffix('.pdf')" in mod
+          print('1.7.4 cumulative validation OK: 1.7.1 -> 1.7.4')
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_4_TINY.zip'
+          payload=[
+              ('build/1702/patch_1702.py','patch_1702.py'),
+              ('build/1703/patch_1703.py','patch_1703.py'),
+              ('build/1704/patch_1704.py','patch_1704.py'),
+              ('build/1704/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.7.4','published_at':'2026-09-17',
+              'min_bootstrap_version':'1.7.1',
+              'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_4_TINY.zip?rev=1704-cumulative-bridge',
+              'package_format':'zip','sha256':sha,
+              'notes':'Version 1.7.4: Kumulatives Reparaturupdate für die Update-Kette. Installationen ab 1.7.1 werden automatisch über die fehlenden Zwischenschritte auf den aktuellen Stand gebracht. Enthalten bleiben: Kreuz und Ort/Datum automatisch, PDF direkt neben Word, vorhandenes Word-Formular direkt aktualisieren und Formularfelder erhalten.',
+              'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_7_4_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.7.4 cumulative bridge'
+          git pull --rebase origin main
+          git push origin main
