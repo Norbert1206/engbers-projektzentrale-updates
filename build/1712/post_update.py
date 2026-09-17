@@ -31,6 +31,8 @@ def main():
         return 0
     except Exception:
         text = traceback.format_exc()
+        try: print(text)
+        except Exception: pass
         try: ERR.write_text(text, encoding='utf-8')
         except Exception: pass
         try: LOG.write_text('FEHLER bei Update 1.7.12:\n' + text, encoding='utf-8')
