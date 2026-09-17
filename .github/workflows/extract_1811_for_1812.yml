@@ -1,0 +1,43 @@
+name: Prepare Projektzentrale 1.8.12 source
+on:
+  push:
+    paths:
+      - 'build/1812/EXTRACT'
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract current stable source
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1811
+          mkdir -p /tmp/pz1811
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_11_TINY.zip?rev=1811-text-editor-fit' -o /tmp/pz1811/update.zip
+          unzip -l /tmp/pz1811/update.zip | tee build/1812/package_contents.txt
+          mkdir -p /tmp/pz1811/unpacked
+          unzip -q /tmp/pz1811/update.zip -d /tmp/pz1811/unpacked
+          APP=$(find /tmp/pz1811/unpacked -type f -name 'app.py' -print -quit)
+          if [ -z "$APP" ]; then
+            echo 'app.py not found in 1.8.11 package' >&2
+            exit 2
+          fi
+          cp "$APP" build/1812/app_1811.py
+          python -m py_compile build/1812/app_1811.py
+          grep -q 'APP_VERSION = "1.8.11"' build/1812/app_1811.py
+      - name: Commit extracted source
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add build/1812/app_1811.py build/1812/package_contents.txt
+          git diff --cached --quiet && exit 0
+          git commit -m 'Prepare 1.8.12 from stable 1.8.11 source'
+          git pull --rebase origin main
+          git push origin main
