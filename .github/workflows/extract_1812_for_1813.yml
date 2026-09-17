@@ -1,0 +1,42 @@
+name: Prepare Projektzentrale 1.8.13 source
+on:
+  push:
+    paths:
+      - 'build/1813/EXTRACT'
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract current stable source
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1812
+          mkdir -p /tmp/pz1812
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_12_TINY.zip?rev=1812-lexware-m-workflow' -o /tmp/pz1812/update.zip
+          unzip -l /tmp/pz1812/update.zip | tee build/1813/package_contents.txt
+          mkdir -p /tmp/pz1812/unpacked
+          unzip -q /tmp/pz1812/update.zip -d /tmp/pz1812/unpacked
+          for f in app.py commercial_v1890.py post_update.py; do
+            src=$(find /tmp/pz1812/unpacked -type f -name "$f" -print -quit)
+            if [ -z "$src" ]; then echo "$f not found" >&2; exit 2; fi
+            cp "$src" "build/1813/${f%.py}_1812.py"
+          done
+          python -m py_compile build/1813/app_1812.py build/1813/commercial_v1890_1812.py build/1813/post_update_1812.py
+          grep -q 'APP_VERSION = "1.8.12"' build/1813/app_1812.py
+      - name: Commit extracted source
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add build/1813/app_1812.py build/1813/commercial_v1890_1812.py build/1813/post_update_1812.py build/1813/package_contents.txt
+          git diff --cached --quiet && exit 0
+          git commit -m 'Prepare 1.8.13 from stable 1.8.12 source'
+          git pull --rebase origin main
+          git push origin main
