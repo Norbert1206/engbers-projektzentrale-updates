@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.10",
+  "version": "1.8.11",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_10_TINY.zip?rev=1810-generic-invoices",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_11_TINY.zip?rev=1811-text-editor-fit",
   "package_format": "zip",
-  "sha256": "a08ed20111c505912e327354c99fd663735c4757f179801c75e6e670c564440c",
-  "notes": "Version 1.8.10: Im Bereich Angebote & Rechnungen steht nun zusaetzlich das allgemeine Ablageziel Rechnungen zur Verfuegung. Es ist fuer einzelne Rechnungen gedacht, die weder Abschlags- noch Schlussrechnungen sind. Alle Funktionen aus Version 1.8.9 bleiben erhalten.",
+  "sha256": "afbb3f3b766035866d3a03bb52d09035cbdf5f4c9754d5df60beb80f2fabedc2",
+  "notes": "Version 1.8.11: Das Fenster fuer Textbausteine passt sich automatisch an Bildschirmhoehe und Windows-Skalierung an. Die Schaltflaechen Speichern und Abbrechen bleiben fest am unteren Fensterrand sichtbar. Alle Funktionen aus Version 1.8.10 bleiben erhalten.",
   "update_available": true
 }
