@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.1",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_4_TINY.zip?rev=1704-cumulative-bridge",
+  "min_bootstrap_version": "1.7.4",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_5_TINY.zip?rev=1705-pdf-retry",
   "package_format": "zip",
-  "sha256": "344b2dd3a540bf10df7de5cf2f61dd443ac2cc9621ca42543a494350aa8072fa",
-  "notes": "Version 1.7.4: Kumulatives Reparaturupdate für die Update-Kette. Installationen ab 1.7.1 werden automatisch über die fehlenden Zwischenschritte auf den aktuellen Stand gebracht. Enthalten bleiben: Kreuz und Ort/Datum automatisch, PDF direkt neben Word, vorhandenes Word-Formular direkt aktualisieren und Formularfelder erhalten.",
+  "sha256": "c4c93e5e38381b157a9bee732be80d1ad4fb02f8b0979e10f4dc4791f7ecb431",
+  "notes": "Version 1.7.5: Robuster PDF-Export fuer Word-Bescheinigungen. Word exportiert zunaechst in eine temporaere PDF und ersetzt die vorhandene PDF erst nach erfolgreichem Export. Voruebergehende Word-COM-Fehler werden automatisch erneut versucht. Bei geoeffneter/gesperrter PDF erscheint ein klarer Hinweis. Word-Direktaktualisierung, Kreuz sowie Ort/Datum bleiben unveraendert.",
   "update_available": true
 }
