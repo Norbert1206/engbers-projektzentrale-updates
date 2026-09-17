@@ -1,0 +1,109 @@
+name: Build Engbers Projektzentrale 1.8.0
+on:
+  push:
+    paths:
+      - 'build/1800/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate clean 1.7.18 to 1.8.0 installer
+        run: |
+          python -m py_compile build/1800/patch_1800.py build/1800/post_update.py
+          python - <<'PY'
+          import pathlib, runpy, tempfile, shutil, subprocess, sys
+          root=pathlib.Path('.')
+          src=(root/'build/1700/wordforms_v1700.py').read_text(encoding='utf-8')
+          p1=runpy.run_path(str(root/'build/1701/patch_1701.py'),run_name='defs1701')
+          for a,b in [('OLD_FILL','NEW_FILL'),('OLD_RETURN','NEW_RETURN'),('OLD_SELECTED','NEW_SELECTED'),('OLD_OPEN','NEW_OPEN'),('OLD_BUTTON','NEW_BUTTON')]:
+              assert p1[a] in src,a; src=src.replace(p1[a],p1[b],1)
+          p2=runpy.run_path(str(root/'build/1702/patch_1702.py'),run_name='defs1702')
+          for a,b in [('IMPORT_OLD','IMPORT_NEW'),('CLASSIFY_OLD','CLASSIFY_NEW'),('VALUES_OLD','VALUES_NEW'),('FILL_ANCHOR','FILL_HELPER'),('FILL_OLD','FILL_NEW'),('OUT_OLD','OUT_NEW'),('DOCS_OLD','DOCS_NEW'),('FILL_UI_OLD','FILL_UI_NEW'),('FILL_UI_BODY_OLD','FILL_UI_BODY_NEW'),('MSG_OLD','MSG_NEW'),('OPEN_OLD','OPEN_NEW'),('BUTTON_OLD','BUTTON_NEW')]:
+              assert p2[a] in src,a; src=src.replace(p2[a],p2[b],1)
+          p3=runpy.run_path(str(root/'build/1703/patch_1703.py'),run_name='defs1703')
+          for a,b in [('IMPORT_OLD','IMPORT_NEW'),('HELPER_ANCHOR','HELPER_NEW'),('FILL_OLD','FILL_NEW'),('OUT_OLD','OUT_NEW'),('HEAD_OLD','HEAD_NEW'),('STATUS_OLD','STATUS_NEW'),('MSG_OLD','MSG_NEW'),('OUTPUT_MSG_OLD','OUTPUT_MSG_NEW')]:
+              assert p3[a] in src,a; src=src.replace(p3[a],p3[b],1)
+          if p3['FALLBACK_OLD'] in src: src=src.replace(p3['FALLBACK_OLD'],p3['FALLBACK_NEW'],1)
+          src=src.replace(p3['OPEN_ERROR_OLD'],p3['OPEN_ERROR_NEW'],1)
+          for ver in ('1705','1706','1707','1708'):
+              p=runpy.run_path(str(root/f'build/{ver}/patch_{ver}.py'),run_name=f'defs{ver}')
+              src=p['_patch_mod'](src)
+          p9=runpy.run_path(str(root/'build/1709/patch_1709_fixed.py'),run_name='defs1709')
+          src=p9['_patch_mod'](src)
+          p10=runpy.run_path(str(root/'build/1710/patch_1710.py'),run_name='defs1710')
+          src=p10['_patch_mod'](src)
+          with tempfile.TemporaryDirectory() as td:
+              d=pathlib.Path(td)
+              (d/'app.py').write_text('APP_VERSION = "1.7.10"\n',encoding='utf-8')
+              (d/'wordforms_v1700.py').write_text(src,encoding='utf-8')
+              for ver in ('1712','1713','1714','1715','1716','1717'):
+                  shutil.copy2(root/f'build/{ver}/patch_{ver}.py',d/f'patch_{ver}.py')
+                  shutil.copy2(root/f'build/{ver}/post_update.py',d/'post_update.py')
+                  cp=subprocess.run([sys.executable,str(d/'post_update.py')],cwd=d,capture_output=True,text=True)
+                  assert cp.returncode==0,(ver,cp.stdout,cp.stderr)
+              shutil.copy2(root/'build/1718/patch_1718.py',d/'patch_1718.py')
+              shutil.copy2(root/'build/1718/patch_1718_fixed.py',d/'patch_1718_fixed.py')
+              shutil.copy2(root/'build/1718/post_update_fixed.py',d/'post_update.py')
+              cp=subprocess.run([sys.executable,str(d/'post_update.py')],cwd=d,capture_output=True,text=True)
+              assert cp.returncode==0,('1718',cp.stdout,cp.stderr)
+              shutil.copy2(root/'build/1800/patch_1800.py',d/'patch_1800.py')
+              shutil.copy2(root/'build/1800/post_update.py',d/'post_update.py')
+              cp=subprocess.run([sys.executable,str(d/'post_update.py')],cwd=d,capture_output=True,text=True)
+              if cp.returncode:
+                  print(cp.stdout); print(cp.stderr)
+                  err=d/'update_1800_error.txt'
+                  if err.exists(): print(err.read_text(encoding='utf-8'))
+              assert cp.returncode==0,cp.returncode
+              app=(d/'app.py').read_text(encoding='utf-8')
+              mod=(d/'wordforms_v1700.py').read_text(encoding='utf-8')
+              assert 'APP_VERSION = "1.8.0"' in app
+              assert 'PZ_WORD_SINGLE_COM_PIPELINE_V1800' in mod
+              active=mod[mod.find('PZ_WORD_SINGLE_COM_PIPELINE_V1800'):]
+              for required in ('FormFields.Item','CheckBox.Value','.Result =','SaveAs2($NormalizedPath,16)','ExportAsFixedFormat($PdfPath,17)','OpenNoRepairDialog'):
+                  assert required in active,required
+              for forbidden in ('SendWait(','PrintToFile=$true','GetActiveObject','Start-Process -FilePath $DocxPath -Verb Print'):
+                  assert forbidden not in active,forbidden
+              assert 'import json' in mod
+              assert (d/'update_1800_install.log').exists()
+          print('1.8.0 real installer chain OK')
+          PY
+      - name: Build update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_0_TINY.zip'
+          payload=[('build/1800/patch_1800.py','patch_1800.py'),('build/1800/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload: z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              assert set(z.namelist())=={'patch_1800.py','post_update.py'}
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.0','published_at':'2026-09-17',
+            'min_bootstrap_version':'1.7.18',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_0_TINY.zip?rev=1800-clean-word-pipeline',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.0: Word-Automatik komplett neu aufgebaut. XML wird nur noch zur Felderkennung gelesen. Eine einzige neue Word-COM-Instanz setzt die Legacy-FormFields, speichert eine von Word selbst normalisierte DOCX und exportiert im selben Lauf direkt die PDF. Keine UI-Automation, kein PDF-Drucker, kein Anhaengen an bestehende Word-Instanzen.',
+            'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_0_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.0 clean Word pipeline'
+          git pull --rebase origin main
+          git push origin main
