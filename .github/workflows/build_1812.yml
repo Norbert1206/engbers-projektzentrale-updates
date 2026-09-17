@@ -1,0 +1,84 @@
+name: Build Engbers Projektzentrale 1.8.12
+on:
+  push:
+    paths:
+      - 'build/1812/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.11 to 1.8.12
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1812
+          mkdir -p /tmp/pz1812/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_11_TINY.zip?rev=1811-text-editor-fit' -o /tmp/pz1812/base.zip
+          unzip -q /tmp/pz1812/base.zip -d /tmp/pz1812/unpacked
+          python -m py_compile build/1812/patch_1812_release.py
+          python build/1812/patch_1812_release.py /tmp/pz1812/unpacked
+          python - <<'PY'
+          from pathlib import Path
+          import py_compile
+          root=Path('/tmp/pz1812/unpacked')
+          for p in root.glob('*.py'):
+              py_compile.compile(str(p),doraise=True)
+          app=(root/'app.py').read_text(encoding='utf-8')
+          commercial=(root/'commercial_v1890.py').read_text(encoding='utf-8')
+          assert 'APP_VERSION = "1.8.12"' in app
+          assert 'MODULE_VERSION = "1.8.12"' in commercial
+          for marker in ('PZ_LEXWARE_M_WORKFLOW_V1812','LEXWARE ANGEBOTE','LEXWARE RECHNUNGEN','PROJEKTBEZUG KOPIEREN','LEXWARE-PDF ABLEGEN'):
+              assert marker in commercial, marker
+          assert 'api_key' not in commercial.lower()
+          assert 'api-token' not in commercial.lower()
+          print('1.8.12 validation OK')
+          PY
+      - name: Build update package and manifest
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,zipfile
+          root=Path('.')
+          src=Path('/tmp/pz1812/unpacked')
+          out=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_12_TINY.zip'
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(src.iterdir(),key=lambda x:x.name.casefold()):
+                  if p.is_file():
+                      z.write(p,p.name)
+          with zipfile.ZipFile(out) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              required={'app.py','commercial_v1890.py','post_update.py','wordforms_v1700.py','pdf_stamp_v1870.py','project_batch_stamp_v1870.py','masterdata_edit_v1860.py'}
+              assert required.issubset(names), sorted(required-names)
+          sha=hashlib.sha256(out.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale',
+            'channel':'stable',
+            'version':'1.8.12',
+            'published_at':'2026-09-17',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_12_TINY.zip?rev=1812-lexware-m-workflow',
+            'package_format':'zip',
+            'sha256':sha,
+            'notes':'Version 1.8.12: Lexware Office M wird ohne API praktisch angebunden. Angebote und Rechnungen koennen direkt in Lexware geoeffnet werden, der aktuelle Projektbezug kann in die Zwischenablage kopiert werden und exportierte Lexware-PDFs lassen sich direkt aus dem Downloads-Ordner als Kopie in das gewaehlte Ablageziel uebernehmen. Es werden keine Zugangsdaten gespeichert. Alle Funktionen aus Version 1.8.11 bleiben erhalten.',
+            'update_available':True,
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_12_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.12 Lexware M workflow'
+          git pull --rebase origin main
+          git push origin main
