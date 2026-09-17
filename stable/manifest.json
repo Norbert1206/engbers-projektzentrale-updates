@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.13",
+  "version": "1.8.14",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_13_TINY.zip?rev=1813-professional-billing-texts",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip?rev=1814-private-letter-addressbook",
   "package_format": "zip",
-  "sha256": "3fd45fd9dfc8986bd3b7bb6608ad3a897c6bcb20ae4b3ebb45822ee1e8952743",
-  "notes": "Version 1.8.13: Die Textbausteine erhalten eine projektuebergreifende Standardbibliothek mit mehr als 30 professionellen Formulierungen fuer Tragwerksplanung/Statik, Waermeschutz/GEG, KfW/EEE, energetische Zusatz- und Variantenberechnungen sowie DGNB/QNG-Zertifizierung. Enthalten sind Rechnung, Abschlag, Schlussrechnung, Zusatzleistungen, Angebote und Zahlungstexte. Eigene vorhandene Textbausteine bleiben unveraendert; die Standardbibliothek wird nur einmal ergaenzt. Alle Funktionen aus Version 1.8.12 bleiben erhalten.",
+  "sha256": "c0a9539878727bff9df7722b8ac2567040b7282c4e5659bd08a0aea86018a374",
+  "notes": "Version 1.8.14: Unter Kommunikation kommen ANSCHREIBEN ERSTELLEN und ADRESSBUCH hinzu. Das lokale Adressbuch speichert Firmen und Ansprechpartner mit Anschrift, Telefon, Mobil, E-Mail, Webseite, Quelle und Notiz; eine Dublettenpruefung ist vorbereitet. Beim Anschreiben kann der Empfaenger direkt aus dem Adressbuch uebernommen werden. Das vorhandene Engbers-Musteranschreiben wird beim ersten Einsatz einmal lokal ausgewaehlt und automatisch als private Arbeitsvorlage eingerichtet; der persoenliche Briefkopf und darin enthaltene Bueroangaben werden nicht im Update oder GitHub gespeichert. Das Word-Anschreiben wird projektbezogen unter 08_Kommunikation/Anschreiben gespeichert und in der Kommunikationsakte registriert. Die Adressstruktur ist fuer spaetere mobile Synchronisation vorbereitet. Alle Funktionen aus Version 1.8.13 bleiben erhalten.",
   "update_available": true
 }
