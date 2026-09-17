@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.11",
+  "version": "1.7.12",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.7.10",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_11_TINY.zip?rev=1711-word-focus",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_12_TINY.zip?rev=1712-update-repair",
   "package_format": "zip",
-  "sha256": "42159f567bb22dd445016f52d3e51f249f463f0df1e2bc71205e9b9ffdb0d514",
-  "notes": "Version 1.7.11: Fuer den Adobe-PDF-Ablauf wird jetzt gezielt das Word-Fenster der aktuellen Bescheinigung anhand des Dokumentnamens aktiviert. Der Datei-Bereich wird gezielt ueber das sichtbare Datei-Element geoeffnet, mit Alt+F nur noch als Fallback. Wird Word waehrend der PDF-Erzeugung geschlossen, wird dies sauber als Fehler gemeldet statt den Ablauf abstuerzen zu lassen.",
+  "sha256": "030320aa740d018944402a1f4897a669d191f2221a1841032a65716ac7435d78",
+  "notes": "Version 1.7.12: Reparatur der Update-Ausfuehrung. post_update startet den eigentlichen Patch wieder selbst; Launcher und Updater pruefen Fehler und schreiben Protokolle. Direkter Sprung von 1.7.10/1.7.11 auf 1.7.12. Enthalten ist zugleich der Word-Fokus-/Adobe-PDF-Fix.",
   "update_available": true
 }
