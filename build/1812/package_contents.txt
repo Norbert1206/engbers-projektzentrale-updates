@@ -1,0 +1,13 @@
+Archive:  /tmp/pz1811/update.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+   271220  2026-09-17 14:53   app.py
+    54760  2026-09-17 14:52   wordforms_v1700.py
+    34085  2026-09-17 14:52   pdf_stamp_v1870.py
+    14654  2026-09-17 14:52   project_batch_stamp_v1870.py
+     5456  2026-09-17 14:52   masterdata_edit_v1860.py
+    21393  2026-09-17 14:53   commercial_v1890.py
+     4654  2026-09-17 14:53   post_update.py
+      849  2026-09-17 14:53   BUILD
+---------                     -------
+   407071                     8 files
