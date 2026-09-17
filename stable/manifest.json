@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.18",
+  "version": "1.8.0",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.17",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_18_TINY.zip?rev=1718-word-printtofile-fixed",
+  "min_bootstrap_version": "1.7.18",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_0_TINY.zip?rev=1800-clean-word-pipeline",
   "package_format": "zip",
-  "sha256": "9eb411ad30f672bf8630de4a12b06a8c1db9be58d6d648e611e777666ef41aad",
-  "notes": "Version 1.7.18: Windows-Speicherdialog komplett entfernt. Word oeffnet das Formular normal und druckt danach direkt ueber Microsoft Print to PDF mit PrintToFile und festem OutputFileName in die PDF neben der Word-Datei.",
+  "sha256": "cdd1dc5eb8cdefe3f6ed3104eddd5fc480ec2935aa7d1809e05c6427f79cede4",
+  "notes": "Version 1.8.0: Word-Automatik komplett neu aufgebaut. XML wird nur noch zur Felderkennung gelesen. Eine einzige neue Word-COM-Instanz setzt die Legacy-FormFields, speichert eine von Word selbst normalisierte DOCX und exportiert im selben Lauf direkt die PDF. Keine UI-Automation, kein PDF-Drucker, kein Anhaengen an bestehende Word-Instanzen.",
   "update_available": true
 }
