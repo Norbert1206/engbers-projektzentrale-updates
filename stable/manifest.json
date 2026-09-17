@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.8.0",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_1_TINY.zip?rev=1801-csharp-word-bridge-fixed",
+  "min_bootstrap_version": "1.8.1",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_2_TINY.zip?rev=1802-local-sasv-release-stamp",
   "package_format": "zip",
-  "sha256": "5ed6d756b72e95ffefd02a6a26e4aa7456a3ab11989bb0db792d87cb2a0499e5",
-  "notes": "Version 1.8.1: Word-COM wird ueber einen C#-Bridge mit benannten Parametern gesteuert. OpenAndRepair, Formularfelder, Speichern und PDF-Export laufen in derselben Word-Instanz; die fehleranfaellige direkte PowerShell-COM-Parameteruebergabe ist entfernt.",
+  "sha256": "c7e41edd2bbe4c6ef05ecd10425dbf2aea6f5d1963e5eaf509b29b80b80c17ad",
+  "notes": "Version 1.8.2: saSV-Freigabeschritt mit lokalem Stempelprofil. Neue Buttons STEMPEL EINRICHTEN und FREIGEBEN & STEMPELN. Die echte Stempel/Unterschrift-Grafik bleibt ausschliesslich lokal unter LOCALAPPDATA und ist nicht Bestandteil des Update-Pakets. Das Word-Original bleibt beim finalen Stempeln unveraendert.",
   "update_available": true
 }
