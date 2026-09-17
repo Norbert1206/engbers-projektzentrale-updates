@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.14",
+  "version": "1.8.15",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip?rev=1814-private-letter-addressbook",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_15_TINY.zip?rev=1815-clean-letter-layout",
   "package_format": "zip",
-  "sha256": "c0a9539878727bff9df7722b8ac2567040b7282c4e5659bd08a0aea86018a374",
-  "notes": "Version 1.8.14: Unter Kommunikation kommen ANSCHREIBEN ERSTELLEN und ADRESSBUCH hinzu. Das lokale Adressbuch speichert Firmen und Ansprechpartner mit Anschrift, Telefon, Mobil, E-Mail, Webseite, Quelle und Notiz; eine Dublettenpruefung ist vorbereitet. Beim Anschreiben kann der Empfaenger direkt aus dem Adressbuch uebernommen werden. Das vorhandene Engbers-Musteranschreiben wird beim ersten Einsatz einmal lokal ausgewaehlt und automatisch als private Arbeitsvorlage eingerichtet; der persoenliche Briefkopf und darin enthaltene Bueroangaben werden nicht im Update oder GitHub gespeichert. Das Word-Anschreiben wird projektbezogen unter 08_Kommunikation/Anschreiben gespeichert und in der Kommunikationsakte registriert. Die Adressstruktur ist fuer spaetere mobile Synchronisation vorbereitet. Alle Funktionen aus Version 1.8.13 bleiben erhalten.",
+  "sha256": "9f7b52e5ad9f2164ec74156c5fd9c38aa56322bb97f0a468a37116162eb46635",
+  "notes": "Version 1.8.15: Das Anschreiben-Layout wurde bereinigt. Ausgewählte Unterlagen stehen links sauber untereinander; die ausgewählten Optionen unter Mit der Bitte um stehen rechts ebenfalls direkt untereinander. Nicht ausgewählte Einträge erzeugen keine leeren oder verstreuten Kästchen mehr. Der Standard-Betreff ist wieder schlicht Unterlagen. Bis zu fünf Bitte-um-Optionen können gleichzeitig gewählt werden. Adressbuch, private lokale Briefkopfvorlage und alle Funktionen aus 1.8.14 bleiben erhalten.",
   "update_available": true
 }
