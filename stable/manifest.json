@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.13",
+  "version": "1.7.14",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.12",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_13_TINY.zip?rev=1713-direct-backstage",
+  "min_bootstrap_version": "1.7.13",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_14_TINY.zip?rev=1714-altf-uia-click",
   "package_format": "zip",
-  "sha256": "30673db62b7ed286ae91eb5d0cc0818727d93c19bc5ba40c402ed46e6f8e8147",
-  "notes": "Version 1.7.13: Adobe-PDF-Ablauf ohne globale rekursive Windows-UI-Suche. Word wird per Win32 in den Vordergrund geholt, Datei/Backstage wird direkt geoeffnet und nur in Word-Prozessfenstern nach Als Adobe PDF speichern gesucht. Dadurch kein 100-Sekunden-Haenger mehr.",
+  "sha256": "83e4e7f830c88647ab74b3e233b7964831d9c0312183cd4e9d40eda4f69665cf",
+  "notes": "Version 1.7.14: Word-Datei/Backstage wird dreistufig geoeffnet: echtes Windows Alt+F, UIAutomation-Patterns und als letzter Fallback direkter Klick auf den sichtbaren Datei-Reiter. Nach jedem Versuch wird geprueft, ob Als Adobe PDF speichern wirklich sichtbar ist.",
   "update_available": true
 }
