@@ -6,9 +6,10 @@ ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd()
 APP = ROOT / "app.py"
 POST = ROOT / "post_update.py"
 CORR = ROOT / "correspondence_v1814.py"
-TEMPLATE = ROOT / "anschreiben_template.docx"
+CONTACTS = ROOT / "contacts_v1814.py"
+TEMPLATE_HELPER = ROOT / "letter_template_v1814.py"
 
-for path in (APP, POST, CORR, TEMPLATE):
+for path in (APP, POST, CORR, CONTACTS, TEMPLATE_HELPER):
     if not path.exists():
         raise RuntimeError(f"1.8.14: Update-Datei fehlt: {path.name}")
 
@@ -33,14 +34,22 @@ app = replace_once(
         except Exception as exc:
             messagebox.showerror('Anschreiben', str(exc), parent=self)
 
+    def open_addressbook(self):
+        # PZ_CONTACTS_V1814: lokales Adressbuch, vorbereitet fuer spaetere mobile Synchronisation.
+        try:
+            from contacts_v1814 import open_contact_picker
+            return open_contact_picker(self, DB_PATH, self.project_id, None, False)
+        except Exception as exc:
+            messagebox.showerror('Adressbuch', str(exc), parent=self)
+
     def show_comm(self):
 ''',
-    "correspondence method",
+    "correspondence and addressbook methods",
 )
 app = replace_once(
     app,
     "        for txt,cmd in [('E-Mail (.eml) importieren',self.import_eml),('WhatsApp (.txt) importieren',self.import_whatsapp),('Goodnotes-PDF importieren',self.import_goodnotes)]:\n",
-    "        for txt,cmd in [('ANSCHREIBEN ERSTELLEN',self.create_correspondence),('E-Mail (.eml) importieren',self.import_eml),('WhatsApp (.txt) importieren',self.import_whatsapp),('Goodnotes-PDF importieren',self.import_goodnotes)]:\n",
+    "        for txt,cmd in [('ANSCHREIBEN ERSTELLEN',self.create_correspondence),('ADRESSBUCH',self.open_addressbook),('E-Mail (.eml) importieren',self.import_eml),('WhatsApp (.txt) importieren',self.import_whatsapp),('Goodnotes-PDF importieren',self.import_goodnotes)]:\n",
     "communication toolbar",
 )
 APP.write_text(app, encoding="utf-8")
@@ -48,32 +57,36 @@ APP.write_text(app, encoding="utf-8")
 post = POST.read_text(encoding="utf-8")
 post = replace_once(post, "update_1813_install.log", "update_1814_install.log", "post log")
 post = replace_once(post, "update_1813_error.txt", "update_1814_error.txt", "post error")
-post = replace_once(post, "    BASE / 'commercial_v1890.py',\n)", "    BASE / 'commercial_v1890.py',\n    BASE / 'correspondence_v1814.py',\n)", "post required module")
-post = replace_once(post, 'APP_VERSION = "1.8.13"', 'APP_VERSION = "1.8.14"', "post version check")
 post = replace_once(
     post,
-    "        if not (BASE / 'masterdata_v1604.py').exists():\n            raise RuntimeError('Das vorhandene Stammdatenmodul masterdata_v1604.py fehlt.')\n",
-    "        if not (BASE / 'masterdata_v1604.py').exists():\n            raise RuntimeError('Das vorhandene Stammdatenmodul masterdata_v1604.py fehlt.')\n        if not (BASE / 'anschreiben_template.docx').exists():\n            raise RuntimeError('Die Anschreiben-Vorlage anschreiben_template.docx fehlt.')\n",
-    "post template check",
+    "    BASE / 'commercial_v1890.py',\n)",
+    "    BASE / 'commercial_v1890.py',\n    BASE / 'correspondence_v1814.py',\n    BASE / 'contacts_v1814.py',\n    BASE / 'letter_template_v1814.py',\n)",
+    "post required modules",
 )
+post = replace_once(post, 'APP_VERSION = "1.8.13"', 'APP_VERSION = "1.8.14"', "post version check")
 post = replace_once(post, "OK: Update 1.8.13 erfolgreich installiert.", "OK: Update 1.8.14 erfolgreich installiert.", "post success")
 POST.write_text(post, encoding="utf-8")
 
-for path in (APP, POST, CORR):
+for path in (APP, POST, CORR, CONTACTS, TEMPLATE_HELPER):
     py_compile.compile(str(path), doraise=True)
 
 app_text = APP.read_text(encoding="utf-8")
 corr_text = CORR.read_text(encoding="utf-8")
+contacts_text = CONTACTS.read_text(encoding="utf-8")
+template_text = TEMPLATE_HELPER.read_text(encoding="utf-8")
 if 'APP_VERSION = "1.8.14"' not in app_text:
     raise RuntimeError("1.8.14: Version wurde nicht gesetzt.")
 for required in (
     "PZ_CORRESPONDENCE_V1814",
+    "PZ_CONTACTS_V1814",
     "ANSCHREIBEN ERSTELLEN",
+    "ADRESSBUCH",
     "open_correspondence_dialog",
 ):
-    if required not in app_text and required not in corr_text:
+    if required not in app_text and required not in corr_text and required not in contacts_text:
         raise RuntimeError("1.8.14: Funktionspruefung fehlt: " + required)
-if TEMPLATE.stat().st_size < 10000:
-    raise RuntimeError("1.8.14: Anschreiben-Vorlage ist unplausibel klein.")
+for required in ("PZ_CORRESPONDENCE_PRIVATE_TEMPLATE_V1814", "PRIVATE_TEMPLATE", "convert_original_template"):
+    if required not in template_text and required not in corr_text:
+        raise RuntimeError("1.8.14: Vorlagenpruefung fehlt: " + required)
 
-print("OK: Projektzentrale 1.8.14 Anschreiben-Funktion vorbereitet.")
+print("OK: Projektzentrale 1.8.14 Anschreiben, lokales Adressbuch und private Vorlage vorbereitet.")
