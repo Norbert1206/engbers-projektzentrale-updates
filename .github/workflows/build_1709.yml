@@ -1,0 +1,80 @@
+name: Build Engbers Projektzentrale 1.7.9
+on:
+  push:
+    paths:
+      - 'build/1709/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Adobe UI automation patch
+        run: |
+          python -m py_compile build/1709/patch_1709.py build/1709/post_update.py
+          python - <<'PY'
+          import pathlib,runpy
+          root=pathlib.Path('.')
+          src=(root/'build/1700/wordforms_v1700.py').read_text(encoding='utf-8')
+          p1=runpy.run_path(str(root/'build/1701/patch_1701.py'),run_name='defs1701')
+          for a,b in [('OLD_FILL','NEW_FILL'),('OLD_RETURN','NEW_RETURN'),('OLD_SELECTED','NEW_SELECTED'),('OLD_OPEN','NEW_OPEN'),('OLD_BUTTON','NEW_BUTTON')]:
+              assert p1[a] in src,a
+              src=src.replace(p1[a],p1[b],1)
+          p2=runpy.run_path(str(root/'build/1702/patch_1702.py'),run_name='defs1702')
+          for a,b in [('IMPORT_OLD','IMPORT_NEW'),('CLASSIFY_OLD','CLASSIFY_NEW'),('VALUES_OLD','VALUES_NEW'),('FILL_ANCHOR','FILL_HELPER'),('FILL_OLD','FILL_NEW'),('OUT_OLD','OUT_NEW'),('DOCS_OLD','DOCS_NEW'),('FILL_UI_OLD','FILL_UI_NEW'),('FILL_UI_BODY_OLD','FILL_UI_BODY_NEW'),('MSG_OLD','MSG_NEW'),('OPEN_OLD','OPEN_NEW'),('BUTTON_OLD','BUTTON_NEW')]:
+              assert p2[a] in src,a
+              src=src.replace(p2[a],p2[b],1)
+          p3=runpy.run_path(str(root/'build/1703/patch_1703.py'),run_name='defs1703')
+          for a,b in [('IMPORT_OLD','IMPORT_NEW'),('HELPER_ANCHOR','HELPER_NEW'),('FILL_OLD','FILL_NEW'),('OUT_OLD','OUT_NEW'),('HEAD_OLD','HEAD_NEW'),('STATUS_OLD','STATUS_NEW'),('MSG_OLD','MSG_NEW'),('OUTPUT_MSG_OLD','OUTPUT_MSG_NEW')]:
+              assert p3[a] in src,a
+              src=src.replace(p3[a],p3[b],1)
+          if p3['FALLBACK_OLD'] in src: src=src.replace(p3['FALLBACK_OLD'],p3['FALLBACK_NEW'],1)
+          src=src.replace(p3['OPEN_ERROR_OLD'],p3['OPEN_ERROR_NEW'],1)
+          for ver in ('1705','1706','1707','1708','1709'):
+              p=runpy.run_path(str(root/f'build/{ver}/patch_{ver}.py'),run_name=f'defs{ver}')
+              src=p['_patch_mod'](src)
+          compile(src,'wordforms_v1700.py','exec')
+          assert 'PZ_ADOBE_UI_AUTOMATION_V1709' in src
+          assert "Als Adobe PDF speichern" in src
+          assert 'UIAutomationClient' in src
+          assert 'AutomationIdProperty' in src
+          assert "@('Speichern','Save')" in src
+          assert 'CreatePDFEx' not in src[src.find('def _export_pdf_with_word'):src.find('\n\ndef open_wordforms')]
+          print('1.7.9 Adobe UI automation patch validation OK')
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_9_TINY.zip'
+          payload=[('build/1709/patch_1709.py','patch_1709.py'),('build/1709/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.7.9','published_at':'2026-09-17',
+              'min_bootstrap_version':'1.7.8',
+              'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_9_TINY.zip?rev=1709-adobe-ui',
+              'package_format':'zip','sha256':sha,
+              'notes':'Version 1.7.9: Die PDF-Erzeugung bildet den manuellen Word-Ablauf nach. Word wird sichtbar geoeffnet, der Word-Menuebefehl Als Adobe PDF speichern wird per Windows UI Automation angeklickt und der Speichern-Dialog automatisch mit dem PDF-Pfad ausgefuellt. Die direkte, undokumentierte PDFMaker-COM-Ansteuerung wurde entfernt.',
+              'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_7_9_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.7.9 Adobe UI automation'
+          git pull --rebase origin main
+          git push origin main
