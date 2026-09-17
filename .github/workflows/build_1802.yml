@@ -1,0 +1,32 @@
+name: Build Engbers Projektzentrale 1.8.2
+on:
+  push:
+    paths:
+      - 'build/1802/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate installer
+        run: |
+          python -m py_compile build/1802/patch_1802.py build/1802/post_update.py
+          python build/1802/test_install.py
+      - name: Build package
+        run: python build/1802/build_release.py
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_2_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.2 local saSV release stamp'
+          git pull --rebase origin main
+          git push origin main
