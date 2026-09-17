@@ -23,7 +23,7 @@ def main():
         mod = (BASE / 'wordforms_v1700.py').read_text(encoding='utf-8')
         if 'APP_VERSION = "1.7.14"' not in app and "APP_VERSION = '1.7.14'" not in app:
             raise RuntimeError('Versionspruefung nach Installation fehlgeschlagen.')
-        if 'PZ_ADOBE_BACKSTAGE_KEYS_CLICK_V1714' not in mod:
+        if 'PZ_PDF_PRINTER_DRIVER_V1714' not in mod:
             raise RuntimeError('Funktionspruefung nach Installation fehlgeschlagen.')
         LOG.write_text('OK: Update 1.7.14 erfolgreich installiert.\n', encoding='utf-8')
         try: ERR.unlink()
