@@ -11,7 +11,7 @@ OLD='1.7.4'
 NEW='1.7.5'
 MARK='PZ_PDF_EXPORT_RETRY_V1705'
 
-NEW_EXPORT=r'''def _export_pdf_with_word(docx_path, pdf_path):
+NEW_EXPORT=r"""def _export_pdf_with_word(docx_path, pdf_path):
     # PZ_PDF_EXPORT_RETRY_V1705
     # Robust: zuerst in eine temporaere PDF exportieren, danach atomar ersetzen.
     # Dadurch bleibt eine vorhandene PDF erhalten, falls Word beim Export scheitert.
@@ -84,7 +84,7 @@ WScript.Quit 0
         if attempt<3:
             time.sleep(0.8)
     return False,(last_err or 'Unbekannter Word-PDF-Fehler')
-'''
+"""
 
 OLD_MSG="        if made and len(pdf_made)!=len(made): msg.append('Bei mindestens einer Datei konnte Word kein PDF erzeugen; Statuszeile beachten.')"
 NEW_MSG="""        if made and len(pdf_made)!=len(made):
