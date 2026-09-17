@@ -17,7 +17,7 @@ jobs:
           python-version: '3.12'
       - name: Validate 1.8.0 to 1.8.1 installer
         run: |
-          python -m py_compile build/1801/patch_1801.py build/1801/post_update.py
+          python -m py_compile build/1801/patch_1801_fixed.py build/1801/post_update.py
           python - <<'PY'
           import pathlib, runpy, tempfile, shutil, subprocess, sys
           root=pathlib.Path('.')
@@ -54,15 +54,19 @@ jobs:
               shutil.copy2(root/'build/1718/post_update_fixed.py',d/'post_update.py')
               cp=subprocess.run([sys.executable,str(d/'post_update.py')],cwd=d,capture_output=True,text=True)
               assert cp.returncode==0,('1718',cp.stdout,cp.stderr)
-              for ver in ('1800','1801'):
-                  shutil.copy2(root/f'build/{ver}/patch_{ver}.py',d/f'patch_{ver}.py')
-                  shutil.copy2(root/f'build/{ver}/post_update.py',d/'post_update.py')
-                  cp=subprocess.run([sys.executable,str(d/'post_update.py')],cwd=d,capture_output=True,text=True)
-                  if cp.returncode:
-                      print(cp.stdout); print(cp.stderr)
-                      err=d/f'update_{ver}_error.txt'
-                      if err.exists(): print(err.read_text(encoding='utf-8'))
-                  assert cp.returncode==0,(ver,cp.returncode)
+              shutil.copy2(root/'build/1800/patch_1800.py',d/'patch_1800.py')
+              shutil.copy2(root/'build/1800/post_update.py',d/'post_update.py')
+              cp=subprocess.run([sys.executable,str(d/'post_update.py')],cwd=d,capture_output=True,text=True)
+              assert cp.returncode==0,('1800',cp.stdout,cp.stderr)
+              shutil.copy2(root/'build/1801/patch_1801.py',d/'patch_1801.py')
+              shutil.copy2(root/'build/1801/patch_1801_fixed.py',d/'patch_1801_fixed.py')
+              shutil.copy2(root/'build/1801/post_update.py',d/'post_update.py')
+              cp=subprocess.run([sys.executable,str(d/'post_update.py')],cwd=d,capture_output=True,text=True)
+              if cp.returncode:
+                  print(cp.stdout); print(cp.stderr)
+                  err=d/'update_1801_error.txt'
+                  if err.exists(): print(err.read_text(encoding='utf-8'))
+              assert cp.returncode==0,cp.returncode
               app=(d/'app.py').read_text(encoding='utf-8')
               mod=(d/'wordforms_v1700.py').read_text(encoding='utf-8')
               assert 'APP_VERSION = "1.8.1"' in app
@@ -81,19 +85,22 @@ jobs:
           import pathlib,zipfile,hashlib,json
           root=pathlib.Path('.')
           zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_1_TINY.zip'
-          payload=[('build/1801/patch_1801.py','patch_1801.py'),('build/1801/post_update.py','post_update.py')]
+          payload=[
+            ('build/1801/patch_1801.py','patch_1801.py'),
+            ('build/1801/patch_1801_fixed.py','patch_1801_fixed.py'),
+            ('build/1801/post_update.py','post_update.py')]
           with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
               for src,dst in payload: z.write(root/src,dst)
           with zipfile.ZipFile(zip_path) as z:
               assert z.testzip() is None
-              assert set(z.namelist())=={'patch_1801.py','post_update.py'}
+              assert set(z.namelist())=={'patch_1801.py','patch_1801_fixed.py','post_update.py'}
           sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
           manifest={
             'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.1','published_at':'2026-09-17',
             'min_bootstrap_version':'1.8.0',
-            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_1_TINY.zip?rev=1801-csharp-word-bridge',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_1_TINY.zip?rev=1801-csharp-word-bridge-fixed',
             'package_format':'zip','sha256':sha,
-            'notes':'Version 1.8.1: Word-COM wird nicht mehr direkt aus PowerShell mit optionalen Parametern gesteuert. Ein C#-COM-Bridge oeffnet Word mit benannten Parametern und OpenAndRepair, setzt die FormFields, speichert die normalisierte DOCX und exportiert die PDF in derselben Word-Instanz.',
+            'notes':'Version 1.8.1: Word-COM wird ueber einen C#-Bridge mit benannten Parametern gesteuert. OpenAndRepair, Formularfelder, Speichern und PDF-Export laufen in derselben Word-Instanz; die fehleranfaellige direkte PowerShell-COM-Parameteruebergabe ist entfernt.',
             'update_available':True}
           (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print('PACKAGE_SHA256='+sha)
@@ -104,6 +111,6 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add stable/Engbers_Projektzentrale_UPDATE_1_8_1_TINY.zip stable/manifest.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Release Projektzentrale 1.8.1 C# Word bridge'
+          git commit -m 'Release Projektzentrale 1.8.1 C# Word bridge fixed'
           git pull --rebase origin main
           git push origin main
