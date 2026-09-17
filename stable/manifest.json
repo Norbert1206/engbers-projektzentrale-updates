@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.9",
+  "version": "1.8.10",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_9_TINY.zip?rev=1809-commercial-documents-texts",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_10_TINY.zip?rev=1810-generic-invoices",
   "package_format": "zip",
-  "sha256": "e571b4fd39c0f81b3d7f0861b051343110eec1d8215f47e30fb3fd7fc97aac32",
-  "notes": "Version 1.8.9: Neuer projektbezogener Bereich Angebote & Rechnungen mit geordneter Dateiablage, Mehrfachimport, Umbenennen, sicherem Loeschen ueber den Windows-Papierkorb sowie projektbezogenen und projektuebergreifenden Textbausteinen. Lexware Online kann direkt geoeffnet werden; eine spaetere offizielle API-Anbindung ist vorbereitet.",
+  "sha256": "a08ed20111c505912e327354c99fd663735c4757f179801c75e6e670c564440c",
+  "notes": "Version 1.8.10: Im Bereich Angebote & Rechnungen steht nun zusaetzlich das allgemeine Ablageziel Rechnungen zur Verfuegung. Es ist fuer einzelne Rechnungen gedacht, die weder Abschlags- noch Schlussrechnungen sind. Alle Funktionen aus Version 1.8.9 bleiben erhalten.",
   "update_available": true
 }
