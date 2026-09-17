@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.6",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_7_TINY.zip?rev=1707-export-safe-docx",
+  "min_bootstrap_version": "1.7.7",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_8_TINY.zip?rev=1708-adobe-pdfmaker",
   "package_format": "zip",
-  "sha256": "7e46cd71a987351c88d8cca3a121919313c6915f79435aae9e57cd1122790f95",
-  "notes": "Version 1.7.7: PDF-Export nutzt eine temporaere export-sichere DOCX, in der nur fuer den Export die alten Text-Formularfelder in normalen Text umgewandelt werden. Die Projekt-DOCX selbst bleibt unveraendert mit Formularfeldern. Die temporaere DOCX wird nach dem PDF-Export geloescht. PowerShell + Word-COM exportiert nur die Zwischendatei.",
+  "sha256": "ae0c08670e9232d004e380612f60f2c0ca9ea798946b928610a4009987296c1e",
+  "notes": "Version 1.7.8: Word-Bescheinigungen werden fuer die PDF-Erzeugung wie beim manuellen Doppelklick in Microsoft Word geoeffnet und anschliessend mit dem Acrobat PDFMaker Office COM Add-In in PDF umgewandelt. Damit verwendet die Projektzentrale denselben Adobe-PDF-Weg wie der Word-Befehl Adobe PDF erstellen. Word kann dabei kurz sichtbar sein.",
   "update_available": true
 }
