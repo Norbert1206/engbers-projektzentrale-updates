@@ -1,0 +1,62 @@
+name: Build Engbers Projektzentrale 1.8.13
+on:
+  push:
+    paths:
+      - 'build/1813/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and patch stable 1.8.12
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1813
+          mkdir -p /tmp/pz1813/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_12_TINY.zip?rev=1812-lexware-m-workflow' -o /tmp/pz1813/base.zip
+          unzip -q /tmp/pz1813/base.zip -d /tmp/pz1813/unpacked
+          python build/1813/patch_1813.py /tmp/pz1813/unpacked
+      - name: Build update package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('.')
+          src=pathlib.Path('/tmp/pz1813/unpacked')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_13_TINY.zip'
+          if zip_path.exists(): zip_path.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file())
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files:
+                  z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for req in ('app.py','commercial_v1890.py','post_update.py'):
+                  assert req in names, req
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.13','published_at':'2026-09-17',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_13_TINY.zip?rev=1813-professional-billing-texts',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.13: Die Textbausteine erhalten eine projektuebergreifende Standardbibliothek mit mehr als 30 professionellen Formulierungen fuer Tragwerksplanung/Statik, Waermeschutz/GEG, KfW/EEE, energetische Zusatz- und Variantenberechnungen sowie DGNB/QNG-Zertifizierung. Enthalten sind Rechnung, Abschlag, Schlussrechnung, Zusatzleistungen, Angebote und Zahlungstexte. Eigene vorhandene Textbausteine bleiben unveraendert; die Standardbibliothek wird nur einmal ergaenzt. Alle Funktionen aus Version 1.8.12 bleiben erhalten.',
+            'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_13_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.13 professional billing texts'
+          git pull --rebase origin main
+          git push origin main
