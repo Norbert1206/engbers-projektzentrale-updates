@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.6",
+  "version": "1.8.7",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_6_TINY.zip?rev=1806-stamps-reset-masterdata",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_7_TINY.zip?rev=1807-project-batch-stamping",
   "package_format": "zip",
-  "sha256": "cb9a58d28c333b9c0b2b772a3ebfedb332729a43e03bfe9cb12acef24400b92e",
-  "notes": "Version 1.8.6: Zusatzabfragen fuer besondere Waermeschutz-Bescheinigungen, fehlerhafte Bescheinigung loeschen und sofort neu ausfuellen, bearbeitbare Projektstammdaten sowie ein neues PDF-Stempelwerkzeug. Statikstempel und Waerme-/Schallschutzstempel sind getrennt. Statikberechnungen werden auf erster und letzter Seite, Plaene unten rechts im Schriftfeld gestempelt; beide Stempel sind zusaetzlich frei positionier- und skalierbar. Stempelgrafiken bleiben ausschliesslich lokal.",
+  "sha256": "f3f4d06b744b02d31b46b42a7cd811e8ed45047696a98c4f33cd454e59315239",
+  "notes": "Version 1.8.7: Statikberechnungen und mehrere oder alle Statikplaene koennen direkt im Bereich Statik PDF aus dem aktuellen Projekt ausgewaehlt und gesammelt gestempelt werden. Die Stapelverarbeitung zeigt Fortschritt und Ergebnis, ersetzt auf Wunsch die Originale oder erzeugt _gestempelt-Dateien. Ein unsichtbarer PDF-Vermerk verhindert versehentliches Doppelstempeln. Die Stempelauswahl verwendet verstaendliche Bezeichnungen.",
   "update_available": true
 }
