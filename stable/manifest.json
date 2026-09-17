@@ -4,9 +4,9 @@
   "version": "1.8.7",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_7_TINY.zip?rev=1807-project-batch-stamping",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_7_TINY.zip?rev=1807-project-batch-stamping-navfix",
   "package_format": "zip",
-  "sha256": "f3f4d06b744b02d31b46b42a7cd811e8ed45047696a98c4f33cd454e59315239",
+  "sha256": "9d65d8e37d14f1ff64a2b091d6426b3a92e3a40cef81ed8dc4ea1aac90533b7f",
   "notes": "Version 1.8.7: Statikberechnungen und mehrere oder alle Statikplaene koennen direkt im Bereich Statik PDF aus dem aktuellen Projekt ausgewaehlt und gesammelt gestempelt werden. Die Stapelverarbeitung zeigt Fortschritt und Ergebnis, ersetzt auf Wunsch die Originale oder erzeugt _gestempelt-Dateien. Ein unsichtbarer PDF-Vermerk verhindert versehentliches Doppelstempeln. Die Stempelauswahl verwendet verstaendliche Bezeichnungen.",
   "update_available": true
 }
