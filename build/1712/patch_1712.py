@@ -10,9 +10,9 @@ APP = BASE / 'app.py'
 MOD = BASE / 'wordforms_v1700.py'
 NEW = '1.7.12'
 MARK = 'PZ_WORD_FOCUS_BACKSTAGE_V1711'
+GLOBAL_MARK = '# PZ_ADOBE_UI_GLOBAL_SEARCH_V1710'
 
-OLD_START = "# 2) Datei-Backstage oeffnen\n[System.Windows.Forms.SendKeys]::SendWait('%f')\nStart-Sleep -Milliseconds 900\n\n# 3) Adobe-Menueintrag wirklich anklicken\n"
-OLD_END = "# 4) Auf Speichern-Dialog warten"
+FOCUS_START = "$wordWin=[Windows.Automation.AutomationElement]::FromHandle([IntPtr]$hwnd)\ntry { $wordWin.SetFocus() } catch {}\nStart-Sleep -Milliseconds 400\n\n[System.Windows.Forms.SendKeys]::SendWait('%f')\nStart-Sleep -Milliseconds 900\n\n"
 
 NEW_BLOCK = r'''# 2) Exakt das Word-Fenster der aktuellen DOCX finden und aktivieren
 # PZ_WORD_FOCUS_BACKSTAGE_V1711
@@ -35,6 +35,7 @@ if(-not $targetWin){ throw 'Das Word-Fenster mit der Bescheinigung wurde nicht g
 try { $targetWin.SetFocus() } catch {}
 Start-Sleep -Milliseconds 500
 
+# Datei/Backstage zuerst ueber sichtbares UI-Element oeffnen; Alt+F ist Fallback.
 $fileTab=Find-ByName $targetWin @('Datei','File')
 if($fileTab){
   if(-not (Invoke-El $fileTab)){
@@ -49,7 +50,7 @@ if(-not (Get-Process -Id $wordProc.Id -ErrorAction SilentlyContinue)){
   throw 'Microsoft Word wurde waehrend der PDF-Erzeugung geschlossen.'
 }
 
-# 3) Adobe-Menueintrag im gesamten Desktop suchen
+# 3) Adobe-Menueintrag wird anschliessend mit der vorhandenen globalen 1.7.10-Suche gefunden.
 '''
 
 
@@ -71,13 +72,13 @@ def _set_version(text, version):
 def _patch_mod(mod):
     if MARK in mod:
         return mod
-    s = mod.find(OLD_START)
+    s = mod.find(FOCUS_START)
     if s < 0:
-        raise RuntimeError('1.7.12: Start des Word-Backstage-Blocks aus 1.7.10 wurde nicht gefunden.')
-    e = mod.find(OLD_END, s)
+        raise RuntimeError('1.7.12: Word-Fokus/Alt+F-Block aus 1.7.10 wurde nicht gefunden.')
+    e = mod.find(GLOBAL_MARK, s)
     if e < 0:
-        raise RuntimeError('1.7.12: Ende des Word-Backstage-Blocks wurde nicht gefunden.')
-    return mod[:s] + NEW_BLOCK + mod[s + len(OLD_START):e] + mod[e:]
+        raise RuntimeError('1.7.12: Globaler Adobe-Suchmarker aus 1.7.10 wurde nicht gefunden.')
+    return mod[:s] + NEW_BLOCK + mod[e:]
 
 
 def main():
@@ -95,8 +96,8 @@ def main():
 
     mod_new = _patch_mod(mod)
     app_new = _set_version(app, NEW)
-    if MARK not in mod_new:
-        raise RuntimeError('1.7.12: Fokus-/Backstage-Fix fehlt nach dem Patch.')
+    if MARK not in mod_new or GLOBAL_MARK not in mod_new:
+        raise RuntimeError('1.7.12: Fokus-/Adobe-Suchfix fehlt nach dem Patch.')
 
     chk1 = APP.with_name('app.py.1712.check')
     chk2 = MOD.with_name('wordforms_v1700.py.1712.check')
