@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.12",
+  "version": "1.7.13",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.10",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_12_TINY.zip?rev=1712-update-repair",
+  "min_bootstrap_version": "1.7.12",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_13_TINY.zip?rev=1713-direct-backstage",
   "package_format": "zip",
-  "sha256": "030320aa740d018944402a1f4897a669d191f2221a1841032a65716ac7435d78",
-  "notes": "Version 1.7.12: Reparatur der Update-Ausfuehrung. post_update startet den eigentlichen Patch wieder selbst; Launcher und Updater pruefen Fehler und schreiben Protokolle. Direkter Sprung von 1.7.10/1.7.11 auf 1.7.12. Enthalten ist zugleich der Word-Fokus-/Adobe-PDF-Fix.",
+  "sha256": "30673db62b7ed286ae91eb5d0cc0818727d93c19bc5ba40c402ed46e6f8e8147",
+  "notes": "Version 1.7.13: Adobe-PDF-Ablauf ohne globale rekursive Windows-UI-Suche. Word wird per Win32 in den Vordergrund geholt, Datei/Backstage wird direkt geoeffnet und nur in Word-Prozessfenstern nach Als Adobe PDF speichern gesucht. Dadurch kein 100-Sekunden-Haenger mehr.",
   "update_available": true
 }
