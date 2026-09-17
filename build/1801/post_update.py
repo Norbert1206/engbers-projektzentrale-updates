@@ -8,16 +8,16 @@ ERR=BASE/'update_1801_error.txt'
 
 def main():
     try:
-        patch=BASE/'patch_1801.py'
+        patch=BASE/'patch_1801_fixed.py'
         if not patch.exists():
-            raise RuntimeError('patch_1801.py fehlt im Programmordner.')
-        ns=runpy.run_path(str(patch),run_name='pz_patch_1801')
+            raise RuntimeError('patch_1801_fixed.py fehlt im Programmordner.')
+        ns=runpy.run_path(str(patch),run_name='pz_patch_1801_fixed')
         fn=ns.get('main')
         if not callable(fn):
-            raise RuntimeError('patch_1801.py enthaelt keine main()-Funktion.')
+            raise RuntimeError('patch_1801_fixed.py enthaelt keine main()-Funktion.')
         rc=fn()
         if rc not in (None,0):
-            raise RuntimeError(f'patch_1801.py lieferte Rueckgabecode {rc}.')
+            raise RuntimeError(f'patch_1801_fixed.py lieferte Rueckgabecode {rc}.')
         app=(BASE/'app.py').read_text(encoding='utf-8')
         mod=(BASE/'wordforms_v1700.py').read_text(encoding='utf-8')
         if 'APP_VERSION = "1.8.1"' not in app and "APP_VERSION = '1.8.1'" not in app:
