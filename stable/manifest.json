@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.15",
+  "version": "1.8.16",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_15_TINY.zip?rev=1815-clean-letter-layout",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_16_TINY.zip?rev=1816-fixed-letter-grid",
   "package_format": "zip",
-  "sha256": "9f7b52e5ad9f2164ec74156c5fd9c38aa56322bb97f0a468a37116162eb46635",
-  "notes": "Version 1.8.15: Das Anschreiben-Layout wurde bereinigt. Ausgewählte Unterlagen stehen links sauber untereinander; die ausgewählten Optionen unter Mit der Bitte um stehen rechts ebenfalls direkt untereinander. Nicht ausgewählte Einträge erzeugen keine leeren oder verstreuten Kästchen mehr. Der Standard-Betreff ist wieder schlicht Unterlagen. Bis zu fünf Bitte-um-Optionen können gleichzeitig gewählt werden. Adressbuch, private lokale Briefkopfvorlage und alle Funktionen aus 1.8.14 bleiben erhalten.",
+  "sha256": "5645354543b6ede08387a1db4bd62629498b59b6afe2ed9b485c30f15c7a200b",
+  "notes": "Version 1.8.16: Das Anschreiben orientiert sich wieder an der vollständigen Originalstruktur. Der Auswahlbereich wird als festes, unsichtbares Raster erzeugt: fünf Unterlagenzeilen links sowie die vollständigen Bitte-um-Optionen rechts bleiben immer exakt ausgerichtet. Lange Bezeichnungen verschieben keine Kästchen mehr. Nicht gewählte Standardpunkte bleiben sichtbar und ungekreuzt; gewählte zusätzliche Unterlagen ersetzen freie Standardzeilen. Briefkopf, Adressbuch, lokale private Vorlage und alle bisherigen Funktionen bleiben erhalten.",
   "update_available": true
 }
