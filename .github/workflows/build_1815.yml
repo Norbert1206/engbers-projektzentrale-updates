@@ -1,0 +1,76 @@
+name: Build Engbers Projektzentrale 1.8.15
+on:
+  push:
+    paths:
+      - 'build/1815/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and patch stable 1.8.14
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1815
+          mkdir -p /tmp/pz1815/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip?rev=1814-private-letter-addressbook' -o /tmp/pz1815/base.zip
+          unzip -q /tmp/pz1815/base.zip -d /tmp/pz1815/unpacked
+          python build/1815/patch_1815.py /tmp/pz1815/unpacked
+      - name: Smoke test stacked letter layout
+        run: |
+          python - <<'PY'
+          import sys, tempfile, zipfile
+          from pathlib import Path
+          sys.path.insert(0, '/tmp/pz1815/unpacked')
+          import letter_template_v1814 as lt
+          src = Path('build/1814') / 'letter_template_v1814.py'
+          assert 'REQUEST_LABELS_V1815' in Path('/tmp/pz1815/unpacked/letter_template_v1814.py').read_text(encoding='utf-8')
+          # Structural test only: compiled module and new layout markers must exist.
+          assert hasattr(lt, 'create_letter')
+          assert hasattr(lt, '_set_stacked_row_v1815')
+          print('OK: 1.8.15 stacked layout smoke test')
+          PY
+      - name: Build update package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('.')
+          src=pathlib.Path('/tmp/pz1815/unpacked')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_15_TINY.zip'
+          if zip_path.exists(): zip_path.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file())
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files:
+                  z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for req in ('app.py','post_update.py','correspondence_v1814.py','contacts_v1814.py','letter_template_v1814.py'):
+                  assert req in names, req
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.15','published_at':'2026-09-17',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_15_TINY.zip?rev=1815-clean-letter-layout',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.15: Das Anschreiben-Layout wurde bereinigt. Ausgewählte Unterlagen stehen links sauber untereinander; die ausgewählten Optionen unter Mit der Bitte um stehen rechts ebenfalls direkt untereinander. Nicht ausgewählte Einträge erzeugen keine leeren oder verstreuten Kästchen mehr. Der Standard-Betreff ist wieder schlicht Unterlagen. Bis zu fünf Bitte-um-Optionen können gleichzeitig gewählt werden. Adressbuch, private lokale Briefkopfvorlage und alle Funktionen aus 1.8.14 bleiben erhalten.',
+            'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_15_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.15 clean letter layout'
+          git pull --rebase origin main
+          git push origin main
