@@ -17,7 +17,7 @@ jobs:
           python-version: '3.12'
       - name: Validate Adobe UI automation patch
         run: |
-          python -m py_compile build/1709/patch_1709.py build/1709/post_update.py
+          python -m py_compile build/1709/patch_1709_fixed.py build/1709/post_update.py
           python - <<'PY'
           import pathlib,runpy
           root=pathlib.Path('.')
@@ -36,12 +36,14 @@ jobs:
               src=src.replace(p3[a],p3[b],1)
           if p3['FALLBACK_OLD'] in src: src=src.replace(p3['FALLBACK_OLD'],p3['FALLBACK_NEW'],1)
           src=src.replace(p3['OPEN_ERROR_OLD'],p3['OPEN_ERROR_NEW'],1)
-          for ver in ('1705','1706','1707','1708','1709'):
+          for ver in ('1705','1706','1707','1708'):
               p=runpy.run_path(str(root/f'build/{ver}/patch_{ver}.py'),run_name=f'defs{ver}')
               src=p['_patch_mod'](src)
+          p9=runpy.run_path(str(root/'build/1709/patch_1709_fixed.py'),run_name='defs1709')
+          src=p9['_patch_mod'](src)
           compile(src,'wordforms_v1700.py','exec')
           assert 'PZ_ADOBE_UI_AUTOMATION_V1709' in src
-          assert "Als Adobe PDF speichern" in src
+          assert 'Als Adobe PDF speichern' in src
           assert 'UIAutomationClient' in src
           assert 'AutomationIdProperty' in src
           assert "@('Speichern','Save')" in src
@@ -54,7 +56,7 @@ jobs:
           import pathlib,zipfile,hashlib,json
           root=pathlib.Path('.')
           zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_9_TINY.zip'
-          payload=[('build/1709/patch_1709.py','patch_1709.py'),('build/1709/post_update.py','post_update.py')]
+          payload=[('build/1709/patch_1709_fixed.py','patch_1709.py'),('build/1709/post_update.py','post_update.py')]
           with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
               for src,dst in payload:z.write(root/src,dst)
           with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
