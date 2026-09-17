@@ -1,1 +1,1 @@
-trigger 1.7.12
+trigger 1.7.12 retry diagnostics
