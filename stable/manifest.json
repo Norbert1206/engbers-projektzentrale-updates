@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.10",
+  "version": "1.7.11",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.9",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_10_TINY.zip?rev=1710-global-adobe-ui",
+  "min_bootstrap_version": "1.7.10",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_11_TINY.zip?rev=1711-word-focus",
   "package_format": "zip",
-  "sha256": "0e35e422e140719ff6213636a52a774e72e3cad98201e8cbff84c8809757307d",
-  "notes": "Version 1.7.10: Der sichtbare Word-Befehl Als Adobe PDF speichern wird nach dem Oeffnen der Datei jetzt im gesamten Windows-UI-Baum gesucht, weil Word den Backstage-Bereich technisch ausserhalb des normalen Dokumentfensters darstellen kann. Zusaetzlicher Fallback sucht nach jedem UI-Element, dessen Name Adobe PDF enthaelt.",
+  "sha256": "42159f567bb22dd445016f52d3e51f249f463f0df1e2bc71205e9b9ffdb0d514",
+  "notes": "Version 1.7.11: Fuer den Adobe-PDF-Ablauf wird jetzt gezielt das Word-Fenster der aktuellen Bescheinigung anhand des Dokumentnamens aktiviert. Der Datei-Bereich wird gezielt ueber das sichtbare Datei-Element geoeffnet, mit Alt+F nur noch als Fallback. Wird Word waehrend der PDF-Erzeugung geschlossen, wird dies sauber als Fehler gemeldet statt den Ablauf abstuerzen zu lassen.",
   "update_available": true
 }
