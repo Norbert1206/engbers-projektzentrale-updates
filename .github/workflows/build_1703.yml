@@ -1,0 +1,129 @@
+name: Build Engbers Projektzentrale 1.7.3
+on:
+  push:
+    paths:
+      - 'build/1703/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate in-place Word forms
+        run: |
+          python -m py_compile build/1703/patch_1703.py build/1703/post_update.py
+          python - <<'PY'
+          import pathlib,runpy,tempfile,zipfile,types,sys,importlib.util,os,xml.etree.ElementTree as ET
+          root=pathlib.Path('.')
+          src=(root/'build/1700/wordforms_v1700.py').read_text(encoding='utf-8')
+
+          p1=runpy.run_path(str(root/'build/1701/patch_1701.py'),run_name='defs1701')
+          for a,b in [('OLD_FILL','NEW_FILL'),('OLD_RETURN','NEW_RETURN'),('OLD_SELECTED','NEW_SELECTED'),('OLD_OPEN','NEW_OPEN'),('OLD_BUTTON','NEW_BUTTON')]:
+              assert p1[a] in src,a
+              src=src.replace(p1[a],p1[b],1)
+
+          p2=runpy.run_path(str(root/'build/1702/patch_1702.py'),run_name='defs1702')
+          pairs2=[
+              ('IMPORT_OLD','IMPORT_NEW'),('CLASSIFY_OLD','CLASSIFY_NEW'),('VALUES_OLD','VALUES_NEW'),
+              ('FILL_ANCHOR','FILL_HELPER'),('FILL_OLD','FILL_NEW'),('OUT_OLD','OUT_NEW'),
+              ('DOCS_OLD','DOCS_NEW'),('FILL_UI_OLD','FILL_UI_NEW'),('FILL_UI_BODY_OLD','FILL_UI_BODY_NEW'),
+              ('MSG_OLD','MSG_NEW'),('OPEN_OLD','OPEN_NEW'),('BUTTON_OLD','BUTTON_NEW')]
+          for a,b in pairs2:
+              assert p2[a] in src,a
+              src=src.replace(p2[a],p2[b],1)
+
+          p3=runpy.run_path(str(root/'build/1703/patch_1703.py'),run_name='defs1703')
+          pairs3=[
+              ('IMPORT_OLD','IMPORT_NEW'),('HELPER_ANCHOR','HELPER_NEW'),('FILL_OLD','FILL_NEW'),
+              ('OUT_OLD','OUT_NEW'),('HEAD_OLD','HEAD_NEW'),('STATUS_OLD','STATUS_NEW'),
+              ('MSG_OLD','MSG_NEW'),('OUTPUT_MSG_OLD','OUTPUT_MSG_NEW')]
+          for a,b in pairs3:
+              assert p3[a] in src,a
+              src=src.replace(p3[a],p3[b],1)
+          if p3['FALLBACK_OLD'] in src:
+              src=src.replace(p3['FALLBACK_OLD'],p3['FALLBACK_NEW'],1)
+          src=src.replace(p3['OPEN_ERROR_OLD'],p3['OPEN_ERROR_NEW'],1)
+          compile(src,'wordforms_v1700.py','exec')
+          assert 'PZ_WORD_INPLACE_FIELDS_V1703' in src
+          assert 'return Path(src)' in src
+          assert "return Path(src).with_suffix('.pdf')" in src
+          assert "word_backups" in src
+
+          tmp=pathlib.Path(tempfile.mkdtemp())
+          os.environ['LOCALAPPDATA']=str(tmp/'localapp')
+          modpath=tmp/'wordforms_v1700.py'; modpath.write_text(src,encoding='utf-8')
+          stub=types.ModuleType('masterdata_v1604')
+          stub._masterdata_row=lambda app:{}
+          stub._base=types.SimpleNamespace(_env=lambda app:(None,None,'#fff','#fff','#111','#777','#b08b49','#222'))
+          sys.modules['masterdata_v1604']=stub
+          spec=importlib.util.spec_from_file_location('wf',modpath)
+          wf=importlib.util.module_from_spec(spec);spec.loader.exec_module(wf)
+
+          W='http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+          def textfield(name):
+              return f'''<w:r><w:fldChar w:fldCharType="begin"><w:ffData><w:name w:val="{name}"/><w:textInput/></w:ffData></w:fldChar></w:r><w:r><w:instrText> FORMTEXT </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>blank</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r>'''
+          def checkbox(name):
+              return f'''<w:r><w:fldChar w:fldCharType="begin"><w:ffData><w:name w:val="{name}"/><w:checkBox><w:sizeAuto/><w:default w:val="0"/></w:checkBox></w:ffData></w:fldChar></w:r><w:r><w:instrText> FORMCHECKBOX </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r>'''
+          xml=f'''<?xml version="1.0" encoding="UTF-8"?><w:document xmlns:w="{W}"><w:body><w:tbl>
+          <w:tr><w:tc><w:p><w:r><w:t>1. Genaue Bezeichnung:</w:t></w:r>{textfield('Projekt')}</w:p></w:tc></w:tr>
+          <w:tr><w:tc><w:p><w:r><w:t>II. Ergebnis der Prüfung</w:t></w:r></w:p><w:p>{checkbox('K1')}<w:r><w:t> Die von mir aufgestellten energetischen Nachweise entsprechen den geltenden Vorschriften.</w:t></w:r></w:p><w:p>{checkbox('K2')}<w:r><w:t> Die von der Fachplanerin/dem Fachplaner aufgestellten und von mir geprüften Nachweise entsprechen den Vorschriften.</w:t></w:r></w:p></w:tc></w:tr>
+          <w:tr><w:tc><w:p><w:r><w:t>III. Unterschrift</w:t></w:r>{textfield('Ort')}{textfield('Datum')}</w:p></w:tc></w:tr>
+          </w:tbl></w:body></w:document>'''
+          doc=tmp/'formular.docx'
+          with zipfile.ZipFile(doc,'w') as z:z.writestr('word/document.xml',xml)
+          n=wf.fill_docx(doc,doc,{'project_title':'Testbauvorhaben','engineer_city':'Lingen'})
+          assert n>=4,n
+          assert zipfile.is_zipfile(doc)
+          with zipfile.ZipFile(doc) as z: outxml=z.read('word/document.xml')
+          out=ET.fromstring(outxml); Q=lambda n:f'{{{W}}}{n}'
+          text=''.join((t.text or '') for t in out.iter(Q('t')))
+          assert 'Testbauvorhaben' in text and 'Lingen' in text
+          assert len(list(out.iter(Q('ffData'))))>=5, 'Formularfelder wurden entfernt'
+          states=[]
+          for ff in out.iter(Q('ffData')):
+              cb=ff.find(Q('checkBox'))
+              if cb is None: continue
+              default=cb.find(Q('default')); checked=cb.find(Q('checked'))
+              states.append((default.get(Q('val')) if default is not None else None,checked.get(Q('val')) if checked is not None else None))
+          assert states[0]==('1','1'),states
+          assert states[1][0]=='0' and states[1][1] in (None,'0'),states
+          backups=list((tmp/'localapp'/'Engbers Projektzentrale'/'word_backups').glob('*.docx'))
+          assert backups and zipfile.is_zipfile(backups[0])
+          print('1.7.3 validation OK; in-place fields preserved, backup=',backups[0].name)
+          PY
+      - name: Build and validate update package
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          root=pathlib.Path('.')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_7_3_TINY.zip'
+          payload=[('build/1703/patch_1703.py','patch_1703.py'),('build/1703/post_update.py','post_update.py')]
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for src,dst in payload:z.write(root/src,dst)
+          with zipfile.ZipFile(zip_path) as z:assert z.testzip() is None
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+              'app':'Engbers Projektzentrale','channel':'stable','version':'1.7.3','published_at':'2026-09-17',
+              'min_bootstrap_version':'1.7.2',
+              'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_3_TINY.zip?rev=1703-inplace-word-fields',
+              'package_format':'zip','sha256':sha,
+              'notes':'Version 1.7.3: Word-Bescheinigungen werden direkt im vorhandenen Projektformular aktualisiert; es wird keine zusätzliche _ausgefüllt-Wordkopie mehr angelegt. Die Word-Formularfelder bleiben erhalten und können später erneut aktualisiert werden. Eine technische Sicherheitskopie liegt ausschließlich lokal außerhalb des Projektordners. Die PDF-Datei wird direkt neben der Word-Datei gespeichert. Kreuz sowie Ort und Tagesdatum bleiben automatisch.',
+              'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_7_3_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.7.3 in-place Word forms'
+          git pull --rebase origin main
+          git push origin main
