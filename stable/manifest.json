@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.18",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_0_TINY.zip?rev=1800-clean-word-pipeline",
+  "min_bootstrap_version": "1.8.0",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_1_TINY.zip?rev=1801-csharp-word-bridge-fixed",
   "package_format": "zip",
-  "sha256": "cdd1dc5eb8cdefe3f6ed3104eddd5fc480ec2935aa7d1809e05c6427f79cede4",
-  "notes": "Version 1.8.0: Word-Automatik komplett neu aufgebaut. XML wird nur noch zur Felderkennung gelesen. Eine einzige neue Word-COM-Instanz setzt die Legacy-FormFields, speichert eine von Word selbst normalisierte DOCX und exportiert im selben Lauf direkt die PDF. Keine UI-Automation, kein PDF-Drucker, kein Anhaengen an bestehende Word-Instanzen.",
+  "sha256": "5ed6d756b72e95ffefd02a6a26e4aa7456a3ab11989bb0db792d87cb2a0499e5",
+  "notes": "Version 1.8.1: Word-COM wird ueber einen C#-Bridge mit benannten Parametern gesteuert. OpenAndRepair, Formularfelder, Speichern und PDF-Export laufen in derselben Word-Instanz; die fehleranfaellige direkte PowerShell-COM-Parameteruebergabe ist entfernt.",
   "update_available": true
 }
