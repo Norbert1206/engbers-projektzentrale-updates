@@ -1,0 +1,64 @@
+name: Build Engbers Projektzentrale 1.8.14
+on:
+  push:
+    paths:
+      - 'build/1814/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and patch stable 1.8.13
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1814
+          mkdir -p /tmp/pz1814/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_13_TINY.zip?rev=1813-professional-billing-texts' -o /tmp/pz1814/base.zip
+          unzip -q /tmp/pz1814/base.zip -d /tmp/pz1814/unpacked
+          cp build/1814/correspondence_v1814.py /tmp/pz1814/unpacked/correspondence_v1814.py
+          cp build/1814/anschreiben_template.docx /tmp/pz1814/unpacked/anschreiben_template.docx
+          python build/1814/patch_1814.py /tmp/pz1814/unpacked
+      - name: Build update package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('.')
+          src=pathlib.Path('/tmp/pz1814/unpacked')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip'
+          if zip_path.exists(): zip_path.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file())
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files:
+                  z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for req in ('app.py','commercial_v1890.py','post_update.py','correspondence_v1814.py','anschreiben_template.docx'):
+                  assert req in names, req
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.14','published_at':'2026-09-17',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip?rev=1814-project-correspondence',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.14: Das vorhandene Engbers-Standardanschreiben ist direkt in die Projektzentrale integriert. Unter Kommunikation steht jetzt ANSCHREIBEN ERSTELLEN zur Verfügung. Empfänger, Datum, Betreff, Anrede, bis zu fünf überreichte Unterlagen sowie die Optionen Kenntnisnahme, Prüfung, Genehmigung, Erledigung, Unterschrift, Rücksprache, Rücksendung, Angebot und Weiterleitung lassen sich im Dialog auswählen. Das Word-Dokument wird projektbezogen unter 08_Kommunikation/Anschreiben gespeichert, anschließend geöffnet und automatisch in der Kommunikationsakte registriert. Alle Funktionen aus Version 1.8.13 bleiben erhalten.',
+            'update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_14_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.14 project correspondence'
+          git pull --rebase origin main
+          git push origin main
