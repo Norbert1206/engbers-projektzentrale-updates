@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.7.15",
+  "version": "1.7.16",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.7.14",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_15_TINY.zip?rev=1715-save-dialog",
+  "min_bootstrap_version": "1.7.15",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_7_16_TINY.zip?rev=1716-save-keys",
   "package_format": "zip",
-  "sha256": "cf6838f6cf13c3cda49082990c4d835ba213eba291c3fd5dc8cc5bccff08006e",
-  "notes": "Version 1.7.15: PDF-Druck bleibt unveraendert. Der Windows-Dialog Druckausgabe speichern unter erkennt jetzt gezielt das echte Dateiname-Feld (FileNameControlHost) bzw. als Fallback das unterste Eingabefeld, traegt den vollstaendigen PDF-Zielpfad ein, verifiziert ihn und klickt erst danach auf Speichern.",
+  "sha256": "fee8e31d8b6eb5411e262b00532a0f34512a9690edb92fea590dedaf315e6a57",
+  "notes": "Version 1.7.16: Der funktionierende PDF-Druck bleibt unveraendert. Der Windows-Dialog Druckausgabe speichern unter wird nicht mehr ueber einzelne UI-Felder analysiert, sondern direkt per Tastatur bedient: richtiger Zielordner, richtiger PDF-Dateiname, Enter. Dadurch ist der zuletzt verwendete Speicherordner egal.",
   "update_available": true
 }
