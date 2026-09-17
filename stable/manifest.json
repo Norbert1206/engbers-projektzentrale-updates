@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "published_at": "2026-09-17",
-  "min_bootstrap_version": "1.8.2",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_3_TINY.zip?rev=1803-direct-pdf-stamp",
+  "min_bootstrap_version": "1.8.3",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_4_TINY.zip?rev=1804-pdf-only-overlay",
   "package_format": "zip",
-  "sha256": "46c5b0512d4878ccd28b006dabe1611fa28a2a69e9d2abc5cba34ee4e0ab6bb4",
-  "notes": "Version 1.8.3: FREIGEBEN & STEMPELN arbeitet direkt auf der bereits geprueften PDF. Das Word-Original wird beim Stempeln nicht mehr geoeffnet oder veraendert. Die lokale PNG wird intern transparent aufbereitet und nur auf Seite 1 der PDF gelegt; die echte Grafik bleibt lokal und ist nicht Bestandteil des Update-Pakets.",
+  "sha256": "ad00e21dc4d986b7f8e0dbbab38bfc91c475396d2d3bcb58ddfa8ecbe07aa39b",
+  "notes": "Version 1.8.4: Der finale saSV-Stempel wird weiterhin nur auf die PDF gesetzt. Die transparente Overlay-PDF wird jetzt direkt in C# aus der lokalen PNG erzeugt; Word wird beim Stempeln ueberhaupt nicht mehr verwendet.",
   "update_available": true
 }
