@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.4",
+  "version": "1.8.6",
   "published_at": "2026-09-17",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_4_TINY.zip?rev=1804-pdf-only-overlay",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_6_TINY.zip?rev=1806-stamps-reset-masterdata",
   "package_format": "zip",
-  "sha256": "ad00e21dc4d986b7f8e0dbbab38bfc91c475396d2d3bcb58ddfa8ecbe07aa39b",
-  "notes": "Version 1.8.4: Der finale saSV-Stempel wird weiterhin nur auf die PDF gesetzt. Die transparente Overlay-PDF wird jetzt direkt in C# aus der lokalen PNG erzeugt; Word wird beim Stempeln ueberhaupt nicht mehr verwendet.",
+  "sha256": "cb9a58d28c333b9c0b2b772a3ebfedb332729a43e03bfe9cb12acef24400b92e",
+  "notes": "Version 1.8.6: Zusatzabfragen fuer besondere Waermeschutz-Bescheinigungen, fehlerhafte Bescheinigung loeschen und sofort neu ausfuellen, bearbeitbare Projektstammdaten sowie ein neues PDF-Stempelwerkzeug. Statikstempel und Waerme-/Schallschutzstempel sind getrennt. Statikberechnungen werden auf erster und letzter Seite, Plaene unten rechts im Schriftfeld gestempelt; beide Stempel sind zusaetzlich frei positionier- und skalierbar. Stempelgrafiken bleiben ausschliesslich lokal.",
   "update_available": true
 }
