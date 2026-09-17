@@ -22,6 +22,18 @@ jobs:
           mkdir -p /tmp/pz1813/unpacked
           curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_12_TINY.zip?rev=1812-lexware-m-workflow' -o /tmp/pz1813/base.zip
           unzip -q /tmp/pz1813/base.zip -d /tmp/pz1813/unpacked
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/pz1813/unpacked/post_update.py')
+          text=p.read_text(encoding='utf-8')
+          marker="            ('PZ_LEXWARE_M_WORKFLOW_V1812', commercial),\n"
+          if marker not in text:
+              anchor="            ('PZ_TEXT_EDITOR_FIT_V1811', commercial),\n"
+              if anchor not in text:
+                  raise RuntimeError('Post-update anchor not found')
+              text=text.replace(anchor,anchor+marker,1)
+              p.write_text(text,encoding='utf-8')
+          PY
           python build/1813/patch_1813.py /tmp/pz1813/unpacked
       - name: Build update package and manifest
         run: |
