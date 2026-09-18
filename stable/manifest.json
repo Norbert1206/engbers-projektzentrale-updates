@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.32",
+  "version": "1.8.33",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_32_TINY.zip?rev=1832-hidrive-oauth-setup",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_33_TINY.zip?rev=1833-hidrive-default-redirect",
   "package_format": "zip",
-  "sha256": "79cbb9d874ddda79ddf2e6ff7c0245d9c7a62bd29365f8c6261fe0ea8fd5cea2",
-  "notes": "Version 1.8.32: HiDrive-API Einrichtung im Freigabekorb. client_id und client_secret werden lokal per Windows DPAPI verschluesselt gespeichert. Einmalige OAuth2-Browseranmeldung ueber den registrierten localhost:8765 Rueckruf; angefordert wird nur user,rw. Access-/Refresh-Token werden sicher lokal gespeichert und die Verbindung kann direkt geprueft oder getrennt werden. Der Freigabekorb zeigt den HiDrive-Verbindungsstatus. Noch keine automatische Linkerstellung in dieser Version; diese folgt nach erfolgreichem Verbindungstest. Alle Funktionen aus 1.8.31 bleiben erhalten.",
+  "sha256": "c38e3e6c2cfa64cc6ee431c6247a4360dc855bb3cb87f5f59ebd416f3258038a",
+  "notes": "Version 1.8.33: HiDrive OAuth Redirect-Hotfix. Die Autorisierungsanfrage sendet keine eigene redirect_uri mehr, sondern verwendet die bei STRATO fuer die App hinterlegte Standard-Redirect-URI. Damit wird der HiDrive-Fehler invalid redirect_uri (set, no match) vermieden. Der lokale Rueckrufdienst auf Port 8765 bleibt unveraendert. Alle Funktionen aus 1.8.32 bleiben erhalten.",
   "update_available": true
 }
