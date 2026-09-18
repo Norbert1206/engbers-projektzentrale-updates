@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.21",
+  "version": "1.8.22",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_21_TINY.zip?rev=1821-share-basket",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_22_TINY.zip?rev=1822-outlook-draft",
   "package_format": "zip",
-  "sha256": "4d50d6bbd0ea5e555ca8c929cfdbd5508e68d0200b7dea67bb77c0dbea311e44",
-  "notes": "Version 1.8.21: Projektweiter Freigabekorb für beliebige Dateitypen. Dateien und Ordner können aus Statik PDF und dem Projekt-Explorer gesammelt zur Freigabe hinzugefügt werden – z.B. Statik, Pläne, Brandschutz, Word, DWG, Bilder oder weitere Unterlagen. Ein gemeinsamer Freigabeordner wird in HiDrive angelegt; Originaldateien bleiben unverändert. Der Korb wird lokal pro Projekt gespeichert und kann auch externe Einzeldateien aufnehmen. Alle Funktionen aus 1.8.20 bleiben erhalten.",
+  "sha256": "5a477650b59f63e2eee7cb90aa408990e9b9b07f0a3dfdbb20cd5fab55c464e8",
+  "notes": "Version 1.8.22: Outlook (klassisch) direkt aus dem Freigabekorb. Empfänger wird aus dem lokalen Adressbuch gewählt; Betreff und Begleittext sind vorbefüllt und editierbar. Optional können die Dateien aus dem Freigabekorb direkt angehängt werden; bei großen Anhängen erscheint eine Warnung. Es wird ausschließlich ein sichtbarer Outlook-Entwurf geöffnet – niemals automatisch versendet. Die vorhandene Outlook-Signatur bleibt erhalten. Alle Funktionen aus 1.8.21 bleiben erhalten.",
   "update_available": true
 }
