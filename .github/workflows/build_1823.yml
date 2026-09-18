@@ -1,0 +1,86 @@
+name: Build Engbers Projektzentrale 1.8.23
+on:
+  push:
+    paths:
+      - 'build/1823/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download stable 1.8.22 and patch
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1823
+          mkdir -p /tmp/pz1823/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_22_TINY.zip?rev=1822-outlook-draft' -o /tmp/pz1823/base.zip
+          unzip -q /tmp/pz1823/base.zip -d /tmp/pz1823/unpacked
+          cp build/1823/outlook_archive_v1823.py /tmp/pz1823/unpacked/outlook_archive_v1823.py
+          python build/1823/patch_1823.py /tmp/pz1823/unpacked
+      - name: Smoke test Outlook archive helper
+        run: |
+          python - <<'PY'
+          import importlib.util, pathlib, tempfile, sqlite3
+          src=pathlib.Path('/tmp/pz1823/unpacked/outlook_archive_v1823.py')
+          spec=importlib.util.spec_from_file_location('outlook_archive_v1823',src)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          assert m._safe_name('A:B/C*D?') == 'A B C D'
+          with tempfile.TemporaryDirectory() as td:
+              db=pathlib.Path(td)/'x.db'
+              con=sqlite3.connect(db)
+              con.execute('CREATE TABLE comm(id INTEGER PRIMARY KEY,project_id INTEGER,ts TEXT,channel TEXT,sender TEXT,recipient TEXT,subject TEXT,body TEXT,attachment TEXT,original_path TEXT,immutable INTEGER DEFAULT 1)')
+              con.commit(); con.close()
+              m.ensure_schema(db)
+              con=sqlite3.connect(db)
+              cols={r[1] for r in con.execute('PRAGMA table_info(comm)')}
+              con.close()
+              assert 'outlook_entry_id' in cols and 'outlook_store_id' in cols
+          try:
+              m.scan_outlook('25-026')
+          except RuntimeError as exc:
+              assert 'Windows' in str(exc)
+          print('Outlook archive helper smoke test OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1823/unpacked')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_23_TINY.zip'
+          if zip_path.exists(): zip_path.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc')
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files:z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for req in ('app.py','post_update.py','outlook_v1822.py','outlook_archive_v1823.py'):
+                  assert req in names,req
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.23','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_23_TINY.zip?rev=1823-outlook-project-archive',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.23: Projektbezogene Outlook-Mailakte. In Kommunikation können passende Outlook-Mails automatisch synchronisiert werden; Mails mit Projektnummer oder aus der Projektzentrale erzeugte Mails werden erkannt. Zusätzlich können beliebige aktuelle Outlook-Mails manuell dem Projekt zugeordnet werden. Zugeordnete Mails werden als originale .msg-Datei unter 08_Kommunikation\\Outlook archiviert und in der Kommunikationsakte dokumentiert. Doppelklick öffnet die archivierte Originalmail. Projektzentrale-Outlook-Entwürfe erhalten zusätzlich eine unsichtbare Projektkennung für zuverlässige spätere Zuordnung. Es wird weiterhin niemals automatisch versendet.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_23_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.23 Outlook project archive'
+          git pull --rebase origin main
+          git push origin main
