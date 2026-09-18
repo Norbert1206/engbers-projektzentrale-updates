@@ -1,0 +1,20 @@
+name: Inspect 1.8.35 Outlook share flow
+on:
+  push:
+    paths:
+      - 'build/1836/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect stable 1.8.35 basket Outlook section
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1836
+          mkdir -p /tmp/pz1836/src
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_35_TINY.zip?rev=1835b-hidrive-share-pid' -o /tmp/pz1836/base.zip
+          unzip -q /tmp/pz1836/base.zip -d /tmp/pz1836/src
+          grep -n -A170 -B40 'def open_outlook_mail' /tmp/pz1836/src/share_basket_v1821.py
