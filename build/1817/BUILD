@@ -1,0 +1,1 @@
+2026-09-18 1.8.17 letter spacing polish\n
