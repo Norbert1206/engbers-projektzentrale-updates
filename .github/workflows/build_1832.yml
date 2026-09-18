@@ -1,0 +1,72 @@
+name: Build Engbers Projektzentrale 1.8.32
+on:
+  push:
+    paths:
+      - 'build/1832/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.31
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1832build
+          mkdir -p /tmp/pz1832build/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_31_TINY.zip?rev=1831-outlook-assignment-search' -o /tmp/pz1832build/base.zip
+          unzip -q /tmp/pz1832build/base.zip -d /tmp/pz1832build/unpacked
+          cp build/1832/hidrive_oauth_v1832.py /tmp/pz1832build/unpacked/hidrive_oauth_v1832.py
+          python build/1832/patch_1832.py /tmp/pz1832build/unpacked
+      - name: Verify HiDrive setup
+        run: |
+          python - <<'PY'
+          import importlib.util, pathlib
+          root=pathlib.Path('/tmp/pz1832build/unpacked')
+          src=root/'hidrive_oauth_v1832.py'
+          spec=importlib.util.spec_from_file_location('hidrive_oauth_v1832',src)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          assert m.REDIRECT_URI == 'http://localhost:8765'
+          assert m.REQUESTED_SCOPE == 'user,rw'
+          assert 'oauth2/token' in m.TOKEN_URL
+          assert 'HIDRIVE EINRICHTEN' in (root/'share_basket_v1821.py').read_text(encoding='utf-8')
+          print('HiDrive OAuth setup smoke test OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1832build/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_32_TINY.zip'
+          if zp.exists(): zp.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.32','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_32_TINY.zip?rev=1832-hidrive-oauth-setup',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.32: HiDrive-API Einrichtung im Freigabekorb. client_id und client_secret werden lokal per Windows DPAPI verschluesselt gespeichert. Einmalige OAuth2-Browseranmeldung ueber den registrierten localhost:8765 Rueckruf; angefordert wird nur user,rw. Access-/Refresh-Token werden sicher lokal gespeichert und die Verbindung kann direkt geprueft oder getrennt werden. Der Freigabekorb zeigt den HiDrive-Verbindungsstatus. Noch keine automatische Linkerstellung in dieser Version; diese folgt nach erfolgreichem Verbindungstest. Alle Funktionen aus 1.8.31 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_32_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.32 HiDrive OAuth setup'
+          git pull --rebase origin main
+          git push origin main
