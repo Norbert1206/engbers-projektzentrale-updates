@@ -1,0 +1,25 @@
+name: Inspect 1.8.21 Outlook integration points
+on:
+  push:
+    paths:
+      - 'build/1822/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect stable source
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1822
+          mkdir -p /tmp/pz1822
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_21_TINY.zip?rev=1821-share-basket' -o /tmp/pz1822/base.zip
+          unzip -q /tmp/pz1822/base.zip -d /tmp/pz1822/src
+          echo '=== share basket ==='
+          sed -n '1,320p' /tmp/pz1822/src/share_basket_v1821.py
+          echo '=== contacts schema/helpers ==='
+          sed -n '1,320p' /tmp/pz1822/src/contacts_v1814.py
+          echo '=== project schema ==='
+          grep -Rni -C 5 --include='*.py' 'CREATE TABLE.*projects\|CREATE TABLE.*contacts\|project_contacts\|contacts' /tmp/pz1822/src/app.py /tmp/pz1822/src/contacts_v1814.py | head -n 700 || true
