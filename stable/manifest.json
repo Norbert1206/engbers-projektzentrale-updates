@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.25",
+  "version": "1.8.26",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_25_TINY.zip?rev=1825-outlook-store-enumeration",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_26_TINY.zip?rev=1826-outlook-folder-fallback",
   "package_format": "zip",
-  "sha256": "24e874261555c98cf33f72f51e4cdd879cd3cd0eb9b4a9fc6a2e4982948ec223",
-  "notes": "Version 1.8.25: Hotfix fuer die Outlook-Mailauswahl. Outlook-Konten und Datenspeicher werden jetzt einzeln aus der COM-Store-Sammlung gelesen, damit Posteingang und Gesendete Elemente korrekt geladen werden. Leere Trefferlisten werden weiterhin sauber behandelt. Alle Funktionen aus 1.8.24 bleiben erhalten.",
+  "sha256": "543631b51085c2da8dcc3d0c265a156ea177684fd6fe8294b6927dd05242f73f",
+  "notes": "Version 1.8.26: Outlook-Leser robuster. Falls Outlook die Standardordner nicht direkt liefert, sucht die Projektzentrale Posteingang und Gesendete Elemente jetzt zusaetzlich nach den echten Ordnernamen (Deutsch/Englisch) im jeweiligen Outlook-Konto. Alle Funktionen aus 1.8.25 bleiben erhalten.",
   "update_available": true
 }
