@@ -1,0 +1,21 @@
+name: Inspect 1.8.23 get_project_folder
+on:
+  push:
+    paths:
+      - 'build/1824/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect helper
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1824
+          mkdir -p /tmp/pz1824
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_23_TINY.zip?rev=1823-outlook-project-archive' -o /tmp/pz1824/base.zip
+          unzip -q /tmp/pz1824/base.zip -d /tmp/pz1824/src
+          grep -n -A80 -B20 'def get_project_folder' /tmp/pz1824/src/app.py || true
+          grep -Rni -C 3 --include='*.py' '\.strip()' /tmp/pz1824/src/outlook_archive_v1823.py /tmp/pz1824/src/app.py | grep -E 'get_project_folder|folder_path|show_comm|Outlook' -C 4 || true
