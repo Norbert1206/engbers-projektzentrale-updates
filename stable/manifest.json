@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.36",
+  "version": "1.8.37",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_36_TINY.zip?rev=1836b-outlook-hidrive-link",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_37_TINY.zip?rev=1837-outlook-foreground",
   "package_format": "zip",
-  "sha256": "78396789313e18a9c65376715b2fc580343d52ccaba67cec0088232e346d605a",
-  "notes": "Version 1.8.36: Der zuletzt erzeugte HiDrive-Freigabelink wird beim Öffnen von OUTLOOK-MAIL automatisch in den Begleittext übernommen. Zusätzlich erkennt die Projektzentrale einen HiDrive-Freigabelink in der Zwischenablage, falls der Freigabekorb inzwischen neu geöffnet wurde. Alle Funktionen aus 1.8.35 bleiben erhalten.",
+  "sha256": "d744196503907cbd75514aa6bcc2f29f3b2888730d6c42dfdc6460511ca0ce35",
+  "notes": "Version 1.8.37: Outlook-Entwurf wird nach dem Erstellen aktiv in den Vordergrund geholt. Das Outlook-Fenster wird bei Bedarf wiederhergestellt, nach vorn gebracht und fokussiert; als Fallback wird AppActivate verwendet. Dadurch soll der Entwurf nicht mehr nur in der Taskleiste blinken. Alle Funktionen aus 1.8.36 bleiben erhalten.",
   "update_available": true
 }
