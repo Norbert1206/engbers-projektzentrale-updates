@@ -113,7 +113,7 @@ def _compact_letter_spacing_v1817(body):
             [_blank_paragraph_v1817(), _blank_paragraph_v1817()],
         )
 '''
-letter = letter.rstrip() + "\\n\\n" + helper + "\\n"
+letter = letter.rstrip() + "\n\n" + helper + "\n"
 
 call_old = '        body.insert(start, _selection_table_v1816(document_items, requests, values.get("forward_to", "")))\n\n        converted = ET.tostring(root, encoding="utf-8", xml_declaration=True)\n'
 call_new = '        body.insert(start, _selection_table_v1816(document_items, requests, values.get("forward_to", "")))\n        _compact_letter_spacing_v1817(body)\n\n        converted = ET.tostring(root, encoding="utf-8", xml_declaration=True)\n'
