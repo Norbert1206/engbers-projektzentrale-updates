@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.23",
+  "version": "1.8.24",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_23_TINY.zip?rev=1823-outlook-project-archive",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_24_TINY.zip?rev=1824-outlook-sync-hotfix",
   "package_format": "zip",
-  "sha256": "5d7ac9356f990a39e489de449e71672e4b7e83640b7c720e0985516bd7108ee7",
-  "notes": "Version 1.8.23: Projektbezogene Outlook-Mailakte. In Kommunikation können passende Outlook-Mails automatisch synchronisiert werden; Mails mit Projektnummer oder aus der Projektzentrale erzeugte Mails werden erkannt. Zusätzlich können beliebige aktuelle Outlook-Mails manuell dem Projekt zugeordnet werden. Zugeordnete Mails werden als originale .msg-Datei unter 08_Kommunikation\\Outlook archiviert und in der Kommunikationsakte dokumentiert. Doppelklick öffnet die archivierte Originalmail. Projektzentrale-Outlook-Entwürfe erhalten zusätzlich eine unsichtbare Projektkennung für zuverlässige spätere Zuordnung. Es wird weiterhin niemals automatisch versendet.",
+  "sha256": "e013c3dd122bd3a992e35cae1b53c1de6a54a78127d2b461776ef9031a69ae51",
+  "notes": "Version 1.8.24: Hotfix für Outlook-Synchronisierung. Leere/fehlende PowerShell-Ausgaben werden jetzt robust behandelt; die Synchronisierung bricht nicht mehr mit NoneType/strip ab. Zusätzlich werden leere JSON-Antworten sauber als keine Treffer behandelt. Alle Funktionen aus 1.8.23 bleiben erhalten.",
   "update_available": true
 }
