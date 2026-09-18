@@ -1,0 +1,20 @@
+name: Inspect Outlook foreground behavior
+on:
+  push:
+    paths:
+      - 'build/1837/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect Outlook module
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1837
+          mkdir -p /tmp/pz1837/src
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_36_TINY.zip?rev=1836b-outlook-hidrive-link' -o /tmp/pz1837/base.zip
+          unzip -q /tmp/pz1837/base.zip -d /tmp/pz1837/src
+          sed -n '1,360p' /tmp/pz1837/src/outlook_v1822.py
