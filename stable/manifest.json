@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.20",
+  "version": "1.8.21",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_20_TINY.zip?rev=1820-hidrive-share",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_21_TINY.zip?rev=1821-share-basket",
   "package_format": "zip",
-  "sha256": "ec9a2e3d6249e8ed169e1e39f79a530daae802cca2fbb30d6e9c70866f6d16a8",
-  "notes": "Version 1.8.20: STRATO-/HiDrive-Freigabe direkt aus Statik PDF. Markierte PDFs oder Ordner werden ausschließlich als Kopie in HiDrive\\Engbers Projektfreigaben bereitgestellt. Pro Projekt und Freigabe wird ein sauberer neuer Freigabeordner angelegt; Unterordner bleiben erhalten. Originaldateien im Projekt werden nie verschoben oder verändert. Der Freigabeordner wird anschließend automatisch geöffnet. Alle Funktionen aus 1.8.19 bleiben erhalten.",
+  "sha256": "4d50d6bbd0ea5e555ca8c929cfdbd5508e68d0200b7dea67bb77c0dbea311e44",
+  "notes": "Version 1.8.21: Projektweiter Freigabekorb für beliebige Dateitypen. Dateien und Ordner können aus Statik PDF und dem Projekt-Explorer gesammelt zur Freigabe hinzugefügt werden – z.B. Statik, Pläne, Brandschutz, Word, DWG, Bilder oder weitere Unterlagen. Ein gemeinsamer Freigabeordner wird in HiDrive angelegt; Originaldateien bleiben unverändert. Der Korb wird lokal pro Projekt gespeichert und kann auch externe Einzeldateien aufnehmen. Alle Funktionen aus 1.8.20 bleiben erhalten.",
   "update_available": true
 }
