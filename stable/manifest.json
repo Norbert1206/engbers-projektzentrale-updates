@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.19",
+  "version": "1.8.20",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_19_TINY.zip?rev=1819-ai-result-fix",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_20_TINY.zip?rev=1820-hidrive-share",
   "package_format": "zip",
-  "sha256": "7eecf6d9cb78117aeed28e62fb6da6dd8c0b2dca6cbce448722f4221f256ba44",
-  "notes": "Version 1.8.19: Fehlerbehebung der KI-Schreibhilfe. Die Antwort der OpenAI-API wird jetzt thread-sicher an das Anschreiben-Fenster zurückgegeben, sodass KI-Texte und API-Fehlermeldungen zuverlässig sichtbar werden. Alle Funktionen aus 1.8.18 bleiben erhalten.",
+  "sha256": "ec9a2e3d6249e8ed169e1e39f79a530daae802cca2fbb30d6e9c70866f6d16a8",
+  "notes": "Version 1.8.20: STRATO-/HiDrive-Freigabe direkt aus Statik PDF. Markierte PDFs oder Ordner werden ausschließlich als Kopie in HiDrive\\Engbers Projektfreigaben bereitgestellt. Pro Projekt und Freigabe wird ein sauberer neuer Freigabeordner angelegt; Unterordner bleiben erhalten. Originaldateien im Projekt werden nie verschoben oder verändert. Der Freigabeordner wird anschließend automatisch geöffnet. Alle Funktionen aus 1.8.19 bleiben erhalten.",
   "update_available": true
 }
