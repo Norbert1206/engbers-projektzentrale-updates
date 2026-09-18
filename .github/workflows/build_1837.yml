@@ -1,0 +1,67 @@
+name: Build Engbers Projektzentrale 1.8.37
+on:
+  push:
+    paths:
+      - 'build/1837/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.36
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1837build
+          mkdir -p /tmp/pz1837build/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_36_TINY.zip?rev=1836b-outlook-hidrive-link' -o /tmp/pz1837build/base.zip
+          unzip -q /tmp/pz1837build/base.zip -d /tmp/pz1837build/unpacked
+          python build/1837/patch_1837.py /tmp/pz1837build/unpacked
+      - name: Verify Outlook foreground patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/pz1837build/unpacked/outlook_v1822.py').read_text(encoding='utf-8')
+          for marker in ('Focus-OutlookInspector','SetForegroundWindow','BringWindowToTop','AppActivate'):
+              assert marker in p, marker
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1837build/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_37_TINY.zip'
+          if zp.exists(): zp.unlink()
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(src.rglob('*')):
+                  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':
+                      z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          m={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.37','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_37_TINY.zip?rev=1837-outlook-foreground',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.37: Outlook-Entwurf wird nach dem Erstellen aktiv in den Vordergrund geholt. Das Outlook-Fenster wird bei Bedarf wiederhergestellt, nach vorn gebracht und fokussiert; als Fallback wird AppActivate verwendet. Dadurch soll der Entwurf nicht mehr nur in der Taskleiste blinken. Alle Funktionen aus 1.8.36 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_37_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.37 Outlook foreground'
+          git pull --rebase origin main
+          git push origin main
