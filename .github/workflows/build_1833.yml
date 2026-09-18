@@ -1,0 +1,70 @@
+name: Build Engbers Projektzentrale 1.8.33
+on:
+  push:
+    paths:
+      - 'build/1833/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.32
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1833
+          mkdir -p /tmp/pz1833/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_32_TINY.zip?rev=1832-hidrive-oauth-setup' -o /tmp/pz1833/base.zip
+          unzip -q /tmp/pz1833/base.zip -d /tmp/pz1833/unpacked
+          python build/1833/patch_1833.py /tmp/pz1833/unpacked
+      - name: Verify authorize URL behavior
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/pz1833/unpacked/hidrive_oauth_v1832.py').read_text(encoding='utf-8')
+          pos=p.index('params = {')
+          end=p.index('url = AUTH_URL',pos)
+          block=p[pos:end]
+          assert '"redirect_uri"' not in block
+          assert '"response_type": "code"' in block
+          assert '"scope": REQUESTED_SCOPE' in block
+          print('HiDrive default redirect URI smoke test OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1833/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_33_TINY.zip'
+          if zp.exists(): zp.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.33','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_33_TINY.zip?rev=1833-hidrive-default-redirect',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.33: HiDrive OAuth Redirect-Hotfix. Die Autorisierungsanfrage sendet keine eigene redirect_uri mehr, sondern verwendet die bei STRATO fuer die App hinterlegte Standard-Redirect-URI. Damit wird der HiDrive-Fehler invalid redirect_uri (set, no match) vermieden. Der lokale Rueckrufdienst auf Port 8765 bleibt unveraendert. Alle Funktionen aus 1.8.32 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_33_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.33 HiDrive redirect hotfix'
+          git pull --rebase origin main
+          git push origin main
