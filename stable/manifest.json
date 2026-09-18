@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.26",
+  "version": "1.8.27",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_26_TINY.zip?rev=1826-outlook-folder-fallback",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_27_TINY.zip?rev=1827-outlook-recursive-reader",
   "package_format": "zip",
-  "sha256": "543631b51085c2da8dcc3d0c265a156ea177684fd6fe8294b6927dd05242f73f",
-  "notes": "Version 1.8.26: Outlook-Leser robuster. Falls Outlook die Standardordner nicht direkt liefert, sucht die Projektzentrale Posteingang und Gesendete Elemente jetzt zusaetzlich nach den echten Ordnernamen (Deutsch/Englisch) im jeweiligen Outlook-Konto. Alle Funktionen aus 1.8.25 bleiben erhalten.",
+  "sha256": "e5ff48c5ba2f1e1268a5328fced9f7f36236d89f4322be6739659fc1d0c573b1",
+  "notes": "Version 1.8.27: Outlook-Leser grundlegend robuster. Neben den Standardordnern wird jetzt die reale Outlook-Ordnerstruktur rekursiv durchsucht und Posteingang sowie Gesendet-Ordner anhand ihrer echten Namen erkannt. Dadurch werden auch IMAP- und Mehrkonten-Konfigurationen erfasst, bei denen die bisherige Standardordner-Abfrage leer blieb. Doppelte Mails werden per Outlook EntryID unterdrückt. Alle Funktionen aus 1.8.26 bleiben erhalten.",
   "update_available": true
 }
