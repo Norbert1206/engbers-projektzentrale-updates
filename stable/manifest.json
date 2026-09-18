@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.30",
+  "version": "1.8.31",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_30_TINY.zip?rev=1830-communication-filters",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_31_TINY.zip?rev=1831-outlook-assignment-search",
   "package_format": "zip",
-  "sha256": "cb8cb2dc16384d7e3276f0d4c6ccd65b5dee5df921aeb9abef0cc1e804677368",
-  "notes": "Version 1.8.30: Kommunikationsakte mit Live-Filter und Suche. Filter: Alle, Nur Outlook, Eingang, Ausgang. Suche gleichzeitig in Absender, Empfaenger, Betreff, Anlage und Kanal. Die Trefferliste aktualisiert sich sofort beim Tippen; Zuruecksetzen stellt die komplette Projektkommunikation wieder her. Doppelklick zum Oeffnen archivierter Originale bleibt erhalten. Alle Funktionen aus 1.8.29 bleiben erhalten.",
+  "sha256": "283d1da59e0b260dc339360ad2c5e6e11ce729b48c2bb73e4e64caea354f9fdf",
+  "notes": "Version 1.8.31: Suche und Filter auch im Fenster OUTLOOK-MAIL ZUORDNEN. Live-Suche über Datum, Absender, Empfänger, Betreff und Outlook-Konto; zusätzlich Filter Alle/Eingang/Ausgang und Zurücksetzen. Mehrfachauswahl und Archivierung bleiben unverändert. Alle Funktionen aus 1.8.30 bleiben erhalten.",
   "update_available": true
 }
