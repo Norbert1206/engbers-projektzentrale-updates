@@ -1,0 +1,68 @@
+name: Build Engbers Projektzentrale 1.8.35
+on:
+  push:
+    paths:
+      - 'build/1835/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.34
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1835
+          mkdir -p /tmp/pz1835/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_34_TINY.zip?rev=1834c-hidrive-share-link' -o /tmp/pz1835/base.zip
+          unzip -q /tmp/pz1835/base.zip -d /tmp/pz1835/unpacked
+          python build/1835/patch_1835.py /tmp/pz1835/unpacked
+      - name: Verify
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/pz1835/unpacked/hidrive_sharelink_v1834.py').read_text(encoding='utf-8')
+          assert '{"pid": dir_id}' in p
+          assert '"writable": "false"' not in p
+          assert 'detail = raw' in p
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1835/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_35_TINY.zip'
+          if zp.exists(): zp.unlink()
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(src.rglob('*')):
+                  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':
+                      z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          m={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.35','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_35_TINY.zip?rev=1835-hidrive-share-pid',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.35: HiDrive-Freigabelink robuster. Der Zielordner wird zuerst über die HiDrive-API aufgelöst und die Freigabe anschließend über die eindeutige Verzeichnis-ID (pid) mit einem minimalen POST erzeugt. Dadurch entfallen unnötige optionale Parameter und Pfad-/Encoding-Probleme. HiDrive-Freigaben sind standardmäßig nur lesbar. API-Fehler zeigen nun außerdem den vollständigen Serverhinweis an. Alle Funktionen aus 1.8.34 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_35_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.35 HiDrive share PID fix'
+          git pull --rebase origin main
+          git push origin main
