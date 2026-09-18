@@ -1,0 +1,20 @@
+name: Inspect Projektzentrale 1.8.19 Statik block
+on:
+  push:
+    paths:
+      - 'build/1820/INSPECT2'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print Statik PDF source block
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1820
+          mkdir -p /tmp/pz1820
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_19_TINY.zip?rev=1819-ai-result-fix' -o /tmp/pz1820/base.zip
+          unzip -q /tmp/pz1820/base.zip -d /tmp/pz1820/src
+          sed -n '1340,1620p' /tmp/pz1820/src/app.py
