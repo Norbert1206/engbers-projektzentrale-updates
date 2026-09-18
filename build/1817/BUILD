@@ -1,1 +1,1 @@
-2026-09-18 1.8.17 letter spacing polish\n
+2026-09-18 1.8.17 letter spacing polish\nretry after patch fix
