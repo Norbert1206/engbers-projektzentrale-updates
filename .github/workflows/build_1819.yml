@@ -1,0 +1,64 @@
+name: Build Engbers Projektzentrale 1.8.19
+on:
+  push:
+    paths:
+      - 'build/1819/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and patch stable 1.8.18
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1819
+          mkdir -p /tmp/pz1819/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_18_TINY.zip?rev=1818-ai-letter-writer' -o /tmp/pz1819/base.zip
+          unzip -q /tmp/pz1819/base.zip -d /tmp/pz1819/unpacked
+          python build/1819/patch_1819.py /tmp/pz1819/unpacked
+      - name: Build update package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('.')
+          src=pathlib.Path('/tmp/pz1819/unpacked')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_19_TINY.zip'
+          if zip_path.exists(): zip_path.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc')
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files:
+                  z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for req in ('app.py','post_update.py','correspondence_v1814.py','ai_writer_v1818.py'):
+                  assert req in names, req
+              assert 'anschreiben_template.docx' not in names
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.19','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_19_TINY.zip?rev=1819-ai-result-fix',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.19: Fehlerbehebung der KI-Schreibhilfe. Die Antwort der OpenAI-API wird jetzt thread-sicher an das Anschreiben-Fenster zurückgegeben, sodass KI-Texte und API-Fehlermeldungen zuverlässig sichtbar werden. Alle Funktionen aus 1.8.18 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_19_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.19 AI result fix'
+          git pull --rebase origin main
+          git push origin main
