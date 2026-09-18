@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.35",
+  "version": "1.8.36",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_35_TINY.zip?rev=1835b-hidrive-share-pid",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_36_TINY.zip?rev=1836b-outlook-hidrive-link",
   "package_format": "zip",
-  "sha256": "3744b43b0673098f2bf6c341e30c01ac37657e0a3aa139a4915815d9b771a218",
-  "notes": "Version 1.8.35: HiDrive-Link-Erzeugung korrigiert. Der synchronisierte Zielordner wird zuerst per API aufgeloest und die Freigabe danach mit seiner eindeutigen Verzeichnis-ID (pid) erzeugt. Der Request nutzt nur die zwingend benoetigte Angabe; die Freigabe bleibt gemaess HiDrive-Standard read-only. API-Fehler zeigen nun den vollstaendigen Serverhinweis. Alle Funktionen aus 1.8.34 bleiben erhalten.",
+  "sha256": "78396789313e18a9c65376715b2fc580343d52ccaba67cec0088232e346d605a",
+  "notes": "Version 1.8.36: Der zuletzt erzeugte HiDrive-Freigabelink wird beim Öffnen von OUTLOOK-MAIL automatisch in den Begleittext übernommen. Zusätzlich erkennt die Projektzentrale einen HiDrive-Freigabelink in der Zwischenablage, falls der Freigabekorb inzwischen neu geöffnet wurde. Alle Funktionen aus 1.8.35 bleiben erhalten.",
   "update_available": true
 }
