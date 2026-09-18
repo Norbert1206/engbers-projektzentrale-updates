@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.16",
-  "published_at": "2026-09-17",
+  "version": "1.8.17",
+  "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_16_TINY.zip?rev=1816-fixed-letter-grid",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_17_TINY.zip?rev=1817-letter-spacing-polish",
   "package_format": "zip",
-  "sha256": "5645354543b6ede08387a1db4bd62629498b59b6afe2ed9b485c30f15c7a200b",
-  "notes": "Version 1.8.16: Das Anschreiben orientiert sich wieder an der vollständigen Originalstruktur. Der Auswahlbereich wird als festes, unsichtbares Raster erzeugt: fünf Unterlagenzeilen links sowie die vollständigen Bitte-um-Optionen rechts bleiben immer exakt ausgerichtet. Lange Bezeichnungen verschieben keine Kästchen mehr. Nicht gewählte Standardpunkte bleiben sichtbar und ungekreuzt; gewählte zusätzliche Unterlagen ersetzen freie Standardzeilen. Briefkopf, Adressbuch, lokale private Vorlage und alle bisherigen Funktionen bleiben erhalten.",
+  "sha256": "4da49ee9b81cb470d0e4c6ac1f0f0ecbd38f2fcde9224a08074de1e83b239b28",
+  "notes": "Version 1.8.17: Dezenter Feinschliff am Anschreiben ohne farbige oder verspielte Gestaltung. Die Grundstruktur aus 1.8.16 bleibt unverändert; Abstände zwischen Betreff, Auswahlblock, Anrede, Gruß und Unterschrift wurden harmonischer und kompakter abgestimmt. Die Beschriftung Weiterleitung an wurde typografisch bereinigt. Briefkopf, Adressbuch, lokale private Vorlage und alle bisherigen Funktionen bleiben erhalten.",
   "update_available": true
 }
