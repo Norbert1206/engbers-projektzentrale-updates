@@ -1,0 +1,80 @@
+name: Build Engbers Projektzentrale 1.8.18
+on:
+  push:
+    paths:
+      - 'build/1818/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and patch stable 1.8.17
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1818
+          mkdir -p /tmp/pz1818/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_17_TINY.zip?rev=1817-letter-spacing-polish' -o /tmp/pz1818/base.zip
+          unzip -q /tmp/pz1818/base.zip -d /tmp/pz1818/unpacked
+          cp build/1818/ai_writer_v1818.py /tmp/pz1818/unpacked/ai_writer_v1818.py
+          python build/1818/patch_1818.py /tmp/pz1818/unpacked
+      - name: Smoke test AI helper without network
+        run: |
+          PYTHONPATH=/tmp/pz1818/unpacked python - <<'PY'
+          import ai_writer_v1818 as ai
+          p = ai._build_prompt(
+              "geänderte Statik beigefügt; Anmerkungen eingearbeitet; bitte kurze Rückmeldung",
+              "freundlich",
+              ["Statische Berechnung"],
+              ["Kenntnisnahme"],
+          )
+          assert "geänderte Statik" in p
+          assert "Statische Berechnung" in p
+          assert ai._extract_output_text({"output":[{"content":[{"type":"output_text","text":"Testtext"}]}]}) == "Testtext"
+          print("OK: AI helper smoke test")
+          PY
+      - name: Build update package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('.')
+          src=pathlib.Path('/tmp/pz1818/unpacked')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_18_TINY.zip'
+          if zip_path.exists(): zip_path.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc')
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files:
+                  z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for req in ('app.py','commercial_v1890.py','post_update.py','correspondence_v1814.py','contacts_v1814.py','letter_template_v1814.py','ai_writer_v1818.py'):
+                  assert req in names, req
+              assert 'anschreiben_template.docx' not in names
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.18','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_18_TINY.zip?rev=1818-ai-letter-writer',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.18: KI-Schreibhilfe direkt im Anschreiben. Stichpunkte können mit KI kurz & sachlich, freundlich professionell oder förmlich formuliert werden; vorhandene Texte lassen sich sprachlich verbessern. Der Vorschlag landet direkt im Begleittextfeld und bleibt vor Word-Erstellung vollständig editierbar. Es werden nur Begleittext und fachlicher Auswahlkontext übertragen, keine Empfänger- oder Adressdaten. Der OpenAI-API-Schlüssel wird lokal mit Windows DPAPI verschlüsselt gespeichert. Alle Funktionen aus 1.8.17 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_18_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.18 AI letter writer'
+          git pull --rebase origin main
+          git push origin main
