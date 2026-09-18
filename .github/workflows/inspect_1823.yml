@@ -1,0 +1,27 @@
+name: Inspect 1.8.22 Outlook mail archive
+on:
+  push:
+    paths:
+      - 'build/1823/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect communication and project paths
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1823
+          mkdir -p /tmp/pz1823
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_22_TINY.zip?rev=1822-outlook-draft' -o /tmp/pz1823/base.zip
+          unzip -q /tmp/pz1823/base.zip -d /tmp/pz1823/src
+          echo '=== comm schema ==='
+          grep -n -C 8 'CREATE TABLE IF NOT EXISTS comm' /tmp/pz1823/src/app.py || true
+          echo '=== show_comm block ==='
+          sed -n '4260,4345p' /tmp/pz1823/src/app.py
+          echo '=== project source/path helpers ==='
+          grep -n -C 6 '_project_sources\|project_root\|find.*folder\|08_Kommunikation' /tmp/pz1823/src/app.py | head -n 500 || true
+          echo '=== outlook current helper ==='
+          sed -n '1,320p' /tmp/pz1823/src/outlook_v1822.py
