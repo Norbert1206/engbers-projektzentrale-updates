@@ -1,0 +1,20 @@
+name: Inspect stable 1.8.26 Outlook reader
+on:
+  push:
+    paths:
+      - 'build/1827/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print Outlook reader
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1827
+          mkdir -p /tmp/pz1827/src
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_26_TINY.zip?rev=1826-outlook-folder-fallback' -o /tmp/pz1827/base.zip
+          unzip -q /tmp/pz1827/base.zip -d /tmp/pz1827/src
+          sed -n '1,280p' /tmp/pz1827/src/outlook_archive_v1823.py
