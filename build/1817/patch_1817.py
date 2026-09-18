@@ -113,10 +113,10 @@ def _compact_letter_spacing_v1817(body):
             [_blank_paragraph_v1817(), _blank_paragraph_v1817()],
         )
 '''
-anchor = "\\ndef create_letter(template_path, output_path, values, document_items, requests):\\n"
+anchor = "\\n\\n__all__ ="
 if anchor not in letter:
-    raise RuntimeError("1.8.17: create_letter-Anker fehlt.")
-letter = letter.replace(anchor, "\n" + helper + anchor, 1)
+    raise RuntimeError("1.8.17: __all__-Anker fehlt.")
+letter = letter.replace(anchor, "\\n\\n" + helper + anchor, 1)
 
 call_old = '        body.insert(start, _selection_table_v1816(document_items, requests, values.get("forward_to", "")))\n\n        converted = ET.tostring(root, encoding="utf-8", xml_declaration=True)\n'
 call_new = '        body.insert(start, _selection_table_v1816(document_items, requests, values.get("forward_to", "")))\n        _compact_letter_spacing_v1817(body)\n\n        converted = ET.tostring(root, encoding="utf-8", xml_declaration=True)\n'
