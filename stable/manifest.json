@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.27",
+  "version": "1.8.28",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_27_TINY.zip?rev=1827-outlook-recursive-reader",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_28_TINY.zip?rev=1828-outlook-diagnostic",
   "package_format": "zip",
-  "sha256": "e5ff48c5ba2f1e1268a5328fced9f7f36236d89f4322be6739659fc1d0c573b1",
-  "notes": "Version 1.8.27: Outlook-Leser grundlegend robuster. Neben den Standardordnern wird jetzt die reale Outlook-Ordnerstruktur rekursiv durchsucht und Posteingang sowie Gesendet-Ordner anhand ihrer echten Namen erkannt. Dadurch werden auch IMAP- und Mehrkonten-Konfigurationen erfasst, bei denen die bisherige Standardordner-Abfrage leer blieb. Doppelte Mails werden per Outlook EntryID unterdrückt. Alle Funktionen aus 1.8.26 bleiben erhalten.",
+  "sha256": "00bf203109c1a808103fa38a93ce7beff4b1fa2a4983530821a8db8a687cebe0",
+  "notes": "Version 1.8.28: Outlook-Diagnose ergänzt. In Kommunikation gibt es jetzt OUTLOOK DIAGNOSE. Die Diagnose zeigt nur Outlook-Konten-/Ordnerstruktur und Elementanzahlen, keine Mailtexte. Damit lässt sich die lokale Outlook-Konfiguration gezielt prüfen, statt weitere Änderungen blind vorzunehmen. Alle Funktionen aus 1.8.27 bleiben erhalten.",
   "update_available": true
 }
