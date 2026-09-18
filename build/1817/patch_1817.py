@@ -113,9 +113,7 @@ def _compact_letter_spacing_v1817(body):
             [_blank_paragraph_v1817(), _blank_paragraph_v1817()],
         )
 '''
-anchor = '
-def create_letter(template_path, output_path, values, document_items, requests):
-'
+anchor = "\\ndef create_letter(template_path, output_path, values, document_items, requests):\\n"
 if anchor not in letter:
     raise RuntimeError("1.8.17: create_letter-Anker fehlt.")
 letter = letter.replace(anchor, "\n" + helper + anchor, 1)
