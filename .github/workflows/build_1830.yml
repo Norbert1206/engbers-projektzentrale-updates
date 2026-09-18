@@ -1,0 +1,66 @@
+name: Build Engbers Projektzentrale 1.8.30
+on:
+  push:
+    paths:
+      - 'build/1830/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.29
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1830
+          mkdir -p /tmp/pz1830/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_29_TINY.zip?rev=1829-powershell-tempfile-transport' -o /tmp/pz1830/base.zip
+          unzip -q /tmp/pz1830/base.zip -d /tmp/pz1830/unpacked
+          python build/1830/patch_1830.py /tmp/pz1830/unpacked
+      - name: Verify communication filters
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          app=Path('/tmp/pz1830/unpacked/app.py').read_text(encoding='utf-8')
+          for marker in ('Nur Outlook','SUCHE PERSON / BETREFF','ZURÜCKSETZEN','refill_comm'):
+              assert marker in app, marker
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1830/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_30_TINY.zip'
+          if zp.exists(): zp.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.30','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_30_TINY.zip?rev=1830-communication-filters',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.30: Kommunikationsakte mit Live-Filter und Suche. Filter: Alle, Nur Outlook, Eingang, Ausgang. Suche gleichzeitig in Absender, Empfaenger, Betreff, Anlage und Kanal. Die Trefferliste aktualisiert sich sofort beim Tippen; Zuruecksetzen stellt die komplette Projektkommunikation wieder her. Doppelklick zum Oeffnen archivierter Originale bleibt erhalten. Alle Funktionen aus 1.8.29 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_30_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.30 communication filters'
+          git pull --rebase origin main
+          git push origin main
