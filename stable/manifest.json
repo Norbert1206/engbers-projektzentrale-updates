@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.22",
+  "version": "1.8.23",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_22_TINY.zip?rev=1822-outlook-draft",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_23_TINY.zip?rev=1823-outlook-project-archive",
   "package_format": "zip",
-  "sha256": "5a477650b59f63e2eee7cb90aa408990e9b9b07f0a3dfdbb20cd5fab55c464e8",
-  "notes": "Version 1.8.22: Outlook (klassisch) direkt aus dem Freigabekorb. Empfänger wird aus dem lokalen Adressbuch gewählt; Betreff und Begleittext sind vorbefüllt und editierbar. Optional können die Dateien aus dem Freigabekorb direkt angehängt werden; bei großen Anhängen erscheint eine Warnung. Es wird ausschließlich ein sichtbarer Outlook-Entwurf geöffnet – niemals automatisch versendet. Die vorhandene Outlook-Signatur bleibt erhalten. Alle Funktionen aus 1.8.21 bleiben erhalten.",
+  "sha256": "5d7ac9356f990a39e489de449e71672e4b7e83640b7c720e0985516bd7108ee7",
+  "notes": "Version 1.8.23: Projektbezogene Outlook-Mailakte. In Kommunikation können passende Outlook-Mails automatisch synchronisiert werden; Mails mit Projektnummer oder aus der Projektzentrale erzeugte Mails werden erkannt. Zusätzlich können beliebige aktuelle Outlook-Mails manuell dem Projekt zugeordnet werden. Zugeordnete Mails werden als originale .msg-Datei unter 08_Kommunikation\\Outlook archiviert und in der Kommunikationsakte dokumentiert. Doppelklick öffnet die archivierte Originalmail. Projektzentrale-Outlook-Entwürfe erhalten zusätzlich eine unsichtbare Projektkennung für zuverlässige spätere Zuordnung. Es wird weiterhin niemals automatisch versendet.",
   "update_available": true
 }
