@@ -1,0 +1,69 @@
+name: Build Engbers Projektzentrale 1.8.28
+on:
+  push:
+    paths:
+      - 'build/1828/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.27
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1828build
+          mkdir -p /tmp/pz1828build/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_27_TINY.zip?rev=1827-outlook-recursive-reader' -o /tmp/pz1828build/base.zip
+          unzip -q /tmp/pz1828build/base.zip -d /tmp/pz1828build/unpacked
+          cp build/1828/outlook_diag_v1828.py /tmp/pz1828build/unpacked/outlook_diag_v1828.py
+          python build/1828/patch_1828.py /tmp/pz1828build/unpacked
+      - name: Verify diagnostic
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          app=Path('/tmp/pz1828build/unpacked/app.py').read_text(encoding='utf-8')
+          diag=Path('/tmp/pz1828build/unpacked/outlook_diag_v1828.py').read_text(encoding='utf-8')
+          assert 'OUTLOOK DIAGNOSE' in app
+          assert 'Standard-Posteingang' in diag
+          assert 'Ordnerstruktur' in diag
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1828build/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_28_TINY.zip'
+          if zp.exists(): zp.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.28','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_28_TINY.zip?rev=1828-outlook-diagnostic',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.28: Outlook-Diagnose ergänzt. In Kommunikation gibt es jetzt OUTLOOK DIAGNOSE. Die Diagnose zeigt nur Outlook-Konten-/Ordnerstruktur und Elementanzahlen, keine Mailtexte. Damit lässt sich die lokale Outlook-Konfiguration gezielt prüfen, statt weitere Änderungen blind vorzunehmen. Alle Funktionen aus 1.8.27 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_28_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.28 Outlook diagnostic'
+          git pull --rebase origin main
+          git push origin main
