@@ -1,0 +1,23 @@
+name: Inspect 1.8.20 sharing surfaces
+on:
+  push:
+    paths:
+      - 'build/1821/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect current stable source for document views
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1821
+          mkdir -p /tmp/pz1821
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_20_TINY.zip?rev=1820-hidrive-share' -o /tmp/pz1821/base.zip
+          unzip -q /tmp/pz1821/base.zip -d /tmp/pz1821/src
+          echo '=== functions ==='
+          grep -n "^    def show_" /tmp/pz1821/src/app.py || true
+          echo '=== brandschutz / plaene / dokumente ==='
+          grep -Rni -C 12 --include='*.py' 'Brandschutz\|BRANDSCHUTZ\|Pläne\|PLAENE\|Dokumente\|DOKUMENTE' /tmp/pz1821/src | head -n 1200 || true
