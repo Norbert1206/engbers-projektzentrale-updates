@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.34",
+  "version": "1.8.35",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_34_TINY.zip?rev=1834c-hidrive-share-link",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_35_TINY.zip?rev=1835b-hidrive-share-pid",
   "package_format": "zip",
-  "sha256": "9eadbd011d28f77ada66d7dfecab4519dbeb104f036e0b6720a0278ed7d38e37",
-  "notes": "Version 1.8.34: HIDRIVE-LINK direkt im Freigabekorb. Erstellt den Freigabeordner, wartet auf die HiDrive-Synchronisation, erzeugt eine schreibgeschuetzte Ordnerfreigabe ueber die HiDrive-API und kopiert den Link automatisch in die Zwischenablage. Bei noch laufender Synchronisation kann derselbe bereits erstellte Ordner erneut versucht werden. Outlook-Übernahme folgt nach dem ersten erfolgreichen Linktest. Alle Funktionen aus 1.8.33 bleiben erhalten.",
+  "sha256": "3744b43b0673098f2bf6c341e30c01ac37657e0a3aa139a4915815d9b771a218",
+  "notes": "Version 1.8.35: HiDrive-Link-Erzeugung korrigiert. Der synchronisierte Zielordner wird zuerst per API aufgeloest und die Freigabe danach mit seiner eindeutigen Verzeichnis-ID (pid) erzeugt. Der Request nutzt nur die zwingend benoetigte Angabe; die Freigabe bleibt gemaess HiDrive-Standard read-only. API-Fehler zeigen nun den vollstaendigen Serverhinweis. Alle Funktionen aus 1.8.34 bleiben erhalten.",
   "update_available": true
 }
