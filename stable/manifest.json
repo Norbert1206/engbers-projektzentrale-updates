@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.29",
+  "version": "1.8.30",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_29_TINY.zip?rev=1829-powershell-tempfile-transport",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_30_TINY.zip?rev=1830-communication-filters",
   "package_format": "zip",
-  "sha256": "9ab280bc298547cb69755eb7ff34e74f75d13f10c92a15b117d251952b60555a",
-  "notes": "Version 1.8.29: Outlook-Kommunikation robuster. Die Rueckgabe aus Windows PowerShell wird nicht mehr ueber stdout gelesen, sondern ueber eine temporaere Ergebnisdatei. Das behebt Konfigurationen, in denen die gepackte Windows-App PowerShell-Ausgaben leer zurueckbekam, obwohl Outlook-Aktionen selbst funktionierten. Outlook-Diagnose und Mail-Leser verwenden jetzt denselben robusten Transport. Alle Funktionen aus 1.8.28 bleiben erhalten.",
+  "sha256": "cb8cb2dc16384d7e3276f0d4c6ccd65b5dee5df921aeb9abef0cc1e804677368",
+  "notes": "Version 1.8.30: Kommunikationsakte mit Live-Filter und Suche. Filter: Alle, Nur Outlook, Eingang, Ausgang. Suche gleichzeitig in Absender, Empfaenger, Betreff, Anlage und Kanal. Die Trefferliste aktualisiert sich sofort beim Tippen; Zuruecksetzen stellt die komplette Projektkommunikation wieder her. Doppelklick zum Oeffnen archivierter Originale bleibt erhalten. Alle Funktionen aus 1.8.29 bleiben erhalten.",
   "update_available": true
 }
