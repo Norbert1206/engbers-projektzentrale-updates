@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.18",
+  "version": "1.8.19",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_18_TINY.zip?rev=1818-ai-letter-writer",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_19_TINY.zip?rev=1819-ai-result-fix",
   "package_format": "zip",
-  "sha256": "365244e000ec518c30b6aa96bc854d7611616c2ccecfcf9a823112ed84758b35",
-  "notes": "Version 1.8.18: KI-Schreibhilfe direkt im Anschreiben. Stichpunkte können mit KI kurz & sachlich, freundlich professionell oder förmlich formuliert werden; vorhandene Texte lassen sich sprachlich verbessern. Der Vorschlag landet direkt im Begleittextfeld und bleibt vor Word-Erstellung vollständig editierbar. Es werden nur Begleittext und fachlicher Auswahlkontext übertragen, keine Empfänger- oder Adressdaten. Der OpenAI-API-Schlüssel wird lokal mit Windows DPAPI verschlüsselt gespeichert. Alle Funktionen aus 1.8.17 bleiben erhalten.",
+  "sha256": "7eecf6d9cb78117aeed28e62fb6da6dd8c0b2dca6cbce448722f4221f256ba44",
+  "notes": "Version 1.8.19: Fehlerbehebung der KI-Schreibhilfe. Die Antwort der OpenAI-API wird jetzt thread-sicher an das Anschreiben-Fenster zurückgegeben, sodass KI-Texte und API-Fehlermeldungen zuverlässig sichtbar werden. Alle Funktionen aus 1.8.18 bleiben erhalten.",
   "update_available": true
 }
