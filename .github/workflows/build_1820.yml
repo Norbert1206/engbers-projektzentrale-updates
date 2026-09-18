@@ -1,0 +1,87 @@
+name: Build Engbers Projektzentrale 1.8.20
+on:
+  push:
+    paths:
+      - 'build/1820/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download stable 1.8.19 and add HiDrive helper
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1820
+          mkdir -p /tmp/pz1820/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_19_TINY.zip?rev=1819-ai-result-fix' -o /tmp/pz1820/base.zip
+          unzip -q /tmp/pz1820/base.zip -d /tmp/pz1820/unpacked
+          cp build/1820/hidrive_share_v1820.py /tmp/pz1820/unpacked/hidrive_share_v1820.py
+          python build/1820/patch_1820.py /tmp/pz1820/unpacked
+      - name: Smoke test HiDrive share helper
+        run: |
+          python - <<'PY'
+          import importlib.util, pathlib, tempfile
+          src=pathlib.Path('/tmp/pz1820/unpacked/hidrive_share_v1820.py')
+          spec=importlib.util.spec_from_file_location('hidrive_share_v1820',src)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          with tempfile.TemporaryDirectory() as td:
+              base=pathlib.Path(td)
+              statik=base/'Statik PDF'; statik.mkdir()
+              nested=statik/'Plaene'; nested.mkdir()
+              a=statik/'Statik.pdf'; a.write_bytes(b'A')
+              b=nested/'Plan.pdf'; b.write_bytes(b'B')
+              share=base/'HiDrive'/'Engbers Projektfreigaben'
+              release,copied=m.prepare_share([a,nested],statik,'25-026','Werning',share_root=share)
+              assert len(copied)==2
+              assert (release/'Statik.pdf').read_bytes()==b'A'
+              assert (release/'Plaene'/'Plan.pdf').read_bytes()==b'B'
+              assert a.read_bytes()==b'A' and b.read_bytes()==b'B'
+              assert release.parent.name=='25-026 Werning'
+          print('HiDrive helper smoke test OK')
+          PY
+      - name: Build update package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('.')
+          src=pathlib.Path('/tmp/pz1820/unpacked')
+          zip_path=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_20_TINY.zip'
+          if zip_path.exists(): zip_path.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc')
+          with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files:
+                  z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zip_path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for req in ('app.py','post_update.py','hidrive_share_v1820.py'):
+                  assert req in names, req
+              assert 'anschreiben_template.docx' not in names
+          sha=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.20','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_20_TINY.zip?rev=1820-hidrive-share',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.20: STRATO-/HiDrive-Freigabe direkt aus Statik PDF. Markierte PDFs oder Ordner werden ausschließlich als Kopie in HiDrive\\Engbers Projektfreigaben bereitgestellt. Pro Projekt und Freigabe wird ein sauberer neuer Freigabeordner angelegt; Unterordner bleiben erhalten. Originaldateien im Projekt werden nie verschoben oder verändert. Der Freigabeordner wird anschließend automatisch geöffnet. Alle Funktionen aus 1.8.19 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PACKAGE_SHA256='+sha)
+          PY
+      - name: Commit release files
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_20_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.20 HiDrive share'
+          git pull --rebase origin main
+          git push origin main
