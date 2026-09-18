@@ -1,0 +1,22 @@
+name: Inspect 1.8.22 project root helper
+on:
+  push:
+    paths:
+      - 'build/1823/INSPECT_ROOT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect project helpers
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1823root
+          mkdir -p /tmp/pz1823root
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_22_TINY.zip?rev=1822-outlook-draft' -o /tmp/pz1823root/base.zip
+          unzip -q /tmp/pz1823root/base.zip -d /tmp/pz1823root/src
+          grep -n -A35 -B5 'def project_row' /tmp/pz1823root/src/app.py || true
+          grep -n -A90 -B10 'def _project_sources' /tmp/pz1823root/src/app.py || true
+          sed -n '225,250p' /tmp/pz1823root/src/app.py
