@@ -1,2 +1,2 @@
 2026-09-18 1.8.17 letter spacing polish\nretry after patch fix
-retry 2 after robust helper insertion\nretry 3 namespace anchor\nretry 4 append helper\n
+retry 2 after robust helper insertion\nretry 3 namespace anchor\nretry 4 append helper\nretry 5 newline literal fix\n
