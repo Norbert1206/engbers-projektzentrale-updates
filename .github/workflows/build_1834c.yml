@@ -1,0 +1,55 @@
+name: Build Engbers Projektzentrale 1.8.34c
+on:
+  push:
+    paths:
+      - 'build/1834/BUILD3'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Patch stable 1.8.33
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1834c && mkdir -p /tmp/pz1834c/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_33_TINY.zip?rev=1833-hidrive-default-redirect' -o /tmp/pz1834c/base.zip
+          unzip -q /tmp/pz1834c/base.zip -d /tmp/pz1834c/unpacked
+          cp build/1834/hidrive_sharelink_v1834.py /tmp/pz1834c/unpacked/hidrive_sharelink_v1834.py
+          python build/1834/patch_1834c.py /tmp/pz1834c/unpacked
+      - name: Verify
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          r=Path('/tmp/pz1834c/unpacked')
+          assert 'HIDRIVE-LINK' in (r/'share_basket_v1821.py').read_text(encoding='utf-8')
+          assert 'create_share_link_for_local_dir' in (r/'hidrive_sharelink_v1834.py').read_text(encoding='utf-8')
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1834c/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_34_TINY.zip'
+          if zp.exists(): zp.unlink()
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(src.rglob('*')):
+                  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc': z.write(p,p.relative_to(src).as_posix())
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          m={'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.34','published_at':'2026-09-18','min_bootstrap_version':'1.8.3','package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_34_TINY.zip?rev=1834c-hidrive-share-link','package_format':'zip','sha256':sha,'notes':'Version 1.8.34: HIDRIVE-LINK direkt im Freigabekorb. Erstellt den Freigabeordner, wartet auf die HiDrive-Synchronisation, erzeugt eine schreibgeschuetzte Ordnerfreigabe ueber die HiDrive-API und kopiert den Link automatisch in die Zwischenablage. Bei noch laufender Synchronisation kann derselbe bereits erstellte Ordner erneut versucht werden. Outlook-Übernahme folgt nach dem ersten erfolgreichen Linktest. Alle Funktionen aus 1.8.33 bleiben erhalten.','update_available':True}
+          (root/'stable/manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_34_TINY.zip stable/manifest.json
+          git commit -m 'Release Projektzentrale 1.8.34 HiDrive link' || exit 0
+          git pull --rebase origin main
+          git push origin main
