@@ -1,0 +1,66 @@
+name: Build Engbers Projektzentrale 1.8.31
+on:
+  push:
+    paths:
+      - 'build/1831/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.30
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1831
+          mkdir -p /tmp/pz1831/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_30_TINY.zip?rev=1830-communication-filters' -o /tmp/pz1831/base.zip
+          unzip -q /tmp/pz1831/base.zip -d /tmp/pz1831/unpacked
+          python build/1831/patch_1831.py /tmp/pz1831/unpacked
+      - name: Verify search
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/pz1831/unpacked/outlook_archive_v1823.py').read_text(encoding='utf-8')
+          for marker in ('direction_var = tk.StringVar(value="Alle")','ZURÜCKSETZEN','def refill()'):
+              assert marker in p
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1831/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_31_TINY.zip'
+          if zp.exists(): zp.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.31','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_31_TINY.zip?rev=1831-outlook-assignment-search',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.31: Suche und Filter auch im Fenster OUTLOOK-MAIL ZUORDNEN. Live-Suche über Datum, Absender, Empfänger, Betreff und Outlook-Konto; zusätzlich Filter Alle/Eingang/Ausgang und Zurücksetzen. Mehrfachauswahl und Archivierung bleiben unverändert. Alle Funktionen aus 1.8.30 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_31_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.31 Outlook assignment search'
+          git pull --rebase origin main
+          git push origin main
