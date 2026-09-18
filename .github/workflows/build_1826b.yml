@@ -1,0 +1,65 @@
+name: Build Engbers Projektzentrale 1.8.26
+on:
+  push:
+    paths:
+      - 'build/1826/BUILD2'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.25
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1826
+          mkdir -p /tmp/pz1826/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_25_TINY.zip?rev=1825-outlook-store-enumeration' -o /tmp/pz1826/base.zip
+          unzip -q /tmp/pz1826/base.zip -d /tmp/pz1826/unpacked
+          python build/1826/patch_1826b.py /tmp/pz1826/unpacked
+      - name: Verify patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/pz1826/unpacked/outlook_archive_v1823.py').read_text(encoding='utf-8')
+          assert 'posteingang' in p and 'sent items' in p
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.')
+          src=pathlib.Path('/tmp/pz1826/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_26_TINY.zip'
+          if zp.exists(): zp.unlink()
+          files=sorted(p for p in src.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.relative_to(src).as_posix())
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          manifest={
+            'app':'Engbers Projektzentrale','channel':'stable','version':'1.8.26','published_at':'2026-09-18',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_26_TINY.zip?rev=1826-outlook-folder-fallback',
+            'package_format':'zip','sha256':sha,
+            'notes':'Version 1.8.26: Outlook-Leser robuster. Falls Outlook die Standardordner nicht direkt liefert, sucht die Projektzentrale Posteingang und Gesendete Elemente jetzt zusaetzlich nach den echten Ordnernamen (Deutsch/Englisch) im jeweiligen Outlook-Konto. Alle Funktionen aus 1.8.25 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_26_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.26 Outlook folder fallback'
+          git pull --rebase origin main
+          git push origin main
