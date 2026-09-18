@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.33",
+  "version": "1.8.34",
   "published_at": "2026-09-18",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_33_TINY.zip?rev=1833-hidrive-default-redirect",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_34_TINY.zip?rev=1834c-hidrive-share-link",
   "package_format": "zip",
-  "sha256": "c38e3e6c2cfa64cc6ee431c6247a4360dc855bb3cb87f5f59ebd416f3258038a",
-  "notes": "Version 1.8.33: HiDrive OAuth Redirect-Hotfix. Die Autorisierungsanfrage sendet keine eigene redirect_uri mehr, sondern verwendet die bei STRATO fuer die App hinterlegte Standard-Redirect-URI. Damit wird der HiDrive-Fehler invalid redirect_uri (set, no match) vermieden. Der lokale Rueckrufdienst auf Port 8765 bleibt unveraendert. Alle Funktionen aus 1.8.32 bleiben erhalten.",
+  "sha256": "9eadbd011d28f77ada66d7dfecab4519dbeb104f036e0b6720a0278ed7d38e37",
+  "notes": "Version 1.8.34: HIDRIVE-LINK direkt im Freigabekorb. Erstellt den Freigabeordner, wartet auf die HiDrive-Synchronisation, erzeugt eine schreibgeschuetzte Ordnerfreigabe ueber die HiDrive-API und kopiert den Link automatisch in die Zwischenablage. Bei noch laufender Synchronisation kann derselbe bereits erstellte Ordner erneut versucht werden. Outlook-Übernahme folgt nach dem ersten erfolgreichen Linktest. Alle Funktionen aus 1.8.33 bleiben erhalten.",
   "update_available": true
 }
