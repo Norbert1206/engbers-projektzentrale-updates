@@ -1,0 +1,88 @@
+name: Build Engbers Projektzentrale 1.8.39
+on:
+  push:
+    paths:
+      - 'build/1839/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.38
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1839build
+          mkdir -p /tmp/pz1839build/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_38_TINY.zip?rev=1838-idea-statika' -o /tmp/pz1839build/base.zip
+          unzip -q /tmp/pz1839build/base.zip -d /tmp/pz1839build/unpacked
+          python build/1839/patch_1839.py /tmp/pz1839build/unpacked
+      - name: Verify real IDEA grouping
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import py_compile
+          root=Path('/tmp/pz1839build/unpacked')
+          py_compile.compile(str(root/'app.py'),doraise=True)
+          a=(root/'app.py').read_text(encoding='utf-8')
+          assert "endswith('.ideacon')" in a
+          assert "IDEA-Datei: vorhanden" in a
+          assert "NEUER ANSCHLUSS" in a
+          assert "IFCMECHANICALFASTENER(" in a
+          # exact real-world extension/name association smoke test
+          names=[
+              'E.01.AN1.ideaCon',
+              'E.01.AN1.ideaCon.Archiv',
+              'E.01.AN1.ideaCon.backup',
+              'Berechnungsprotokoll E.01.AN1.pdf',
+              'Nachweis E.01.AN1.docx',
+              'E.01.AN1.ifc',
+          ]
+          token='E.01.AN1'.casefold()
+          related=[n for n in names if token in n.casefold()]
+          assert len(related)==6
+          print('OK',related)
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1839build/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_39_TINY.zip'
+          if zp.exists(): zp.unlink()
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(src.rglob('*')):
+                  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':
+                      z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          m={
+            'app':'Engbers Projektzentrale',
+            'channel':'stable',
+            'version':'1.8.39',
+            'published_at':'2026-09-19',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_39_TINY.zip?rev=1839-real-idea-structure',
+            'package_format':'zip',
+            'sha256':sha,
+            'notes':'Version 1.8.39: IDEA-StatiCa-Bereich auf echte Anschlussdateien abgestimmt. *.ideaCon wird korrekt erkannt; Archiv, Backup, Berechnungs-PDF, Word-Nachweis und IFC aus BIM werden automatisch über die Anschlussbezeichnung zusammengefasst. Bestehender Ordner Idea Static/IDEA StatiCa wird erkannt und bevorzugt. Neuer Anschluss erzeugt optional einen eigenen Anschlussordner mit BIM-Unterordner. Bestehende Dateien werden nicht verschoben. IFC-Metadaten werden für die spätere 3D-Vorschau bereits ausgelesen. Alle Funktionen aus 1.8.38 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_39_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.39 real IDEA structure'
+          git pull --rebase origin main
+          git push origin main
