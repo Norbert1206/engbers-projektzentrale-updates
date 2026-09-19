@@ -1,0 +1,78 @@
+name: Build Engbers Projektzentrale 1.8.38
+on:
+  push:
+    paths:
+      - 'build/1838/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.37
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1838build
+          mkdir -p /tmp/pz1838build/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_37_TINY.zip?rev=1837-outlook-foreground' -o /tmp/pz1838build/base.zip
+          unzip -q /tmp/pz1838build/base.zip -d /tmp/pz1838build/unpacked
+          python build/1838/patch_1838.py /tmp/pz1838build/unpacked
+      - name: Verify patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import py_compile
+          root=Path('/tmp/pz1838build/unpacked')
+          py_compile.compile(str(root/'app.py'),doraise=True)
+          a=(root/'app.py').read_text(encoding='utf-8')
+          assert 'def show_idea_statica' in a
+          assert "text='   ↳ IDEA StatiCa'" in a
+          assert "root/'02_Statik'/'IDEA StatiCa'/'BIM Anschluss'" in a
+          assert "('ALLPLAN'," not in a
+          assert "('ALLMENU'," not in a
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1838build/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_38_TINY.zip'
+          if zp.exists(): zp.unlink()
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(src.rglob('*')):
+                  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':
+                      z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z:
+              assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          m={
+            'app':'Engbers Projektzentrale',
+            'channel':'stable',
+            'version':'1.8.38',
+            'published_at':'2026-09-19',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_38_TINY.zip?rev=1838-idea-statika',
+            'package_format':'zip',
+            'sha256':sha,
+            'notes':'Version 1.8.38: Kleine IDEA-StatiCa-Anbindung unter Statik. Neuer Unterpunkt IDEA StatiCa mit Projektordner Statik/IDEA StatiCa/BIM Anschluss, automatischer Erkennung von IDEA-/IFC-/PDF-Dateien, direktem Öffnen und IDEA-Start. Neue Statik-Projekte erhalten den BIM-Anschluss-Ordner automatisch. Allplan und Allmenu wurden aus der Statik-Programmleiste entfernt. Alle Funktionen aus 1.8.37 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_38_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.38 IDEA StatiCa'
+          git pull --rebase origin main
+          git push origin main
