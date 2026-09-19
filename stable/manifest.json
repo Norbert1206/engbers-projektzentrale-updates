@@ -1,12 +1,12 @@
 {
   "app": "Engbers Projektzentrale",
   "channel": "stable",
-  "version": "1.8.37",
-  "published_at": "2026-09-18",
+  "version": "1.8.38",
+  "published_at": "2026-09-19",
   "min_bootstrap_version": "1.8.3",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_37_TINY.zip?rev=1837-outlook-foreground",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_38_TINY.zip?rev=1838-idea-statika",
   "package_format": "zip",
-  "sha256": "d744196503907cbd75514aa6bcc2f29f3b2888730d6c42dfdc6460511ca0ce35",
-  "notes": "Version 1.8.37: Outlook-Entwurf wird nach dem Erstellen aktiv in den Vordergrund geholt. Das Outlook-Fenster wird bei Bedarf wiederhergestellt, nach vorn gebracht und fokussiert; als Fallback wird AppActivate verwendet. Dadurch soll der Entwurf nicht mehr nur in der Taskleiste blinken. Alle Funktionen aus 1.8.36 bleiben erhalten.",
+  "sha256": "5ab4608154c2ee0e6b839b9304993586c7e5469465caad35b8f3feb3d2be2323",
+  "notes": "Version 1.8.38: Kleine IDEA-StatiCa-Anbindung unter Statik. Neuer Unterpunkt IDEA StatiCa mit Projektordner Statik/IDEA StatiCa/BIM Anschluss, automatischer Erkennung von IDEA-/IFC-/PDF-Dateien, direktem Öffnen und IDEA-Start. Neue Statik-Projekte erhalten den BIM-Anschluss-Ordner automatisch. Allplan und Allmenu wurden aus der Statik-Programmleiste entfernt. Alle Funktionen aus 1.8.37 bleiben erhalten.",
   "update_available": true
 }
