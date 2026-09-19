@@ -1,0 +1,25 @@
+name: Inspect Projektzentrale for IDEA StatiCa
+on:
+  push:
+    paths:
+      - 'build/1838/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect stable 1.8.37
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1838
+          mkdir -p /tmp/pz1838/src
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_37_TINY.zip?rev=1837-outlook-foreground' -o /tmp/pz1838/base.zip
+          unzip -q /tmp/pz1838/base.zip -d /tmp/pz1838/src
+          echo '--- files ---'
+          find /tmp/pz1838/src -maxdepth 2 -type f | sort
+          echo '--- statik/project references ---'
+          grep -RniE 'Statik|MB|Projektstruktur|project_root|project_path|02_' /tmp/pz1838/src/*.py | head -n 700 || true
+          echo '--- app relevant windows/buttons ---'
+          grep -nE 'STATIK|Statik|MB|BIM|ALLPLAN|Allplan' /tmp/pz1838/src/app.py | head -n 500 || true
