@@ -1,0 +1,22 @@
+name: Inspect 1.8.38 IDEA block
+on:
+  push:
+    paths:
+      - 'build/1839/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1839
+          mkdir -p /tmp/pz1839/src
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_38_TINY.zip?rev=1838-idea-statika' -o /tmp/pz1839/base.zip
+          unzip -q /tmp/pz1839/base.zip -d /tmp/pz1839/src
+          A=/tmp/pz1839/src/app.py
+          grep -n "def show_idea_statica" "$A"
+          sed -n '/    def show_idea_statica(self):/,/    def show_statics(self):/p' "$A"
