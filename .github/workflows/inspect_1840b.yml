@@ -1,0 +1,24 @@
+name: Inspect IDEA tree/share basket for 1.8.40
+on:
+  push:
+    paths:
+      - 'build/1840b/INSPECT'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect stable 1.8.39
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1840b
+          mkdir -p /tmp/pz1840b/src
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_39_TINY.zip?rev=1839-real-idea-structure' -o /tmp/pz1840b/base.zip
+          unzip -q /tmp/pz1840b/base.zip -d /tmp/pz1840b/src
+          A=/tmp/pz1840b/src/app.py
+          echo '--- imports/share ---'
+          grep -nE 'share_basket|add_items|open_share|def show_idea_statica|def show_statik_pdf' "$A" | head -n 120
+          echo '--- IDEA block ---'
+          sed -n '/    def show_idea_statica(self):/,/    def show_statics(self):/p' "$A"
