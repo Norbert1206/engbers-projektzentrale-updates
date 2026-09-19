@@ -1,0 +1,74 @@
+name: Build Engbers Projektzentrale 1.8.40b
+on:
+  push:
+    paths:
+      - 'build/1840b/BUILD'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch stable 1.8.39
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pz1840bbuild
+          mkdir -p /tmp/pz1840bbuild/unpacked
+          curl -fL 'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_39_TINY.zip?rev=1839-real-idea-structure' -o /tmp/pz1840bbuild/base.zip
+          unzip -q /tmp/pz1840bbuild/base.zip -d /tmp/pz1840bbuild/unpacked
+          python build/1840b/patch_1840b.py /tmp/pz1840bbuild/unpacked
+      - name: Verify
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import py_compile
+          p=Path('/tmp/pz1840bbuild/unpacked/app.py')
+          py_compile.compile(str(p),doraise=True)
+          a=p.read_text(encoding='utf-8')
+          for marker in ("show='tree headings'","ZUR FREIGABE","source='IDEA StatiCa'","open_basket_dialog"):
+              assert marker in a, marker
+          print('OK')
+          PY
+      - name: Build package and manifest
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('.'); src=pathlib.Path('/tmp/pz1840bbuild/unpacked')
+          zp=root/'stable/Engbers_Projektzentrale_UPDATE_1_8_40_TINY.zip'
+          if zp.exists(): zp.unlink()
+          with zipfile.ZipFile(zp,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(src.rglob('*')):
+                  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':
+                      z.write(p,p.relative_to(src).as_posix())
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None
+          sha=hashlib.sha256(zp.read_bytes()).hexdigest()
+          m={
+            'app':'Engbers Projektzentrale',
+            'channel':'stable',
+            'version':'1.8.40',
+            'published_at':'2026-09-19',
+            'min_bootstrap_version':'1.8.3',
+            'package_url':'https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/stable/Engbers_Projektzentrale_UPDATE_1_8_40_TINY.zip?rev=1840b-idea-tree-share',
+            'package_format':'zip',
+            'sha256':sha,
+            'notes':'Version 1.8.40: IDEA-Anschlüsse lassen sich jetzt aufklappen. PDF, Word, IFC, IDEA-Datei, Archiv und Backup werden als einzelne Unterdateien angezeigt. Mehrere Dateien können markiert und direkt in den bestehenden Freigabekorb gelegt werden; Freigabekorb ist aus dem IDEA-Bereich direkt erreichbar. Doppelklick auf den Anschluss klappt ihn auf/zu, Doppelklick auf eine Datei öffnet nur diese Datei. Die Detailanzeige rechts wurde zugleich sauber formatiert. Alle Funktionen aus 1.8.39 bleiben erhalten.',
+            'update_available':True
+          }
+          (root/'stable/manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(sha)
+          PY
+      - name: Commit release
+        run: |
+          git config user.name 'engbers-update-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add stable/Engbers_Projektzentrale_UPDATE_1_8_40_TINY.zip stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Release Projektzentrale 1.8.40 IDEA expandable files'
+          git pull --rebase origin main
+          git push origin main
