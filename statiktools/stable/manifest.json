@@ -1,8 +1,8 @@
 {
   "version": "1.5 Desktop",
   "update_available": true,
-  "notes": "Neu: Geotechnik > Trägerbohlwand. Update-Transport zusätzlich über GitHub-API abgesichert; der lokale Update-Dienst startet nach Updates automatisch neu.",
+  "notes": "Neu: Geotechnik > Trägerbohlwand. Update-Helfer nutzt jetzt den echten lokalen Python-Pfad statt Windows-App-Aliase; GitHub-API-Fallback bleibt aktiv.",
   "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_5.json",
   "package_format": "base64-json",
-  "sha256": "ca5215e9e60c6b17f506b8800cf1db2e598b6a2d948d83409faa6b6e43cedfdd"
+  "sha256": "fad3a7eff0e6301d765e96cee778081a6cb005ff4d8eaad0396103713c734e9c"
 }
