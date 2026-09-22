@@ -1,8 +1,8 @@
 {
   "version": "1.5 Desktop",
   "update_available": true,
-  "notes": "Neu: Geotechnik > Trägerbohlwand mit Eingabemodell, Bodenschichten, Systemgrafik, Plausibilitätsprüfung, Positionsspeicherung und PDF-/Druckausgabe. Rechenkern folgt nach Referenzverifikation.",
+  "notes": "Neu: Geotechnik > Trägerbohlwand. Zusätzlich wird der lokale Update-Dienst nach künftigen Updates automatisch neu gestartet.",
   "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_5.json",
   "package_format": "base64-json",
-  "sha256": "c0a681ae3c1259365c1558441757db331b3f2f61d78bcc9e651a574d246abe1c"
+  "sha256": "52a2316f95d3101fd1e7fe6868a0f637b5d22da01cb731e32488b2d5800a6414"
 }
