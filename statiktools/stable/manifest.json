@@ -1,8 +1,8 @@
 {
-  "version": "1.6.2 Desktop",
+  "version": "1.6 Desktop",
   "update_available": true,
-  "notes": "Scientific Visuals: geotechnische Analyseplatte mit gemeinsamer Tiefenachse, Bodenschichten mit technischen Schraffuren und Kennwerten, effektive Vertikalspannung, Erddruckbeiwert und horizontaler Erddruck als Tiefenfunktionen. Versionsanzeige korrigiert. Rechenkern 1.6 unverändert; Erdwiderstand/Blum weiterhin gesperrt.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_2.json",
+  "notes": "Trägerbohlwand Rechenkern Stufe 1: Erddruck bis Baugrubensohle, geschichteter Baugrund, Gleichlasten, Grundwasser, Diagramm und Referenzabgleich VB2/VB3. Räumlicher Erdwiderstand und Blum-Einbindetiefe bleiben bis zur Verifikation gesperrt.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6.json",
   "package_format": "base64-json",
-  "sha256": "3c86af630055b313acf276869220a08a5aac8c8729f897f880464ea0c1099bd9"
+  "sha256": "dd58fccd57da0fc9a6c56381645f29e4c8beaf23fdad8c8db3bce7ae018face7"
 }
