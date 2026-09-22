@@ -1,8 +1,8 @@
 {
-  "version": "1.5 Desktop",
+  "version": "1.6 Desktop",
   "update_available": true,
-  "notes": "Neu: Geotechnik > Trägerbohlwand. Der lokale Update-Dienst arbeitet ab 1.5 vollständig mit Windows PowerShell und benötigt kein Python mehr.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_5.json",
+  "notes": "Trägerbohlwand Rechenkern Stufe 1: Erddruck bis Baugrubensohle, geschichteter Baugrund, Gleichlasten, Grundwasser, Diagramm und Referenzabgleich VB2/VB3. Räumlicher Erdwiderstand und Blum-Einbindetiefe bleiben bis zur Verifikation gesperrt.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6.json",
   "package_format": "base64-json",
-  "sha256": "7aa4a86c4568df3486156f750b3ddbad1d5b0fcc23f80ec1310e5d2f3acc08e8"
+  "sha256": "dd58fccd57da0fc9a6c56381645f29e4c8beaf23fdad8c8db3bce7ae018face7"
 }
