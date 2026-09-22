@@ -1,5 +1,8 @@
 {
-  "version": "1.4 Desktop",
+  "version": "1.4.1 Desktop",
   "update_available": true,
-  "notes": "Online-Updatebasis für Engbers Statiktools ist aktiv."
+  "notes": "Update-Fix: robuster Online-Abruf mit Wiederholungsversuchen und Windows-Fallback bei WinError 10054.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_4_1.json",
+  "package_format": "base64-json",
+  "sha256": "79616a5ae0bc277c31925a9550e41d77eab5b68e9d78f81e1ef9fbe3632e3c35"
 }
