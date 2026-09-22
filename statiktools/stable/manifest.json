@@ -1,8 +1,8 @@
 {
-  "version": "1.6.2 Desktop",
+  "version": "1.6.3 Desktop",
   "update_available": true,
-  "notes": "Scientific Visuals: geotechnische Analyseplatte mit gemeinsamer Tiefenachse, Bodenschichten mit technischen Schraffuren und Kennwerten, effektive Vertikalspannung, Erddruckbeiwert und horizontaler Erddruck als Tiefenfunktionen. Versionsanzeige korrigiert. Rechenkern 1.6 unverändert; Erdwiderstand/Blum weiterhin gesperrt.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_2.json",
+  "notes": "Visual Engineering Designstufe: dezente farbige Bodenschichten mit technischen Schraffuren, moderne KPI-Leiste, großzügigere Geotechnik-Visualisierung und klarere wissenschaftliche Hierarchie. Der verifizierte Erddruck-Rechenkern 1.6 bleibt unverändert; Erdwiderstand/Blum/Bohlträger bleiben gesperrt.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_3.json",
   "package_format": "base64-json",
-  "sha256": "3c86af630055b313acf276869220a08a5aac8c8729f897f880464ea0c1099bd9"
+  "sha256": "e9451a2e266642b0c22484d7c87c76fb17b76a84e7ff6c5adcc9117f127d3a0a"
 }
