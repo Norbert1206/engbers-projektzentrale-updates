@@ -1,0 +1,45 @@
+name: Assemble Statiktools 1.7.3
+on:
+  push:
+    paths:
+      - 'statiktools/staging/1_7_3_part_*'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble and verify
+        shell: bash
+        run: |
+          test -f statiktools/staging/1_7_3_part_0 || exit 0
+          test -f statiktools/staging/1_7_3_part_1 || exit 0
+          test -f statiktools/staging/1_7_3_part_2 || exit 0
+          test -f statiktools/staging/1_7_3_part_3 || exit 0
+          test -f statiktools/staging/1_7_3_part_4 || exit 0
+          cat statiktools/staging/1_7_3_part_{0,1,2,3,4} > statiktools/stable/package_1_7_3.json
+          python - <<'PY'
+          import json,base64,hashlib
+          p='statiktools/stable/package_1_7_3.json'
+          d=json.load(open(p))
+          b=base64.b64decode(d['data_base64'])
+          assert d['version']=='1.7.3 Development'
+          assert hashlib.sha256(b).hexdigest()==d['sha256']=='b755f9fe0a619bf94eb5600be8d43cfe4f910c3096261615a6866390c246a6e9'
+          PY
+          cat > statiktools/stable/manifest.json <<'EOF'
+          {
+            "version": "1.7.3 Development",
+            "update_available": true,
+            "notes": "1.7.3 Development: S541-Referenzkern VB2/VB3 und räumlicher passiver Erdwiderstand; Entwicklungsstand für den geprüften Vergleichslauf.",
+            "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_7_3.json",
+            "package_format": "base64-json",
+            "sha256": "b755f9fe0a619bf94eb5600be8d43cfe4f910c3096261615a6866390c246a6e9"
+          }
+          EOF
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add statiktools/stable/package_1_7_3.json statiktools/stable/manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish Statiktools 1.7.3 Development"
+          git push
