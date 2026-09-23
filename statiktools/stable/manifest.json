@@ -1,8 +1,8 @@
 {
-  "version": "1.6.9.1 Desktop",
+  "version": "1.6.9.2 Desktop",
   "update_available": true,
-  "notes": "Reparatur-Update für 1.6.9: erzwingt erneute Installation nach fehlgeschlagenem Paketlauf; PDF/Drucken stabilisiert. Rechenkern unverändert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9.json",
+  "notes": "Updater-Reparatur: stabiler Online-Updateweg, unsichtbarer Hintergrunddienst und Vorbereitung fuer 1.7. Rechenkern und Oberflaeche bleiben in diesem Zwischenschritt unveraendert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9_2.json",
   "package_format": "base64-json",
-  "sha256": "6d9bfc9363836f4d2181ef61f4f692a1b8a70ff5cdaa888cdb20199af7e56cc7"
+  "sha256": "d1fc7a9730442aac4eaf80f49fce3694480160075239e7751e386013e81cb66d"
 }
