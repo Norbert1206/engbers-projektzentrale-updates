@@ -1,8 +1,8 @@
 {
-  "version": "1.6.9.3 Desktop",
+  "version": "1.6.9.4 Desktop",
   "update_available": true,
-  "notes": "Updater-Reparatur: gueltiges Statiktools-Paket mit App-Dateien auf Paketwurzel. Stellt den normalen Online-Updateweg wieder her.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9_3.json",
+  "notes": "Updater-Reparatur 1.6.9.4: kompaktes, vollstaendiges Base64-Paket. Behebt die abgeschnittene Paketdatei des vorherigen Versuchs.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9_4.json",
   "package_format": "base64-json",
-  "sha256": "4becec6010ee6a036b8aff852d130db48c1a2ae5ecca4f81816ef17f187c2c3a"
+  "sha256": "ffe977aebff657a9c071904c107a03643bb598454a1159b08b4b556053e09935"
 }
