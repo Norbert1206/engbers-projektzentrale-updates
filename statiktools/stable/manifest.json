@@ -1,8 +1,8 @@
 {
-  "version": "1.6.9.2 Desktop",
+  "version": "1.6.9.3 Desktop",
   "update_available": true,
-  "notes": "Updater-Reparatur: stabiler Online-Updateweg, unsichtbarer Hintergrunddienst und Vorbereitung fuer 1.7. Rechenkern und Oberflaeche bleiben in diesem Zwischenschritt unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9_2.json",
+  "notes": "Updater-Reparatur: gueltiges Statiktools-Paket mit App-Dateien auf Paketwurzel. Stellt den normalen Online-Updateweg wieder her.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9_3.json",
   "package_format": "base64-json",
-  "sha256": "d1fc7a9730442aac4eaf80f49fce3694480160075239e7751e386013e81cb66d"
+  "sha256": "4becec6010ee6a036b8aff852d130db48c1a2ae5ecca4f81816ef17f187c2c3a"
 }
