@@ -1,8 +1,8 @@
 {
-  "version": "1.6.9.4 Desktop",
+  "version": "1.6.9.5 Desktop",
   "update_available": true,
-  "notes": "Updater-Reparatur 1.6.9.4: kompaktes, vollstaendiges Base64-Paket. Behebt die abgeschnittene Paketdatei des vorherigen Versuchs.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9_4.json",
+  "notes": "Updater-Reparatur 1.6.9.5: vollstaendiges Pflichtpaket mit index.html, js/app.js und VERSION.txt; Update-Helfer wird ebenfalls aktualisiert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_6_9_5.json",
   "package_format": "base64-json",
-  "sha256": "ffe977aebff657a9c071904c107a03643bb598454a1159b08b4b556053e09935"
+  "sha256": "481a278fc908e9ed6e9c3f6da6d27ef21650a923d8bd922051dabb164e44cb19"
 }
