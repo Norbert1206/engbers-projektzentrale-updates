@@ -2,7 +2,7 @@
   "version": "1.20.5",
   "update_available": true,
   "notes": "Updatekanal auf aktuellen Entwicklungsstand angehoben. Ab 1.20.5 koennen weitere Teststaende wieder direkt ueber Update suchen installiert werden. Rechenkern unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/statiktools-1.20.5-updater/statiktools/stable/update_1_20_5.zip",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/update_1_20_5.zip",
   "package_format": "zip",
   "sha256": "cc6d8a57a8035383696efb75e288b4b152d6e1df6b6c290b2b986eda89e2049a"
 }
