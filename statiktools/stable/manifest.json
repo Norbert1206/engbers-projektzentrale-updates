@@ -1,8 +1,8 @@
 {
   "version": "1.20.7",
   "update_available": true,
-  "notes": "A4-Ausgabestandard 1.20.7: einheitliche Typografie, feste Schrift- und Formel-Hierarchie, ein gemeinsamer PDF-Massstab fuer alle 8 Fachblaetter, kompaktere Abstaende/Tabellen und Randkennung je Blatt nur einmal. Vektor-/Text-PDF bleibt erhalten; Rechenkern unveraendert.",
+  "notes": "A4-Ausgabestandard 1.20.7: einheitliche Typografie, feste Schrift- und Formel-Hierarchie, ein gemeinsamer PDF-Massstab fuer alle 8 Fachblaetter, kompaktere Abstaende/Tabellen und Randkennung je Blatt nur einmal. Vektor-/Text-PDF bleibt erhalten; Rechenkern unveraendert. Updatepaket vollstaendig mit js/app.js.",
   "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_7.json",
   "package_format": "base64-json",
-  "sha256": "a643a968498bba5d5ed6e5670e181a1ed4f1ce2b07ae255a7096f99e1a66a720"
+  "sha256": "509def13405303c39902edc4b968840655129e769710e1960cc5858aa367c92f"
 }
