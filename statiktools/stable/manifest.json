@@ -1,8 +1,8 @@
 {
-  "version": "1.20.6",
+  "version": "1.20.7",
   "update_available": true,
-  "notes": "PDF 1.20.6: Screenshot-/Raster-Zwischenschritt entfernt. Ausgabeansicht wird direkt als HTML/CSS/SVG ueber Chromium/Edge in PDF geschrieben; Text und Vektorgrafiken bleiben beim Zoomen scharf. Rechenkern unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/d34f90eb3450ed4c374b3533ce6a395e3b4365c1/statiktools/stable/package_1_20_6.json",
+  "notes": "A4-Ausgabestandard 1.20.7: einheitliche Typografie, feste Schrift- und Formel-Hierarchie, ein gemeinsamer PDF-Massstab fuer alle 8 Fachblaetter, kompaktere Abstaende/Tabellen und Randkennung je Blatt nur einmal. Vektor-/Text-PDF bleibt erhalten; Rechenkern unveraendert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_7.json",
   "package_format": "base64-json",
-  "sha256": "49fac80cc1bed52cd993d04babe045a43ebff42e91bfbd52098eb107f04c0611"
+  "sha256": "03e9e9ea2868ceda8a6973f7ede52cf7f421356dbf8e2e1b5c1f211f7e1acdba"
 }
