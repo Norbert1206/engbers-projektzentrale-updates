@@ -1,8 +1,8 @@
 {
-  "version": "1.20.5",
+  "version": "1.20.6",
   "update_available": true,
-  "notes": "Updatekanal auf aktuellen Entwicklungsstand angehoben. Ab 1.20.5 koennen weitere Teststaende wieder direkt ueber Update suchen installiert werden. Rechenkern unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/update_1_20_5.zip",
-  "package_format": "zip",
-  "sha256": "cc6d8a57a8035383696efb75e288b4b152d6e1df6b6c290b2b986eda89e2049a"
+  "notes": "PDF 1.20.6: Screenshot-/Raster-Zwischenschritt entfernt. Ausgabeansicht wird direkt als HTML/CSS/SVG ueber Chromium/Edge in PDF geschrieben; Text und Vektorgrafiken bleiben beim Zoomen scharf. Rechenkern unveraendert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/d34f90eb3450ed4c374b3533ce6a395e3b4365c1/statiktools/stable/package_1_20_6.json",
+  "package_format": "base64-json",
+  "sha256": "49fac80cc1bed52cd993d04babe045a43ebff42e91bfbd52098eb107f04c0611"
 }
