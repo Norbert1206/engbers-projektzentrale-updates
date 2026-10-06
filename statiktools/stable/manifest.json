@@ -4,5 +4,5 @@
   "notes": "A4-Ausgabestandard 1.20.7: einheitliche Typografie, feste Schrift- und Formel-Hierarchie, ein gemeinsamer PDF-Massstab fuer alle 8 Fachblaetter, kompaktere Abstaende/Tabellen und Randkennung je Blatt nur einmal. Vektor-/Text-PDF bleibt erhalten; Rechenkern unveraendert.",
   "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_7.json",
   "package_format": "base64-json",
-  "sha256": "03e9e9ea2868ceda8a6973f7ede52cf7f421356dbf8e2e1b5c1f211f7e1acdba"
+  "sha256": "a643a968498bba5d5ed6e5670e181a1ed4f1ce2b07ae255a7096f99e1a66a720"
 }
