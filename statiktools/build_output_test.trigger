@@ -1,1 +1,1 @@
-1.20.17 injection fix
+1.20.18 DOM-ready fix
