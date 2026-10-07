@@ -1,8 +1,8 @@
 {
-  "version": "1.20.12",
+  "version": "1.20.13",
   "update_available": true,
-  "notes": "Recovery 1.20.12: korrigiert den sichtbaren Versionsruecksprung und stellt den 1.20.6-basierten Programmstart wieder her. Rechenkern unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_12_recovery_patch.json",
+  "notes": "PDF 1.20.13: entfernt die bisherige 0,76346-Gesamtskalierung. Ausgabeansicht wird direkt in den 202-mm-A4-Satzspiegel uebernommen; SVGs erhalten 100% Breite/auto Hoehe, Tabellenzeilen Umbruchschutz. Rechenkern unveraendert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_13.json",
   "package_format": "base64-json",
-  "sha256": "1bf730fd1ce397200eb202f6a404c251ba1b7fefbd58cfdac3dfbd7de6cb9fbb"
+  "sha256": "3e92307b9f8b7c7fd5f2cd9d0246ef0696441fe15357ffb6c26291b416ccd2dc"
 }
