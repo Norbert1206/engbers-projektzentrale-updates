@@ -1,8 +1,8 @@
 {
-  "version": "1.20.9",
+  "version": "1.20.10",
   "update_available": true,
-  "notes": "PDF-A4-Korrektur 1.20.9: feste 1000px-Zwischenflaeche und transform:scale(.705) aus dem PDF-Export entfernt. Ausgabe wird direkt in den A4-Satzspiegel geschrieben. HTML/Text/SVG bleiben vektorbasiert; Rechenkern unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_9.json",
+  "notes": "PDF-SVG/A4 1.20.10: Blatt 02/06 SVG-Container direkt an A4-Satzspiegel gekoppelt; alte min/max-width-Regeln im PDF neutralisiert; Tabellenzeilen und Rechenblöcke bleiben beim Druck zusammen. SVG proportional, keine Verzerrung. Rechenkern unveraendert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_10.json",
   "package_format": "base64-json",
-  "sha256": "538e07add83b546ef1c7820962618e8ae864285aa833222477cf1bd2f8c129cd"
+  "sha256": "faf82f1b69361758f1e213794cfc465bc9236fbdbafa64299e0c9088980746ba"
 }
