@@ -1,1 +1,1 @@
-1.20.20 inline integration
+1.20.20 inline integration retry
