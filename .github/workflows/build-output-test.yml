@@ -26,7 +26,7 @@ jobs:
               html=re.sub(r'</body\s*>',tag+'\n</body>',html,count=1,flags=re.I)
           else:
               html += '\n'+tag+'\n'
-          inline="""<script id="engbers-output-inline">
+          inline='''<script id="engbers-output-inline">
 (function(){
  function install(){
   if(document.getElementById('engbers-output-document-btn')) return;
@@ -39,7 +39,7 @@ jobs:
  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,{once:true}); else install();
  setTimeout(install,500);
 })();
-</script>"""
+</script>'''
           html=html.replace("</body>",inline+"\n</body>") if "</body>" in html else html+inline
           files["index.html"]=html.encode()
           files["VERSION.txt"]=b"1.20.20\n"
