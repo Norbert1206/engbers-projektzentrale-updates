@@ -26,7 +26,7 @@ jobs:
               html=re.sub(r'</body\s*>',tag+'\n</body>',html,count=1,flags=re.I)
           else:
               html += '\n'+tag+'\n'
-                    inline="""<script id="engbers-output-inline">
+          inline="""<script id="engbers-output-inline">
 (function(){
  function install(){
   if(document.getElementById('engbers-output-document-btn')) return;
