@@ -1,5 +1,5 @@
 name: Build Statiktools Output Test
-on:
+'on':
   push:
     paths:
       - 'statiktools/build_output_test.trigger'
