@@ -1,0 +1,29 @@
+name: Inspect Statiktools Package
+'on':
+  push:
+    paths:
+      - 'statiktools/inspect.trigger'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: python
+        run: |
+          import base64,io,json,zipfile,pathlib
+          root=pathlib.Path("statiktools/stable")
+          src=json.loads((root/"package_1_20_30.json").read_text())
+          z=zipfile.ZipFile(io.BytesIO(base64.b64decode(src["data_base64"])))
+          out=pathlib.Path("statiktools/inspect_1210")
+          for n in z.namelist():
+              if n.endswith(".js") or n=="index.html":
+                  p=out/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(n))
+          (out/"namelist.txt").write_text("\n".join(z.namelist()))
+      - run: |
+          git config user.name "Engbers Inspector"
+          git config user.email "actions@users.noreply.github.com"
+          git add statiktools/inspect_1210
+          git commit -m "Extract 1.20.30 sources for output audit" || exit 0
+          git push
