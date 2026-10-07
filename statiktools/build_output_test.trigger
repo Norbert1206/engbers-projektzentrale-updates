@@ -1,1 +1,1 @@
-rebuild 1.20.25 verified technical output
+build 1.20.26 expanded VB1 Fachausgabe
