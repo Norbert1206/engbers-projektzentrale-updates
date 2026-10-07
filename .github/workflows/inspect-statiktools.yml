@@ -22,13 +22,13 @@ jobs:
           html=re.sub(r'<script[^>]+src=["\']js/output_test\.js[^"\']*["\'][^>]*></script>','',html,flags=re.I)
           html=re.sub(r'<script[^>]+src=["\']js/output_document\.js[^"\']*["\'][^>]*></script>','',html,flags=re.I)
           html=re.sub(r'<script id="engbers-output-inline">.*?</script>','',html,flags=re.I|re.S)
-          tag='<script src="js/output_document.js?v=12110"></script>'
+          tag='<script src="js/output_document.js?v=12120"></script>'
           html=re.sub(r'</body\s*>',tag+'\n</body>',html,count=1,flags=re.I) if re.search(r'</body\s*>',html,re.I) else html+'\n'+tag
           files["index.html"]=html.encode("utf-8")
           files["js/output_document.js"]=pathlib.Path("statiktools/source/output_document.js").read_bytes()
 
           doc=files["js/output_document.js"].decode("utf-8")
-          doc=re.sub(r'const VERSION="[^"]+";', 'const VERSION="1.21.1";', doc)
+          doc=re.sub(r'const VERSION="[^"]+";', 'const VERSION="1.21.2";', doc)
           # Fix project extraction: exact label matching only; never reuse "Bussmann" for unrelated fields.
           doc=doc.replace('.includes(label.toLowerCase())', '===label.toLowerCase()')
           doc=doc.replace('site:field("Baustellenanschrift")||field("Straße / Nr.")||"",', 'site:field("Baustellenanschrift")||field("Straße / Nr.")||"",')
@@ -40,28 +40,28 @@ jobs:
           doc=doc.replace('min-height:297mm', 'height:297mm;min-height:297mm')
           files["js/output_document.js"]=doc.encode("utf-8")
           files.pop("js/output_test.js",None)
-          files["VERSION.txt"]=b"1.21.1\n"
+          files["VERSION.txt"]=b"1.21.2\n"
           out=io.BytesIO()
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as q:
               for n,b in files.items(): q.writestr(n,b)
           raw=out.getvalue(); sha=hashlib.sha256(raw).hexdigest()
-          pkg={"format":"base64-json","version":"1.21.1","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
-          (root/"package_1_21_1.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
-          manifest={"version":"1.21.1","update_available":True,
-            "notes":"1.21.1: Achtseitige Original-Ausgabeansicht: Ausgabedokument direkt an die vorhandene Ausgabeansicht gekoppelt: echte Projektdaten, aktuelle Ergebnis-Tabellen und vorhandene SVG-Fachgrafiken werden unverändert übernommen. Rechenkern unverändert.",
-            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_21_1.json?v=202610071625",
+          pkg={"format":"base64-json","version":"1.21.2","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
+          (root/"package_1_21_2.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
+          manifest={"version":"1.21.2","update_available":True,
+            "notes":"1.21.2: Achtseitige Original-Ausgabeansicht: Ausgabedokument direkt an die vorhandene Ausgabeansicht gekoppelt: echte Projektdaten, aktuelle Ergebnis-Tabellen und vorhandene SVG-Fachgrafiken werden unverändert übernommen. Rechenkern unverändert.",
+            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_21_2.json?v=202610071635",
             "package_format":"base64-json","sha256":sha}
           (root/"manifest.json").write_text(json.dumps(manifest,indent=2),encoding="utf-8")
           # self-check package structure
-          assert files["VERSION.txt"].strip()==b"1.21.1"
-          assert b"output_document.js?v=12110" in files["index.html"]
+          assert files["VERSION.txt"].strip()==b"1.21.2"
+          assert b"output_document.js?v=12120" in files["index.html"]
           assert b"rw-output-sheet" in files["js/output_document.js"]
           assert b"Engbers.rwCalc" not in files["js/output_document.js"]
-          assert b'const VERSION="1.21.1"' in files["js/output_document.js"]
+          assert b'const VERSION="1.21.2"' in files["js/output_document.js"]
       - name: Commit update
         run: |
           git config user.name "Engbers Update Builder"
           git config user.email "actions@users.noreply.github.com"
-          git add statiktools/stable/package_1_21_1.json statiktools/stable/manifest.json
+          git add statiktools/stable/package_1_21_2.json statiktools/stable/manifest.json
           git commit -m "Statiktools 1.21.0 consolidated output update" || exit 0
           git push
