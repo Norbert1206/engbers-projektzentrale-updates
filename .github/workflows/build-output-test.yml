@@ -15,7 +15,7 @@ jobs:
         run: |
           import base64, io, json, zipfile, hashlib, pathlib, re
           root=pathlib.Path("statiktools/stable")
-          src=json.loads((root/"package_1_20_24.json").read_text(encoding="utf-8"))
+          src=json.loads((root/"package_1_20_23.json").read_text(encoding="utf-8"))
           z=zipfile.ZipFile(io.BytesIO(base64.b64decode(src["data_base64"])))
           files={n:z.read(n) for n in z.namelist()}
           html=files["index.html"].decode("utf-8")
@@ -39,10 +39,10 @@ jobs:
               for n,b in files.items(): q.writestr(n,b)
           raw=out.getvalue(); sha=hashlib.sha256(raw).hexdigest()
           pkg={"format":"base64-json","version":"1.20.25","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
-          (root/"package_1_20_24.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
+          (root/"package_1_20_25.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
           manifest={"version":"1.20.25","update_available":True,
             "notes":"1.20.25: VB1-Ausgabedokument im technischen Engbers-Ausgabestil mit Systemgrafik, Berechnungsansatz, Ergebnis-/Nachweisblock und fester Fusszeile. Rechenkern unverändert.",
-            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_24.json?v=202610071251",
+            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_25.json?v=202610071415",
             "package_format":"base64-json","sha256":sha}
           (root/"manifest.json").write_text(json.dumps(manifest,indent=2),encoding="utf-8")
           # self-check package structure
@@ -53,6 +53,6 @@ jobs:
         run: |
           git config user.name "Engbers Update Builder"
           git config user.email "actions@users.noreply.github.com"
-          git add statiktools/stable/package_1_20_24.json statiktools/stable/manifest.json
+          git add statiktools/stable/package_1_20_25.json statiktools/stable/manifest.json
           git commit -m "Statiktools 1.20.25 technical output document" || exit 0
           git push
