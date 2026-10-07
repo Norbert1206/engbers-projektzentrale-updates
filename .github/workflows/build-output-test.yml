@@ -15,7 +15,7 @@ jobs:
         run: |
           import base64, io, json, zipfile, hashlib, pathlib
           root=pathlib.Path("statiktools/stable")
-          src=json.loads((root/"package_1_20_15.json").read_text(encoding="utf-8"))
+          src=json.loads((root/"package_1_20_14.json").read_text(encoding="utf-8"))
           z=zipfile.ZipFile(io.BytesIO(base64.b64decode(src["data_base64"])))
           files={n:z.read(n) for n in z.namelist()}
           html=files["index.html"].decode("utf-8")
