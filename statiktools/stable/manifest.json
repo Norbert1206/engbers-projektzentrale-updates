@@ -1,8 +1,8 @@
 {
   "version": "1.20.17",
   "update_available": true,
-  "notes": "1.20.17: Einbindung des eigenst\u00e4ndigen Engbers-Ausgabedokuments korrigiert und mit Cache-Buster erzwungen. A4-Dokumentprototyp mit Drucken/PDF. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_17.json?v=202610071220",
+  "notes": "1.20.17: Engbers-Ausgabedokument; Manifest erneut veröffentlicht zur Cache-Aktualisierung. Rechenkern unverändert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_17.json?rev=12017-final",
   "package_format": "base64-json",
   "sha256": "b0606ed5b2ea1e45dec9070e0c4ad8f5c932ee8b209f2b330bfbd095f3e0e659"
 }
