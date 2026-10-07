@@ -1,8 +1,8 @@
 {
-  "version": "1.20.13",
+  "version": "1.20.14",
   "update_available": true,
-  "notes": "PDF 1.20.13: A4-Direktexport ohne 0,76346-Gesamtskalierung; SVG 100% Breite. Paket-URL mit Cache-Buster, damit Manifest und Paket garantiert denselben Stand laden. Rechenkern unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_13.json?v=202610070932",
+  "notes": "Ausgabe-Testpaket: vier Wege in einem Update \u2013 A Windows-Druckdialog, B A4 Seitenbreite, C A4 Seitenfl\u00e4che, D bisherige PDF-Ausgabe. Rechenkern unver\u00e4ndert. Automatische Sicherung bleibt aktiv.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_14.json?v=202610071155",
   "package_format": "base64-json",
-  "sha256": "3e92307b9f8b7c7fd5f2cd9d0246ef0696441fe15357ffb6c26291b416ccd2dc"
+  "sha256": "5de657480727f57efbec9a8f00f190e43ba956aed4d2ade7cf860627d6813a88"
 }
