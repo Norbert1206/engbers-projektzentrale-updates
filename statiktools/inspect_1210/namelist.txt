@@ -1,0 +1,5 @@
+index.html
+VERSION.txt
+js/app.js
+js/pdf_snapshot.js
+js/output_document.js

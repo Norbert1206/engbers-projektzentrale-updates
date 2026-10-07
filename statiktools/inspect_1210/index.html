@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Engbers Statiktools 1.20.2 Development</title>
+  <link rel="stylesheet" href="css/style.css?v=1.19.5">
+
+
+
+
+
+
+
+
+
+
+
+
+<style id="engbers-output-desktop-19150">
+@media screen {
+ body.rw-output-preview{overflow:auto!important;background:#dfe5e8!important;padding-top:0!important}
+ body.rw-output-preview .main-grid,body.rw-output-preview .workspace,body.rw-output-preview #workspace{
+  display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important
+ }
+ body.rw-output-preview .paper.gt-modern-shell{
+  width:calc(100vw - 32px)!important;min-width:1360px!important;max-width:1840px!important;
+  margin:18px auto 60px!important;padding:26px 34px 40px!important;transform:none!important;zoom:1!important;
+  box-sizing:border-box!important;font-size:17px!important;line-height:1.38!important;overflow:visible!important
+ }
+ body.rw-output-preview .paper.gt-modern-shell>*{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+
+ /* Remove/clamp old preview header spacers that caused the clipped strip at top */
+ body.rw-output-preview .rw-output-spacer,
+ body.rw-output-preview .output-preview-spacer,
+ body.rw-output-preview .preview-spacer{display:none!important;height:0!important;margin:0!important;padding:0!important}
+
+ /* KPI header */
+ body.rw-output-preview .gt-output-kpis,body.rw-output-preview .gt-kpi-strip,body.rw-output-preview .rw-output-kpis{
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important
+ }
+ body.rw-output-preview .gt-kpi-value,body.rw-output-preview .rw-kpi-value{font-size:30px!important;line-height:1.05!important;font-weight:800!important}
+ body.rw-output-preview .gt-kpi-label,body.rw-output-preview .rw-kpi-label{font-size:13px!important}
+ /* formulas */
+ body.rw-output-preview .rw-output-formula-body{font-size:19px!important;line-height:1.55!important;padding:20px 26px!important;min-height:160px!important}
+ body.rw-output-preview .rw-output-formula-body i,body.rw-output-preview .rw-output-formula-body .formula{font-size:20px!important}
+ /* graphics */
+ body.rw-output-preview .rw-output-sheet-system{margin-top:10px!important}
+ body.rw-output-preview .rw-output-sheet-system svg{width:100%!important;height:auto!important;min-height:690px!important}
+ body.rw-output-preview .rw-output-sheet-bishop{margin-top:18px!important}
+ body.rw-output-preview .rw-output-sheet-bishop svg{width:100%!important;height:auto!important;min-height:620px!important}
+ /* section headings */
+ body.rw-output-preview h2{font-size:22px!important}
+ body.rw-output-preview h3{font-size:19px!important}
+ /* tables */
+ body.rw-output-preview table{font-size:16px!important;line-height:1.35!important}
+ body.rw-output-preview th{font-size:14px!important;padding:8px 10px!important}
+ body.rw-output-preview td{padding:7px 10px!important}
+ /* technical narrative */
+ body.rw-output-preview .technical-summary,body.rw-output-preview .rw-output-summary{
+  font-size:17px!important;line-height:1.55!important;padding:18px 4px 8px!important
+ }
+ /* persistent controls */
+ body.rw-output-preview .rw-output-exit{display:block!important;position:fixed!important;right:20px!important;top:18px!important;z-index:2147483647!important}
+ body.rw-output-preview .rw-version-proof{display:block!important;position:fixed!important;left:14px!important;bottom:14px!important;z-index:2147483647!important;padding:6px 9px!important;background:#111!important;color:#fff!important;font:700 11px Arial!important}
+}
+@media print{.rw-version-proof{display:none!important}}
+</style>
+
+
+<style id="engbers-output-1100-proof">
+body.rw-output-preview .paper.gt-modern-shell{width:min(1500px,calc(100vw - 90px))!important;max-width:1500px!important;padding:0!important;background:transparent!important;box-shadow:none!important}
+body.rw-output-preview .rw-proof-page,body.rw-output-preview .rw-output-sheet{background:#fff!important;border:1px solid #7f8d93!important;box-shadow:0 8px 22px rgba(0,0,0,.12)!important;margin:24px auto!important;padding:28px 34px!important;box-sizing:border-box!important;break-after:page}
+body:not(.rw-output-preview) .rw-proof-page{display:none!important}
+body.rw-output-preview .rw-proof-page{display:block!important}
+body.rw-output-preview .rw-proof-pagehead{display:grid!important;grid-template-columns:110px 1fr auto!important;gap:18px!important;align-items:end!important;border-bottom:3px solid #111!important;padding-bottom:10px!important;margin-bottom:22px!important}
+body.rw-output-preview .rw-proof-pagehead span{font:800 12px Arial!important;letter-spacing:.12em!important}
+body.rw-output-preview .rw-proof-pagehead b{font:800 25px Arial!important}
+body.rw-output-preview .rw-proof-pagehead small{font:12px Arial!important;color:#56636a!important}
+body.rw-output-preview .rw-proof-content{font:16px/1.5 Arial,sans-serif!important}
+body.rw-output-preview .rw-proof-lead{display:flex!important;justify-content:space-between!important;gap:24px!important;padding:14px 18px!important;background:#e8eff2!important;border-left:5px solid #176f68!important;margin-bottom:20px!important}
+body.rw-output-preview .rw-proof-lead b{font-size:20px!important}body.rw-output-preview .rw-proof-lead span{font-size:14px!important}
+body.rw-output-preview .rw-proof-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:18px!important;margin:16px 0 22px!important}
+body.rw-output-preview .rw-proof-grid>div{border:1px solid #aeb9be!important;padding:14px 18px!important;background:#fbfcfc!important}
+body.rw-output-preview .rw-proof-grid h4,body.rw-output-preview .rw-proof-content h4{font:800 16px Arial!important;margin:4px 0 10px!important;text-transform:uppercase!important;letter-spacing:.04em!important}
+body.rw-output-preview .rw-proof-equation{font:italic 19px/1.6 Georgia,'Times New Roman',serif!important;padding:12px 18px!important;margin:9px 0!important;background:#f5f7f7!important;border-left:3px solid #7b8b91!important}
+body.rw-output-preview .rw-proof-result{display:grid!important;grid-template-columns:1fr 160px 230px!important;align-items:center!important;border:2px solid #111!important;margin-top:20px!important;padding:14px 18px!important;font:700 18px Arial!important}
+body.rw-output-preview .rw-proof-result b{font-size:25px!important}body.rw-output-preview .rw-proof-result strong{text-align:right!important;font-size:17px!important}
+body.rw-output-preview .rw-proof-note{margin-top:18px!important;padding-top:12px!important;border-top:1px solid #aaa!important;font-size:13px!important;color:#48555b!important}
+body.rw-output-preview .rw-output-derivation{background:#fff!important;border:1px solid #7f8d93!important;box-shadow:0 8px 22px rgba(0,0,0,.12)!important;margin:24px auto!important;padding:26px 34px!important}
+body.rw-output-preview .rw-output-sheet-system svg{min-height:760px!important}body.rw-output-preview .rw-output-sheet-bishop svg{min-height:720px!important}
+body.rw-output-preview .rw-output-summary{background:#fff!important;border:1px solid #7f8d93!important;box-shadow:0 8px 22px rgba(0,0,0,.12)!important;margin:24px auto!important;padding:28px 34px!important}
+</style>
+
+<style id="engbers-output-1110-detail">
+body.rw-output-preview .rw-proof-page{min-height:760px!important}
+body.rw-output-preview .rw-proof-content p{font-size:16px!important;line-height:1.55!important}
+body.rw-output-preview .rw-proof-content h4{margin-top:24px!important;border-bottom:1px solid #9aa6ab!important;padding-bottom:6px!important}
+body.rw-output-preview .rw-proof-table{width:100%!important;border-collapse:collapse!important;margin:12px 0 22px!important;font:14px/1.35 Arial,sans-serif!important}
+body.rw-output-preview .rw-proof-table th,body.rw-output-preview .rw-proof-table td{border:1px solid #aeb9be!important;padding:7px 9px!important;text-align:right!important}
+body.rw-output-preview .rw-proof-table th:first-child,body.rw-output-preview .rw-proof-table td:first-child{text-align:center!important}
+body.rw-output-preview .rw-proof-table thead th{background:#e8eff2!important;font-weight:800!important}
+body.rw-output-preview .rw-proof-page-bishop{break-before:page!important}
+</style>
+</head>
+<body><div class="rw-version-proof" style="display:none">AUSGABE 1.11.0</div>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">ENGBERS <span>STATIKTOOLS</span></div>
+    <div class="projectline">
+      <div class="global-search">
+        <input id="globalSearch" type="search" placeholder="Suchen: Projekt, Position, Material, Modul ..." autocomplete="off">
+        <div id="searchResults" class="search-results"></div>
+      </div>
+      <select id="projectSelect" title="Aktives Projekt"></select>
+      <button data-action="new-project">Neu</button>
+      <button data-action="project-data">Stammdaten</button>
+      <button data-action="export-project">Projekt exportieren</button>
+      <label class="filebutton">Projekt importieren<input id="projectImport" type="file" accept=".json"></label>
+      <button id="updateButton" data-action="check-update" title="Online nach einer neuen Programmversion suchen">Nach Update suchen</button>
+    </div>
+  </header>
+
+  <nav class="ribbon-tabs" id="ribbonTabs">
+    <button class="active" data-ribbon="projekt">Projekt</button>
+    <button data-ribbon="holzbau">Holzbau</button>
+    <button data-ribbon="stahlbau">Stahlbau</button>
+    <button data-ribbon="massivbau">Massivbau</button>
+    <button data-ribbon="geotechnik">Geotechnik</button>
+    <button data-ribbon="verbindungen">Verbindungen</button>
+    <button data-ribbon="hersteller">Hersteller</button>
+    <button data-ribbon="dokumente">Dokumente</button>
+    <button data-ribbon="ausgabe">Ausgabe</button>
+  </nav>
+
+  <div class="ribbon" id="ribbon"></div>
+
+  <main class="main-grid">
+    <aside class="sidebar">
+      <div class="panel-title">Projekt / Positionen</div>
+      <div id="projectTree" class="tree"></div>
+      <div class="sidebar-actions">
+        <button data-action="project-data">Projektstammdaten</button>
+        <button data-module="loads">Projektlasten</button>
+        <button data-module="documents">Dokumente</button>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div id="workspace"></div>
+    </section>
+
+    <aside class="inspector">
+      <div class="panel-title">Eigenschaften / Lastfluss</div>
+      <div id="inspectorContent">
+        <p class="muted">Je nach Modul erscheinen hier Lastquellen, Verknüpfungen und Positionsinformationen.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="statusbar">
+    <span id="statusText">Bereit</span>
+    <span class="version">1.20.13 Recovery</span>
+  </footer>
+</div>
+
+<script src="js/storage.js?v=1.19.5"></script>
+<script src="js/project.js?v=1.19.5"></script>
+<script src="js/loads.js?v=1.19.5"></script>
+<script src="js/print.js?v=1.19.5"></script>
+<script src="modules/simpson.js?v=1.19.5"></script>
+<script src="modules/cmr_cms.js?v=1.19.5"></script>
+<script src="modules/foundation.js?v=1.19.5"></script>
+<script src="modules/documents.js?v=1.19.5"></script>
+<script src="js/steel_sections.js?v=1.19.5"></script>
+<script src="modules/steel_library.js?v=1.19.5"></script>
+<script src="modules/retaining_wall_core.js?v=1.19.5"></script>
+<script src="modules/retaining_wall_references.js?v=1.19.5"></script>
+<script src="modules/retaining_wall_quality.js?v=1.19.5"></script>
+<script src="modules/retaining_wall_graphics.js?v=1.19.5"></script>
+<script src="modules/retaining_wall.js?v=1.19.5"></script>
+<script src="js/updates.js?v=1.19.5"></script>
+<script src="js/app.js?v=1.19.5"></script>
+<script src="js/pdf_snapshot.js?v=1.20.13"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/output_document.js?v=12030"></script>
+</body>
+</html>
