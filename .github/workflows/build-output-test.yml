@@ -48,7 +48,7 @@ jobs:
           # self-check package structure
           assert files["VERSION.txt"].strip()==b"1.20.25"
           assert b"output_document.js?v=12025" in files["index.html"]
-          assert b"Ausgabedokument 1.20.25" in files["js/output_document.js"]
+          assert b"SYSTEM UND ERGEBNISGRAFIK" in files["js/output_document.js"]
       - name: Commit update
         run: |
           git config user.name "Engbers Update Builder"
