@@ -55,7 +55,9 @@ jobs:
           # self-check package structure
           assert files["VERSION.txt"].strip()==b"1.21.0"
           assert b"output_document.js?v=12100" in files["index.html"]
-          assert b"rwGraphic" in files["js/output_document.js"]\n          assert b"Engbers.rwCalc" not in files["js/output_document.js"]\n          assert b"const VERSION=\\\"1.21.0\\\"" in files["js/output_document.js"]
+          assert b"rwGraphic" in files["js/output_document.js"]
+          assert b"Engbers.rwCalc" not in files["js/output_document.js"]
+          assert b'const VERSION="1.21.0"' in files["js/output_document.js"]
       - name: Commit update
         run: |
           git config user.name "Engbers Update Builder"
