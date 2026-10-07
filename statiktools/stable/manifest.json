@@ -1,8 +1,8 @@
 {
-  "version": "1.20.7",
+  "version": "1.20.9",
   "update_available": true,
-  "notes": "A4-Ausgabestandard 1.20.7: einheitliche Typografie, feste Schrift- und Formel-Hierarchie, ein gemeinsamer PDF-Massstab fuer alle 8 Fachblaetter, kompaktere Abstaende/Tabellen und Randkennung je Blatt nur einmal. Vektor-/Text-PDF bleibt erhalten; Rechenkern unveraendert. Updatepaket vollstaendig mit js/app.js.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_7.json",
+  "notes": "PDF-A4-Korrektur 1.20.9: feste 1000px-Zwischenflaeche und transform:scale(.705) aus dem PDF-Export entfernt. Ausgabe wird direkt in den A4-Satzspiegel geschrieben. HTML/Text/SVG bleiben vektorbasiert; Rechenkern unveraendert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_9.json",
   "package_format": "base64-json",
-  "sha256": "f748fc2dc0a2872acfaab3689bb805c0d25f816c6fcb2c1bc351e15564b6563b"
+  "sha256": "538e07add83b546ef1c7820962618e8ae864285aa833222477cf1bd2f8c129cd"
 }
