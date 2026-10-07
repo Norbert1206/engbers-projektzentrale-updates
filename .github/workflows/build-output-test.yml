@@ -39,10 +39,10 @@ jobs:
               for n,b in files.items(): q.writestr(n,b)
           raw=out.getvalue(); sha=hashlib.sha256(raw).hexdigest()
           pkg={"format":"base64-json","version":"1.20.30","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
-          (root/"package_1_20_29.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
+          (root/"package_1_20_30.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
           manifest={"version":"1.20.30","update_available":True,
             "notes":"1.20.30: VB1-Ausgabedokument weiter an die bestehende Ausgabeansicht angenähert; Renderer und Versionsanzeige synchron. Rechenkern unverändert.",
-            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_29.json?v=202610071505",
+            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_30.json?v=202610071510",
             "package_format":"base64-json","sha256":sha}
           (root/"manifest.json").write_text(json.dumps(manifest,indent=2),encoding="utf-8")
           # self-check package structure
@@ -53,6 +53,6 @@ jobs:
         run: |
           git config user.name "Engbers Update Builder"
           git config user.email "actions@users.noreply.github.com"
-          git add statiktools/stable/package_1_20_29.json statiktools/stable/manifest.json
+          git add statiktools/stable/package_1_20_30.json statiktools/stable/manifest.json
           git commit -m "Statiktools 1.20.30 output view refinement" || exit 0
           git push
