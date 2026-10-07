@@ -1,1 +1,1 @@
-build 1.20.26 expanded VB1 Fachausgabe
+build 1.20.27 output view parity
