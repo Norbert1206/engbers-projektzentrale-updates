@@ -18,7 +18,7 @@ jobs:
           z=zipfile.ZipFile(io.BytesIO(base64.b64decode(src["data_base64"])))
           out=pathlib.Path("statiktools/inspect_1210")
           for n in z.namelist():
-              if n.endswith(".js") or n=="index.html":
+              if n.endswith((".js",".css")) or n=="index.html":
                   p=out/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(n))
           (out/"namelist.txt").write_text("\n".join(z.namelist()))
       - run: |
