@@ -1,8 +1,8 @@
 {
   "version": "1.20.13",
   "update_available": true,
-  "notes": "PDF 1.20.13: direkte A4-Ausgabe ohne 0,76346-Gesamtskalierung; SVG 100% Breite/auto Hoehe; Tabellen-Umbruchschutz. SHA des tatsaechlich ausgelieferten ZIP korrigiert. Rechenkern unveraendert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_13.json",
+  "notes": "PDF 1.20.13: A4-Direktexport ohne 0,76346-Gesamtskalierung; SVG 100% Breite. Paket-URL mit Cache-Buster, damit Manifest und Paket garantiert denselben Stand laden. Rechenkern unveraendert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_13.json?v=202610070932",
   "package_format": "base64-json",
-  "sha256": "9c3dd6b05eb7f79faf7d7a0a5f481cc46f1faf4d2a4ca2107c9183ada5231ef3"
+  "sha256": "3e92307b9f8b7c7fd5f2cd9d0246ef0696441fe15357ffb6c26291b416ccd2dc"
 }
