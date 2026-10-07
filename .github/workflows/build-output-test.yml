@@ -1,8 +1,5 @@
 name: Build Statiktools Output Test
-on:
-  push:
-    paths:
-      - 'statiktools/build_output_test.trigger'
+on:\n  workflow_dispatch:
 permissions:
   contents: write
 jobs:
