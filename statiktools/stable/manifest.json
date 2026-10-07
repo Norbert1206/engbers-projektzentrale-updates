@@ -1,8 +1,8 @@
 {
   "version": "1.20.10",
   "update_available": true,
-  "notes": "PDF-SVG/A4 1.20.10: Blatt 02/06 SVG-Container direkt an A4-Satzspiegel gekoppelt; alte min/max-width-Regeln im PDF neutralisiert; Tabellenzeilen und Rechenblöcke bleiben beim Druck zusammen. SVG proportional, keine Verzerrung. Rechenkern unveraendert. Manifest-Pruefsumme auf den tatsaechlich geladenen Paket-JSON-Hash korrigiert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_10.json",
+  "notes": "PDF-SVG/A4 1.20.10: Blatt 02/06 SVG-Container direkt an A4-Satzspiegel gekoppelt; Tabellen-/Rechenblock-Umbruchschutz. Rechenkern unveraendert. Paket-URL neu versioniert gegen CDN-Cache.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_10.json?v=20261007-1047",
   "package_format": "base64-json",
   "sha256": "604f840323a426f88fac491e1d13b7c01ea4f028a61db957a5b3c6b2a9347a10"
 }
