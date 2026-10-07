@@ -27,19 +27,19 @@ jobs:
           else:
               html += '\n'+tag+'\n'
           inline='''<script id="engbers-output-inline">
-(function(){
- function install(){
-  if(document.getElementById('engbers-output-document-btn')) return;
-  var b=document.createElement('button');
-  b.id='engbers-output-document-btn'; b.textContent='Engbers-Ausgabedokument';
-  b.style.cssText='position:fixed;right:18px;top:78px;z-index:2147483647;padding:9px 13px;background:#fff;border:2px solid #087f73;border-radius:6px;font-weight:700';
-  b.onclick=function(){alert('Engbers-Ausgabedokument 1.20.20 aktiv');};
-  (document.body||document.documentElement).appendChild(b);
- }
- if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,{once:true}); else install();
- setTimeout(install,500);
-})();
-</script>'''
+          (function(){
+           function install(){
+            if(document.getElementById('engbers-output-document-btn')) return;
+            var b=document.createElement('button');
+            b.id='engbers-output-document-btn'; b.textContent='Engbers-Ausgabedokument';
+            b.style.cssText='position:fixed;right:18px;top:78px;z-index:2147483647;padding:9px 13px;background:#fff;border:2px solid #087f73;border-radius:6px;font-weight:700';
+            b.onclick=function(){alert('Engbers-Ausgabedokument 1.20.20 aktiv');};
+            (document.body||document.documentElement).appendChild(b);
+           }
+           if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,{once:true}); else install();
+           setTimeout(install,500);
+          })();
+          </script>'''
           html=html.replace("</body>",inline+"\n</body>") if "</body>" in html else html+inline
           files["index.html"]=html.encode()
           files["VERSION.txt"]=b"1.20.20\n"
