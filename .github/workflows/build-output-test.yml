@@ -1,10 +1,8 @@
 name: Build Statiktools Output Document
 'on':
-  workflow_dispatch:
   push:
     paths:
       - 'statiktools/build_output_test.trigger'
-      - '.github/workflows/build-output-test.yml'
 permissions:
   contents: write
 jobs:
