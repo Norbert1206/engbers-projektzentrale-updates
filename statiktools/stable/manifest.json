@@ -4,5 +4,5 @@
   "notes": "1.20.28: Updater-H\u00e4rtung und VB1-Ausgabedokument. Manifest-/Paketabrufe werden mit versionsbezogenen Cache-Bustern vorbereitet; Rechenkern unver\u00e4ndert.",
   "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_28.json?v=202610071500",
   "package_format": "base64-json",
-  "sha256": "e10bcb2e90958a073ff14dfc74f2ce47381292b668f76402c06d24d72ed5f8f0"
+  "sha256": "ccc17571ec45aecdf9141175972c5f7d5d40cd6bd755e8b28fd0bcf69bba5a5e"
 }
