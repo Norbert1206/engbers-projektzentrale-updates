@@ -1,1 +1,1 @@
-build 1.20.27 output view parity
+rebuild 1.20.27 corrected package target
