@@ -2,7 +2,7 @@
   "version": "1.20.30",
   "update_available": true,
   "notes": "1.20.30: VB1-Ausgabedokument weiter an die bestehende Ausgabeansicht angen\u00e4hert; Renderer und Versionsanzeige synchron. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_29.json?v=202610071505",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_30.json?v=202610071510",
   "package_format": "base64-json",
-  "sha256": "26b3f8b1ccc4c934555a6c3445cd5b77de21351027d047db5d953e6562167e93"
+  "sha256": "4dde5a0ce69b38bdf3dfc8bf95723949750d99e9bc391c226d0b39831de6c3d4"
 }
