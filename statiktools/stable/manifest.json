@@ -2,7 +2,7 @@
   "version": "1.20.29",
   "update_available": true,
   "notes": "1.20.29: Ausgabedokument-Version korrigiert und Ausgabe-Renderer auf 1.20.29 synchronisiert. Grundlage f\u00fcr die 1:1-Angleichung an die Ausgabeansicht; Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_28.json?v=202610071500",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_29.json?v=202610071505",
   "package_format": "base64-json",
-  "sha256": "0c27cb56e049a525b2840aa1b70771370baef1ce8b95626ff263daa6b8dc416e"
+  "sha256": "b78623d2d208a3aa78c7c425b0aa2502c4a93aec8b780090f616d88449680dd1"
 }
