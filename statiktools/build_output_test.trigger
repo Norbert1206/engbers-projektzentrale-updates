@@ -1,1 +1,1 @@
-build 1.21.0 after version literal fix
+build 1.21.0 normalized actions syntax
