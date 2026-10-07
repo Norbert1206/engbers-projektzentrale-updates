@@ -1,8 +1,8 @@
 {
-  "version": "1.20.16",
+  "version": "1.20.17",
   "update_available": true,
-  "notes": "Neuer Engbers-Ausgabedokument-Prototyp: eigenst\u00e4ndige A4-Seite mit Dokumentkopf, Stammdaten, Kennwerten, Ergebnisgrafik, Fu\u00dfzeile und Drucken/PDF. Bedienoberfl\u00e4che wird nicht mehr geklont. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_16.json?v=202610071215",
+  "notes": "1.20.17: Einbindung des eigenst\u00e4ndigen Engbers-Ausgabedokuments korrigiert und mit Cache-Buster erzwungen. A4-Dokumentprototyp mit Drucken/PDF. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_17.json?v=202610071220",
   "package_format": "base64-json",
-  "sha256": "3b0459ea40012c7924810bed7d11c1bd2884cd3d4e2351d8312de81033c01915"
+  "sha256": "b0606ed5b2ea1e45dec9070e0c4ad8f5c932ee8b209f2b330bfbd095f3e0e659"
 }
