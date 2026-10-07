@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build 1.20.15
+      - name: Build 1.20.16
         shell: python
         run: |
           import base64, io, json, zipfile, hashlib, pathlib
@@ -22,64 +22,41 @@ jobs:
           if "js/output_test.js" not in html:
               html=html.replace("</body>",'<script src="js/output_test.js"></script>\n</body>')
           files["index.html"]=html.encode()
-          files["VERSION.txt"]=b"1.20.15\n"
+          files["VERSION.txt"]=b"1.20.16\n"
           js=r'''(() => {
-            function cleanClone(){
-              const c=document.documentElement.cloneNode(true);
-              c.querySelectorAll("#eng-output-test,button[title='Vier Ausgabewege vergleichen'],script").forEach(x=>x.remove());
-              return c;
-            }
-            function fullDoc(mode){
-              const win=window.open("","_blank");
-              const c=cleanClone();
-              win.document.open(); win.document.write("<!doctype html>"+c.outerHTML); win.document.close();
-              const st=win.document.createElement("style");
-              st.textContent="@page{size:A4 portrait;margin:10mm} @media print{#eng-output-test{display:none!important}}";
-              win.document.head.appendChild(st);
-              win.document.title="Engbers Ausgabedokument – "+mode;
-              setTimeout(()=>win.print(),500);
-            }
-            function currentPrint(){
-              const s=document.createElement("style"); s.id="eng-print-clean";
-              s.textContent="@page{size:A4 portrait;margin:10mm}@media print{#eng-output-test,button[title='Vier Ausgabewege vergleichen']{display:none!important}}";
-              document.head.appendChild(s); window.print(); setTimeout(()=>s.remove(),1000);
-            }
-            function pageClone(){
-              const candidates=[...document.querySelectorAll("main,.report,.output,.print-preview,.document-view,[class*='report'],[class*='output'],[class*='document']")];
-              const el=candidates.sort((a,b)=>b.scrollHeight*b.scrollWidth-a.scrollHeight*a.scrollWidth)[0];
-              if(!el){alert("Kein kompletter Ausgabebereich erkannt.");return}
-              const win=window.open("","_blank");
-              win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Engbers Dokumenttest</title><style>@page{size:A4 portrait;margin:10mm}body{margin:0;font-family:Arial,sans-serif}.sheet{width:190mm;margin:auto}svg{max-width:100%;height:auto}</style></head><body><div class="sheet"></div></body></html>');
-              win.document.querySelector(".sheet").appendChild(win.document.adoptNode(el.cloneNode(true))); win.document.close();
-            }
-            function panel(){
-              let d=document.getElementById("eng-output-test"); if(d){d.remove();return}
-              d=document.createElement("div");d.id="eng-output-test";d.style.cssText="position:fixed;right:18px;top:92px;z-index:999999;background:#fff;border:1px solid #9aa7b1;border-radius:8px;box-shadow:0 8px 30px #0003;padding:12px;font:13px Segoe UI;min-width:285px";
-              d.innerHTML='<b>Ausgabe-Test 1.20.15</b><div style="margin-top:8px;display:grid;gap:7px"><button id="e1">E · Gesamte aktuelle Ausgabe drucken</button><button id="e2">F · Komplettes Dokument klonen + drucken</button><button id="e3">G · Ausgabebereich als A4-Dokument</button><button id="e4">H · bisherige PDF-Ausgabe</button></div><div style="margin-top:8px;font-size:11px;color:#566">Keine Einzel-SVG mehr. Rechenkern unverändert.</div>';
-              document.body.appendChild(d);
-              d.querySelector("#e1").onclick=currentPrint; d.querySelector("#e2").onclick=()=>fullDoc("F"); d.querySelector("#e3").onclick=pageClone;
-              d.querySelector("#e4").onclick=()=>{const x=[...document.querySelectorAll("button,a")].find(x=>/PDF öffnen|PDF/i.test((x.innerText||"").trim()));if(x)x.click();else alert("PDF-Button nicht gefunden.")};
-            }
-            const btn=document.createElement("button");btn.type="button";btn.textContent="🖨 Ausgabe-Test 2";btn.title="Ausgabewege E bis H";btn.style.cssText="position:fixed;right:18px;top:48px;z-index:999998;padding:8px 12px;border:1px solid #9aa7b1;border-radius:6px;background:#fff;font:13px Segoe UI;cursor:pointer";btn.onclick=panel;
-            window.addEventListener("DOMContentLoaded",()=>document.body.appendChild(btn));
-          })();'''
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function txt(re,def="—"){const all=[...document.querySelectorAll("body *")];const e=all.find(x=>re.test((x.textContent||"").trim())&&x.children.length===0);return e?(e.textContent||"").trim():def}
+function val(label,def="—"){const labels=[...document.querySelectorAll("label,div,span,td,th")];const l=labels.find(x=>(x.textContent||"").trim().toLowerCase().startsWith(label.toLowerCase()));if(!l)return def;const i=l.querySelector("input,textarea,select")||l.nextElementSibling?.querySelector?.("input,textarea,select")||l.nextElementSibling;return (i?.value||i?.textContent||def).trim?.()||def}
+function build(){
+ const project=(document.body.innerText.match(/26-014\s*[·-]\s*Bussmann/)||[])[0]||"26-014 · Bussmann";
+ const pos=(document.body.innerText.match(/VB1\s*[·-]\s*Trägerbohlwand/)||[])[0]||"VB1 · Trägerbohlwand";
+ const svg=[...document.querySelectorAll("svg")].sort((a,b)=>b.getBoundingClientRect().width*b.getBoundingClientRect().height-a.getBoundingClientRect().width*a.getBoundingClientRect().height)[0];
+ const graphic=svg?svg.outerHTML:'<div class="placeholder">Systemgrafik wird im nächsten Schritt aus dem Ausgabemodell gespeist.</div>';
+ const html='<!doctype html><html><head><meta charset="utf-8"><title>Engbers Ausgabedokument</title><style>'+
+ '@page{size:A4 portrait;margin:0}*{box-sizing:border-box}body{margin:0;background:#333;font-family:Arial,sans-serif;color:#07131c}.toolbar{position:fixed;top:12px;right:18px;z-index:9}.toolbar button{padding:9px 14px}.page{width:210mm;min-height:297mm;margin:12px auto;background:white;padding:12mm 12mm 14mm;box-shadow:0 2px 16px #0005}.top{display:flex;justify-content:space-between;border-bottom:1px solid #1c3948;padding:0 2mm 3mm;font-size:9pt;font-weight:700}.title{margin-top:4mm;border:1px solid #1c3948;background:#eef5f7;padding:4mm;font-size:16pt;font-weight:700}.grid{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid #9fb0b8}.cell{min-height:17mm;border-right:1px solid #9fb0b8;border-bottom:1px solid #9fb0b8;padding:2.5mm}.lab{font-size:7pt;font-weight:700;color:#40535d}.v{font-size:10pt;font-weight:700;margin-top:2mm}.kpis{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid #9fb0b8;border-top:0}.k{min-height:37mm;padding:3mm;border-right:1px solid #9fb0b8}.k:last-child{border:0}.kn{font-size:9pt}.kv{font-size:19pt;font-weight:700;margin-top:2mm}.ks{font-size:7pt;color:#687983;margin-top:2mm}.section{margin-top:7mm;font-size:11pt;font-weight:700;border-bottom:1px solid #1c3948;padding-bottom:2mm}.graphic{margin-top:4mm;width:100%;height:120mm;overflow:hidden}.graphic svg{width:100%;height:100%}.placeholder{border:1px dashed #aaa;padding:20mm;text-align:center;color:#777}.foot{position:absolute;bottom:9mm;left:12mm;right:12mm;border-top:1px solid #9fb0b8;padding-top:2mm;font-size:7pt;display:flex;justify-content:space-between}.page{position:relative}@media print{body{background:white}.toolbar{display:none}.page{margin:0;box-shadow:none;page-break-after:always}}'+
+ '</style></head><body><div class="toolbar"><button onclick="window.print()">Drucken / PDF</button></div><section class="page"><div class="top"><span>'+esc(project)+'</span><span>ENGBERS INGENIEURBAU · GEOTECHNIK<br>EI_G_001 · TRÄGERBOHLWAND</span></div><div class="title">POSITION &nbsp;&nbsp; POS. VB1 · Trägerbohlwand</div><div class="grid"><div class="cell"><div class="lab">BAUVORHABEN</div><div class="v">Bussmann</div></div><div class="cell"><div class="lab">BAUHERR</div><div class="v">—</div></div><div class="cell"><div class="lab">BAUART</div><div class="v">Geotechnik · Trägerbohlwand</div></div><div class="cell"><div class="lab">PROJEKTNUMMER</div><div class="v">26-014</div></div><div class="cell"><div class="lab">BEARBEITER</div><div class="v">—</div></div><div class="cell"><div class="lab">POSITION</div><div class="v">VB1</div></div></div><div class="kpis"><div class="k"><div class="kn">AUSHUB</div><div class="kv">4,00 m</div><div class="ks">BAUZUSTAND ENDAUSHUB</div></div><div class="k"><div class="kn">Σ E<sub>h,k</sub></div><div class="kv">61,2 kN/m</div><div class="ks">BIS BAUGRUBENSOHLE</div></div><div class="k"><div class="kn">SOHLORDINATE</div><div class="kv">26,3 kN/m²</div><div class="ks">HORIZONTALER ERDDRUCK</div></div><div class="k"><div class="kn">BOHLTRÄGER</div><div class="kv">HEB 360</div><div class="ks">S235 · A = 1,50 m</div></div><div class="k"><div class="kn">RECHENMODELL</div><div class="kv">Aktiver Erddruck</div><div class="ks">BLUM · UNVERANKERT</div></div></div><div class="section">GEOTECHNISCHE ERGEBNISGRAFIK</div><div class="graphic">'+graphic+'</div><div class="foot"><span>Engbers Ingenieurbau · Geotechnik</span><span>EI_G_001 · Trägerbohlwand</span></div></section></body></html>';
+ const win=window.open("","_blank");win.document.open();win.document.write(html);win.document.close();
+}
+function add(){const b=document.createElement("button");b.textContent="📄 Engbers-Ausgabedokument";b.style.cssText="position:fixed;right:18px;top:48px;z-index:999999;padding:9px 13px;border:1px solid #81939d;border-radius:6px;background:#fff;cursor:pointer";b.onclick=build;document.body.appendChild(b)}
+window.addEventListener("DOMContentLoaded",add);
+})();'''
           files["js/output_test.js"]=js.encode("utf-8")
           out=io.BytesIO()
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as q:
               for n,b in files.items(): q.writestr(n,b)
           raw=out.getvalue(); sha=hashlib.sha256(raw).hexdigest()
-          pkg={"format":"base64-json","version":"1.20.15","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
-          (root/"package_1_20_15.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
+          pkg={"format":"base64-json","version":"1.20.16","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
+          (root/"package_1_20_16.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
           manifest={
-            "version":"1.20.15","update_available":True,
-            "notes":"Ausgabe-Test 2: E komplette aktuelle Ausgabe, F vollständiger Dokumentklon, G erkannter Ausgabebereich als A4-Dokument, H alter PDF-Weg. Keine Einzel-SVG mehr. Rechenkern unverändert.",
-            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_15.json?v=202610071205",
+            "version":"1.20.16","update_available":True,
+            "notes":"Neuer Engbers-Ausgabedokument-Prototyp: eigenständige A4-Seite mit Dokumentkopf, Stammdaten, Kennwerten, Ergebnisgrafik, Fußzeile und Drucken/PDF. Bedienoberfläche wird nicht mehr geklont. Rechenkern unverändert.",
+            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_16.json?v=202610071215",
             "package_format":"base64-json","sha256":sha}
           (root/"manifest.json").write_text(json.dumps(manifest,indent=2),encoding="utf-8")
       - name: Commit update
         run: |
           git config user.name "Engbers Update Builder"
           git config user.email "actions@users.noreply.github.com"
-          git add statiktools/stable/package_1_20_15.json statiktools/stable/manifest.json
-          git commit -m "Statiktools 1.20.15 output test" || exit 0
+          git add statiktools/stable/package_1_20_16.json statiktools/stable/manifest.json
+          git commit -m "Statiktools 1.20.16 output test" || exit 0
           git push
