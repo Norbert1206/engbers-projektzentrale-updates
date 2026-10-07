@@ -1,1 +1,1 @@
-build-full-1.21.0-no-yaml-newline-escape
+build-full-1.21.0-byte-version
