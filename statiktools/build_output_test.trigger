@@ -1,1 +1,1 @@
-1.20.23 structured output document
+build 1.20.24 technical output
