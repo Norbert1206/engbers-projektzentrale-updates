@@ -6,24 +6,60 @@ name: Inspect Statiktools Package
 permissions:
   contents: write
 jobs:
-  inspect:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - shell: python
+      - name: Build 1.21.0
+        shell: python
         run: |
-          import base64,io,json,zipfile,pathlib
+          import base64, io, json, zipfile, hashlib, pathlib, re
           root=pathlib.Path("statiktools/stable")
-          src=json.loads((root/"package_1_20_10.json").read_text())
+          src=json.loads((root/"package_1_20_30.json").read_text(encoding="utf-8"))
           z=zipfile.ZipFile(io.BytesIO(base64.b64decode(src["data_base64"])))
-          out=pathlib.Path("statiktools/inspect_12010")
-          for n in z.namelist():
-              if n.endswith((".js",".css")) or n=="index.html":
-                  p=out/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(n))
-          (out/"namelist.txt").write_text("\n".join(z.namelist()))
-      - run: |
-          git config user.name "Engbers Inspector"
+          files={n:z.read(n) for n in z.namelist()}
+          html=files["index.html"].decode("utf-8")
+          html=re.sub(r'<script[^>]+src=["\']js/output_test\.js[^"\']*["\'][^>]*></script>','',html,flags=re.I)
+          html=re.sub(r'<script[^>]+src=["\']js/output_document\.js[^"\']*["\'][^>]*></script>','',html,flags=re.I)
+          html=re.sub(r'<script id="engbers-output-inline">.*?</script>','',html,flags=re.I|re.S)
+          tag='<script src="js/output_document.js?v=12100"></script>'
+          html=re.sub(r'</body\s*>',tag+'\n</body>',html,count=1,flags=re.I) if re.search(r'</body\s*>',html,re.I) else html+'\n'+tag
+          files["index.html"]=html.encode("utf-8")
+          files["js/output_document.js"]=base64.b64decode("KCgpPT57CiJ1c2Ugc3RyaWN0IjsKY29uc3QgVkVSU0lPTj0iMS4yMS4wIjsKY29uc3QgZXNjPXM9PlN0cmluZyhzPz8iIikucmVwbGFjZSgvWyY8PlwiXS9nLGM9Pih7IiYiOiImYW1wOyIsIjwiOiImbHQ7IiwiPiI6IiZndDsiLCciJzoiJnF1b3Q7In1bY10pKTsKY29uc3QgaHRtbD1pZD0+ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoaWQpPy5pbm5lckhUTUx8fCIiOwpjb25zdCB2YWw9aWQ9PmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKT8udmFsdWV8fCIiOwpjb25zdCB0eHQ9aWQ9PmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKT8udGV4dENvbnRlbnQ/LnRyaW0oKXx8IiI7CmZ1bmN0aW9uIGFsbENzcygpe2xldCBvdXQ9IiI7Zm9yKGNvbnN0IHNoIG9mIFsuLi5kb2N1bWVudC5zdHlsZVNoZWV0c10pe3RyeXtmb3IoY29uc3QgciBvZiBbLi4uc2guY3NzUnVsZXNdKW91dCs9ci5jc3NUZXh0KyJcbiJ9Y2F0Y2goZSl7fX1yZXR1cm4gb3V0fQpmdW5jdGlvbiBwcm9qZWN0KCl7Y29uc3QgcD13aW5kb3cuRW5nYmVycz8uYWN0aXZlUHJvamVjdD8uKCk7Y29uc3QgZD1wPy5kYXRhfHx7fTtyZXR1cm4ge25vOmQucHJvamVjdE5vfHxwPy5ub3x8IiIsbmFtZTpkLnByb2plY3ROYW1lfHxwPy5uYW1lfHwiIixidWlsZGluZzpkLmJ1aWxkaW5nUHJvamVjdHx8IiIsc3RyZWV0OmQuc3RyZWV0fHwiIixjaXR5OmQuY2l0eXx8IiIsY2xpZW50OmQuY2xpZW50TmFtZXx8IiIsZW5naW5lZXI6ZC5zdHJ1Y3RFbmdpbmVlcnx8IiIsb2ZmaWNlOmQuc3RydWN0T2ZmaWNlfHwiRW5nYmVycyBJbmdlbmlldXJiYXUifX0KZnVuY3Rpb24gcm93KGssdil7cmV0dXJuIGA8ZGl2IGNsYXNzPSJvZC1maWVsZCI+PHNwYW4+JHtlc2Moayl9PC9zcGFuPjxiPiR7ZXNjKHZ8fCLigJQiKX08L2I+PC9kaXY+YH0KZnVuY3Rpb24gYmxvY2sodGl0bGUsaWQsY2xzPSIiKXtjb25zdCB4PWh0bWwoaWQpO3JldHVybiB4P2A8c2VjdGlvbiBjbGFzcz0ib2QtYmxvY2sgJHtjbHN9Ij48aDI+JHtlc2ModGl0bGUpfTwvaDI+PGRpdiBjbGFzcz0ib2Qtc291cmNlIj4ke3h9PC9kaXY+PC9zZWN0aW9uPmA6IiJ9CmZ1bmN0aW9uIGJ1aWxkKCl7CiBpZighZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInJ3R3JhcGhpYyIpKXthbGVydCgiQml0dGUgenVlcnN0IGRpZSBUcsOkZ2VyYm9obHdhbmQtUG9zaXRpb24gw7ZmZm5lbi4gRGFzIEF1c2dhYmVkb2t1bWVudCDDvGJlcm5pbW10IGRpZSBha3R1ZWxsIHNpY2h0YmFyZW4gUmVjaGVuZXJnZWJuaXNzZSB1bnZlcsOkbmRlcnQuIik7cmV0dXJufQogY29uc3QgcD1wcm9qZWN0KCkscG9zPXZhbCgicndQb3NObyIpfHwiVkIxIix0aXRsZT12YWwoInJ3UG9zVGl0bGUiKXx8IlRyw6RnZXJib2hsd2FuZCIscHJlPXZhbCgicndQcmUiKSxwb3N0PXZhbCgicndQb3N0Iik7CiBjb25zdCBjc3M9YWxsQ3NzKCk7CiBjb25zdCBkb2M9YDwhZG9jdHlwZSBodG1sPjxodG1sPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48dGl0bGU+JHtlc2MocC5ubyl9IMK3ICR7ZXNjKHBvcyl9IMK3ICR7ZXNjKHRpdGxlKX08L3RpdGxlPjxzdHlsZT4ke2Nzc30KIEBwYWdle3NpemU6QTQgcG9ydHJhaXQ7bWFyZ2luOjB9Kntib3gtc2l6aW5nOmJvcmRlci1ib3h9aHRtbCxib2R5e21hcmdpbjowO3BhZGRpbmc6MDtiYWNrZ3JvdW5kOiNkOWRjZGU7Y29sb3I6IzEwMTUxNjtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmfS5vZC10b29sc3twb3NpdGlvbjpmaXhlZDtyaWdodDoxNnB4O3RvcDoxNHB4O3otaW5kZXg6OTk5OTl9Lm9kLXRvb2xzIGJ1dHRvbntwYWRkaW5nOjlweCAxNHB4O2ZvbnQtd2VpZ2h0OjgwMH0ub2QtcGFnZXtwb3NpdGlvbjpyZWxhdGl2ZTt3aWR0aDoyMTBtbTtoZWlnaHQ6Mjk3bW07bWFyZ2luOjEwcHggYXV0bztiYWNrZ3JvdW5kOiNmZmY7cGFkZGluZzoxMW1tIDEybW0gMTVtbTtvdmVyZmxvdzpoaWRkZW47Ym94LXNoYWRvdzowIDJweCAxMnB4ICMwMDAzfS5vZC1oZWFke2Rpc3BsYXk6ZmxleDtqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjtnYXA6OG1tO2JvcmRlci1ib3R0b206MnB4IHNvbGlkICMxNzZmNjg7cGFkZGluZy1ib3R0b206My41bW19Lm9kLWJyYW5ke2ZvbnQtc2l6ZToxNHB0O2ZvbnQtd2VpZ2h0OjkwMDtsZXR0ZXItc3BhY2luZzouMDNlbX0ub2QtYnJhbmQgc21hbGx7ZGlzcGxheTpibG9jaztmb250LXNpemU6OHB0O21hcmdpbi10b3A6MW1tfS5vZC1tZXRhe3RleHQtYWxpZ246cmlnaHQ7Zm9udC1zaXplOjhwdDtsaW5lLWhlaWdodDoxLjQ1fS5vZC10aXRsZXtmb250LXNpemU6MTVwdDttYXJnaW46NW1tIDAgM21tfS5vZC1zdWJ7Zm9udC1zaXplOjdwdDtmb250LXdlaWdodDo5MDA7bGV0dGVyLXNwYWNpbmc6LjEyZW07bWFyZ2luOjRtbSAwIDJtbX0ub2QtZ3JpZHtkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciAxZnIgMWZyO2JvcmRlci1sZWZ0OjFweCBzb2xpZCAjYjhjMmM0O2JvcmRlci10b3A6MXB4IHNvbGlkICNiOGMyYzR9Lm9kLWZpZWxke3BhZGRpbmc6Mi4ybW0gMi41bW07Ym9yZGVyLXJpZ2h0OjFweCBzb2xpZCAjYjhjMmM0O2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNiOGMyYzQ7bWluLWhlaWdodDoxM21tfS5vZC1maWVsZCBzcGFue2Rpc3BsYXk6YmxvY2s7Zm9udC1zaXplOjYuNXB0O2NvbG9yOiM1MjY0NmE7dGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlfS5vZC1maWVsZCBie2Rpc3BsYXk6YmxvY2s7Zm9udC1zaXplOjguNXB0O21hcmdpbi10b3A6MW1tfS5vZC1rcGl7bWFyZ2luLXRvcDozbW19Lm9kLWtwaSAuZ3Qta3Bpe21pbi1oZWlnaHQ6YXV0b30ub2QtZ3JhcGhpY3N7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxLjA4ZnIgLjkyZnI7Z2FwOjRtbTttYXJnaW4tdG9wOjRtbX0ub2QtY2FyZHtib3JkZXI6MXB4IHNvbGlkICNiOGMyYzQ7cGFkZGluZzoyLjVtbTttaW4taGVpZ2h0OjkybW19Lm9kLWNhcmQgaDIsLm9kLWJsb2NrIGgye2ZvbnQtc2l6ZTo3cHQ7bGV0dGVyLXNwYWNpbmc6LjEyZW07bWFyZ2luOjAgMCAybW07dGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlfS5vZC1jYXJkIHN2Z3t3aWR0aDoxMDAlIWltcG9ydGFudDtoZWlnaHQ6YXV0byFpbXBvcnRhbnQ7bWF4LWhlaWdodDo4NG1tfS5vZC1ibG9ja3ttYXJnaW4tdG9wOjRtbX0ub2Qtc291cmNle2ZvbnQtc2l6ZTo4cHR9Lm9kLWJsb2NrIHRhYmxle3dpZHRoOjEwMCU7Zm9udC1zaXplOjcuNXB0O2JvcmRlci1jb2xsYXBzZTpjb2xsYXBzZX0ub2QtYmxvY2sgdGgsLm9kLWJsb2NrIHRke3BhZGRpbmc6MS40bW0gMS44bW19Lm9kLW5vdGVze2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIDFmcjtnYXA6NG1tfS5vZC1ub3Rle2JvcmRlci1sZWZ0OjNweCBzb2xpZCAjMTc2ZjY4O2JhY2tncm91bmQ6I2VlZjVmNDtwYWRkaW5nOjNtbTttaW4taGVpZ2h0OjI0bW07Zm9udC1zaXplOjhwdDtsaW5lLWhlaWdodDoxLjQ1O3doaXRlLXNwYWNlOnByZS13cmFwfS5vZC1mb290ZXJ7cG9zaXRpb246YWJzb2x1dGU7bGVmdDoxMm1tO3JpZ2h0OjEybW07Ym90dG9tOjdtbTtib3JkZXItdG9wOjFweCBzb2xpZCAjOWZiMGIzO3BhZGRpbmctdG9wOjJtbTtmb250LXNpemU6Ni41cHQ7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVufS5vZC1zb3VyY2UgLnRvb2xiYXJsaW5lLC5vZC1zb3VyY2UgYnV0dG9uLC5vZC1zb3VyY2UgaW5wdXQsLm9kLXNvdXJjZSB0ZXh0YXJlYSwub2Qtc291cmNlIHN1bW1hcnl7ZGlzcGxheTpub25lIWltcG9ydGFudH0ub2Qtc291cmNlIC5ndC1zdW1tYXJ5LWhlYWR7bWFyZ2luLWJvdHRvbToybW19Lm9kLXNvdXJjZSAuZ3QtZW5naW5lZXJpbmctc3VtbWFyeXtib3gtc2hhZG93Om5vbmUhaW1wb3J0YW50O2JvcmRlcjowIWltcG9ydGFudDtwYWRkaW5nOjAhaW1wb3J0YW50fS5vZC1zb3VyY2UgLnJlZmVyZW5jZS1ib3h7bWFyZ2luOjAhaW1wb3J0YW50fS5vZC1zb3VyY2Ugc3ZnIHRleHR7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZn0ub2QtcGFnZS0yIC5vZC1ibG9ja3ttYXJnaW4tdG9wOjNtbX0ub2QtcGFnZS0yIC5vZC1zb3VyY2V7Zm9udC1zaXplOjcuNXB0fQogQG1lZGlhIHByaW50e2h0bWwsYm9keXtiYWNrZ3JvdW5kOiNmZmZ9Lm9kLXRvb2xze2Rpc3BsYXk6bm9uZX0ub2QtcGFnZXttYXJnaW46MDtib3gtc2hhZG93Om5vbmU7cGFnZS1icmVhay1hZnRlcjphbHdheXN9Lm9kLXBhZ2U6bGFzdC1jaGlsZHtwYWdlLWJyZWFrLWFmdGVyOmF1dG99fQogPC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0ib2QtdG9vbHMiPjxidXR0b24gb25jbGljaz0id2luZG93LnByaW50KCkiPkRydWNrZW4gLyBQREY8L2J1dHRvbj48L2Rpdj4KIDxhcnRpY2xlIGNsYXNzPSJvZC1wYWdlIj48aGVhZGVyIGNsYXNzPSJvZC1oZWFkIj48ZGl2IGNsYXNzPSJvZC1icmFuZCI+RU5HQkVSUyBJTkdFTklFVVJCQVU8c21hbGw+R0VPVEVDSE5JSzwvc21hbGw+PC9kaXY+PGRpdiBjbGFzcz0ib2QtbWV0YSI+RUlfR18wMDEgwrcgVHLDpGdlcmJvaGx3YW5kPGJyPlBPUy4gJHtlc2MocG9zKX0gwrcgQXVzZ2FiZSAke1ZFUlNJT059PC9kaXY+PC9oZWFkZXI+PGgxIGNsYXNzPSJvZC10aXRsZSI+UG9zLiAke2VzYyhwb3MpfSDCtyAke2VzYyh0aXRsZSl9PC9oMT48ZGl2IGNsYXNzPSJvZC1zdWIiPlBST0pFS1QtIFVORCBQT1NJVElPTlNEQVRFTjwvZGl2PjxkaXYgY2xhc3M9Im9kLWdyaWQiPiR7cm93KCJQcm9qZWt0bnVtbWVyIixwLm5vKX0ke3JvdygiUHJvamVrdGJlemVpY2hudW5nIixwLm5hbWUpfSR7cm93KCJCYXV2b3JoYWJlbiIscC5idWlsZGluZyl9JHtyb3coIkJhdXN0ZWxsZSIscC5zdHJlZXQpfSR7cm93KCJQTFogLyBPcnQiLHAuY2l0eSl9JHtyb3coIkJhdWhlcnIgLyBBdWZ0cmFnZ2ViZXIiLHAuY2xpZW50KX08L2Rpdj48ZGl2IGNsYXNzPSJvZC1rcGkiPiR7aHRtbCgicndIZXJvTWV0cmljcyIpfTwvZGl2PjxkaXYgY2xhc3M9Im9kLWdyYXBoaWNzIj48ZGl2IGNsYXNzPSJvZC1jYXJkIj48aDI+VGVjaG5pc2NoZXIgU3lzdGVtc2Nobml0dDwvaDI+JHtodG1sKCJyd0dyYXBoaWMiKX08L2Rpdj48ZGl2IGNsYXNzPSJvZC1jYXJkIj48aDI+RXJkZHJ1Y2sgLyBFcmdlYm5pc2dyYWZpazwvaDI+JHtodG1sKCJyd1ByZXNzdXJlR3JhcGhpYyIpfSR7aHRtbCgicndRdWljayIpfTwvZGl2PjwvZGl2Pjxmb290ZXIgY2xhc3M9Im9kLWZvb3RlciI+PHNwYW4+RW5nYmVycyBJbmdlbmlldXJiYXUgwrcgR2VvdGVjaG5pazwvc3Bhbj48c3Bhbj5FSV9HXzAwMSDCtyBUcsOkZ2VyYm9obHdhbmQ8L3NwYW4+PC9mb290ZXI+PC9hcnRpY2xlPgogPGFydGljbGUgY2xhc3M9Im9kLXBhZ2Ugb2QtcGFnZS0yIj48aGVhZGVyIGNsYXNzPSJvZC1oZWFkIj48ZGl2IGNsYXNzPSJvZC1icmFuZCI+RU5HQkVSUyBJTkdFTklFVVJCQVU8c21hbGw+R0VPVEVDSE5JSzwvc21hbGw+PC9kaXY+PGRpdiBjbGFzcz0ib2QtbWV0YSI+JHtlc2MocC5ubyl9IMK3IFBPUy4gJHtlc2MocG9zKX08YnI+QmVyZWNobnVuZ3Nkb2t1bWVudDwvZGl2PjwvaGVhZGVyPjxkaXYgY2xhc3M9Im9kLW5vdGVzIj48ZGl2PjxkaXYgY2xhc3M9Im9kLXN1YiI+Vk9SQkVNRVJLVU5HPC9kaXY+PGRpdiBjbGFzcz0ib2Qtbm90ZSI+JHtlc2MocHJlfHwi4oCUIil9PC9kaXY+PC9kaXY+PGRpdj48ZGl2IGNsYXNzPSJvZC1zdWIiPkVSTMOEVVRFUlVORyAvIEFVU0bDnEhSVU5HU0hJTldFSVNFPC9kaXY+PGRpdiBjbGFzcz0ib2Qtbm90ZSI+JHtlc2MocG9zdHx8IuKAlCIpfTwvZGl2PjwvZGl2PjwvZGl2PiR7YmxvY2soIlRlY2huaXNjaGUgUG9zaXRpb25zenVzYW1tZW5mYXNzdW5nIiwicndBdXRvU3VtbWFyeSIpfSR7YmxvY2soIkJlcmVjaG51bmdzZXJnZWJuaXNzZSIsInJ3UmVzdWx0cyIpfSR7YmxvY2soIkVyZGRydWNrYmVpd2VydGUgamUgU2NoaWNodCIsInJ3Q29lZmZUYWJsZSIpfSR7YmxvY2soIlZhbGlkaWVydW5nIC8gUmVmZXJlbnphYmdsZWljaCIsInJ3UmVmZXJlbmNlQ2hlY2siKX0ke2Jsb2NrKCJQbGF1c2liaWxpdMOkdHNwcsO8ZnVuZyIsInJ3QXVkaXRQYW5lbCIpfTxmb290ZXIgY2xhc3M9Im9kLWZvb3RlciI+PHNwYW4+RW5nYmVycyBJbmdlbmlldXJiYXUgwrcgR2VvdGVjaG5pazwvc3Bhbj48c3Bhbj4ke2VzYyhwLm5vKX0gwrcgJHtlc2MocG9zKX08L3NwYW4+PC9mb290ZXI+PC9hcnRpY2xlPjwvYm9keT48L2h0bWw+YDsKIGNvbnN0IHc9d2luZG93Lm9wZW4oIiIsIl9ibGFuayIpO2lmKCF3KXthbGVydCgiQXVzZ2FiZWZlbnN0ZXIgd3VyZGUgYmxvY2tpZXJ0LiIpO3JldHVybn13LmRvY3VtZW50Lm9wZW4oKTt3LmRvY3VtZW50LndyaXRlKGRvYyk7dy5kb2N1bWVudC5jbG9zZSgpOwp9CmZ1bmN0aW9uIGluc3RhbGwoKXtsZXQgYj1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZW5nYmVycy1vdXRwdXQtZG9jdW1lbnQtYnRuIik7aWYoIWIpe2I9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiYnV0dG9uIik7Yi5pZD0iZW5nYmVycy1vdXRwdXQtZG9jdW1lbnQtYnRuIjsoZG9jdW1lbnQuYm9keXx8ZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50KS5hcHBlbmRDaGlsZChiKX1iLnRleHRDb250ZW50PSJFbmdiZXJzLUF1c2dhYmVkb2t1bWVudCI7Yi5zdHlsZS5jc3NUZXh0PSJwb3NpdGlvbjpmaXhlZDtyaWdodDoxOHB4O3RvcDo3OHB4O3otaW5kZXg6MjE0NzQ4MzY0NztwYWRkaW5nOjlweCAxM3B4O2JhY2tncm91bmQ6I2ZmZjtib3JkZXI6MnB4IHNvbGlkICMwODdmNzM7Ym9yZGVyLXJhZGl1czo2cHg7Zm9udC13ZWlnaHQ6ODAwIjtiLm9uY2xpY2s9YnVpbGR9CmlmKGRvY3VtZW50LnJlYWR5U3RhdGU9PT0ibG9hZGluZyIpZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigiRE9NQ29udGVudExvYWRlZCIsaW5zdGFsbCx7b25jZTp0cnVlfSk7ZWxzZSBpbnN0YWxsKCk7c2V0VGltZW91dChpbnN0YWxsLDUwMCk7Cn0pKCk7Cg==")
+
+          doc=files["js/output_document.js"].decode("utf-8")
+          doc=re.sub(r'const VERSION="[^"]+";', 'const VERSION="1.21.0";', doc)
+          # Fix project extraction: exact label matching only; never reuse "Bussmann" for unrelated fields.
+          doc=doc.replace('.includes(label.toLowerCase())', '===label.toLowerCase()')
+          doc=doc.replace('site:field("Baustellenanschrift")||field("Straße / Nr.")||"",', 'site:field("Baustellenanschrift")||field("Straße / Nr.")||"",')
+          # Rebuild output around the calculation document instead of KPI dashboard cards.
+          doc=doc.replace('grid-template-columns:repeat(3,1fr)', 'grid-template-columns:repeat(2,1fr)')
+          doc=doc.replace('font-size:16pt;margin-top:2mm', 'font-size:13pt;margin-top:1.5mm')
+          # keep all technical graphics SVG/vector; A4 is fixed in mm and printing is isolated from app UI
+          doc=doc.replace('@page{size:A4_margin:0}', '@page{size:A4 portrait;margin:0}')
+          doc=doc.replace('min-height:297mm', 'height:297mm;min-height:297mm')
+          files["js/output_document.js"]=doc.encode("utf-8")
+          files.pop("js/output_test.js",None)
+          files["VERSION.txt"]=b"1.21.0\\n"
+          out=io.BytesIO()
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as q:
+              for n,b in files.items(): q.writestr(n,b)
+          raw=out.getvalue(); sha=hashlib.sha256(raw).hexdigest()
+          pkg={"format":"base64-json","version":"1.21.0","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
+          (root/"package_1_21_0.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
+          manifest={"version":"1.21.0","update_available":True,
+            "notes":"1.21.0: Großes Ausgabe-Update: Ausgabedokument direkt an die vorhandene Ausgabeansicht gekoppelt: echte Projektdaten, aktuelle Ergebnis-Tabellen und vorhandene SVG-Fachgrafiken werden unverändert übernommen. Rechenkern unverändert.",
+            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_21_0.json?v=202610071530",
+            "package_format":"base64-json","sha256":sha}
+          (root/"manifest.json").write_text(json.dumps(manifest,indent=2),encoding="utf-8")
+          # self-check package structure
+          assert files["VERSION.txt"].strip()==b"1.21.0"
+          assert b"output_document.js?v=12100" in files["index.html"]
+          assert b"rwGraphic" in files["js/output_document.js"]\n          assert b"Engbers.rwCalc" not in files["js/output_document.js"]\n          assert b"const VERSION=\\\"1.21.0\\\"" in files["js/output_document.js"]
+      - name: Commit update
+        run: |
+          git config user.name "Engbers Update Builder"
           git config user.email "actions@users.noreply.github.com"
-          git add statiktools/inspect_1210
-          git commit -m "Extract 1.20.30 sources for output audit" || exit 0
+          git add statiktools/stable/package_1_21_0.json statiktools/stable/manifest.json
+          git commit -m "Statiktools 1.21.0 consolidated output update" || exit 0
           git push
