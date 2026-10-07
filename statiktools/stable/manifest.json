@@ -1,8 +1,8 @@
 {
-  "version": "1.20.25",
+  "version": "1.20.26",
   "update_available": true,
-  "notes": "1.20.25: VB1-Ausgabedokument im technischen Engbers-Ausgabestil mit Systemgrafik, Berechnungsansatz, Ergebnis-/Nachweisblock und fester Fusszeile. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_25.json?v=202610071415",
+  "notes": "1.20.26: VB1-Ausgabe weiter zum Fach-Ausgabedokument ausgebaut: System-/Erddruckgrafik, Berechnungsansatz, Ergebnisse, Bemessung/Dokumentation und Freigabestatus. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_26.json?v=202610071415",
   "package_format": "base64-json",
-  "sha256": "88aab00e1c553237ccf1a13df478c733553ec1e7a9f4221873e73e77d9c3eb6a"
+  "sha256": "8c2cddf829686a2d84dcfc997503e9ebc1361c98944509ecd243e8de1674eace"
 }
