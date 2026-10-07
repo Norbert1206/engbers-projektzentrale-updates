@@ -1,8 +1,8 @@
 {
-  "version": "1.20.29",
+  "version": "1.20.30",
   "update_available": true,
-  "notes": "1.20.29: Ausgabedokument-Version korrigiert und Ausgabe-Renderer auf 1.20.29 synchronisiert. Grundlage f\u00fcr die 1:1-Angleichung an die Ausgabeansicht; Rechenkern unver\u00e4ndert.",
+  "notes": "1.20.30: VB1-Ausgabedokument weiter an die bestehende Ausgabeansicht angen\u00e4hert; Renderer und Versionsanzeige synchron. Rechenkern unver\u00e4ndert.",
   "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_29.json?v=202610071505",
   "package_format": "base64-json",
-  "sha256": "b78623d2d208a3aa78c7c425b0aa2502c4a93aec8b780090f616d88449680dd1"
+  "sha256": "26b3f8b1ccc4c934555a6c3445cd5b77de21351027d047db5d953e6562167e93"
 }
