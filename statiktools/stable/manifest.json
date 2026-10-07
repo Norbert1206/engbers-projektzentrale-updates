@@ -1,8 +1,8 @@
 {
-  "version": "1.20.15",
+  "version": "1.20.16",
   "update_available": true,
-  "notes": "Ausgabe-Test 2: E komplette aktuelle Ausgabe, F vollst\u00e4ndiger Dokumentklon, G erkannter Ausgabebereich als A4-Dokument, H alter PDF-Weg. Keine Einzel-SVG mehr. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_15.json?v=202610071205",
+  "notes": "Neuer Engbers-Ausgabedokument-Prototyp: eigenst\u00e4ndige A4-Seite mit Dokumentkopf, Stammdaten, Kennwerten, Ergebnisgrafik, Fu\u00dfzeile und Drucken/PDF. Bedienoberfl\u00e4che wird nicht mehr geklont. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_16.json?v=202610071215",
   "package_format": "base64-json",
-  "sha256": "54f60f9542b243c1416a956843b723274808aeaf2ec79a6c28b6abfe29f12699"
+  "sha256": "3b0459ea40012c7924810bed7d11c1bd2884cd3d4e2351d8312de81033c01915"
 }
