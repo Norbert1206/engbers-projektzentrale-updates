@@ -1,8 +1,8 @@
 {
-  "version": "1.20.21",
+  "version": "1.20.22",
   "update_available": true,
-  "notes": "1.20.21: Erster eigenst\u00e4ndiger A4-Ausgabedokument-Prototyp \u00f6ffnet in separatem Fenster mit Drucken/PDF. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_21.json?v=202610071234",
+  "notes": "1.20.22: Updatefeed erh\u00e4lt Cache-Buster direkt an der tats\u00e4chlich laufenden index.html; A4-Ausgabedokument bleibt enthalten. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_22.json?v=202610071236",
   "package_format": "base64-json",
-  "sha256": "7ef668cc441d58972ca97ca250bb81af1dd2fb8337cad58b8699ef08910f028a"
+  "sha256": "877c5216acf9baf4fe3c380d33b14c9616b673b2a80fcc7faca1de124266a7e6"
 }
