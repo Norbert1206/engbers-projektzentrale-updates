@@ -34,7 +34,7 @@ jobs:
           # updater cache fix: append a unique query to manifest fetches in app.js
           if "js/app.js" in files:
               app=files["js/app.js"].decode("utf-8")
-              app=re.sub(r'(statiktools/stable/manifest\\.json)(?:\\?[^"\\'\\s)]*)?',r'\\1?nocache=12019',app)
+              app=app.replace("statiktools/stable/manifest.json","statiktools/stable/manifest.json?nocache=12019")
               files["js/app.js"]=app.encode("utf-8")
           out=io.BytesIO()
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as q:
