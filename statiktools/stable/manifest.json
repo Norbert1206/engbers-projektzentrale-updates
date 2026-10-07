@@ -1,8 +1,8 @@
 {
-  "version": "1.20.26",
+  "version": "1.20.27",
   "update_available": true,
-  "notes": "1.20.26: VB1-Ausgabe weiter zum Fach-Ausgabedokument ausgebaut: System-/Erddruckgrafik, Berechnungsansatz, Ergebnisse, Bemessung/Dokumentation und Freigabestatus. Rechenkern unver\u00e4ndert.",
+  "notes": "1.20.27: VB1-Ausgabedokument an die bestehende Ausgabeansicht angeglichen: technische Systemgrafik als Hauptbereich, gemeinsame Tiefenachse, Erddruck- und Widerstandsfl\u00e4chen, technische Ergebnisbl\u00f6cke und Dokumentationsbereich. Rechenkern unver\u00e4ndert.",
   "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_26.json?v=202610071415",
   "package_format": "base64-json",
-  "sha256": "8c2cddf829686a2d84dcfc997503e9ebc1361c98944509ecd243e8de1674eace"
+  "sha256": "c19dae2f1690e0f06436a9f682327bcf89c9cf05e18bbc73314bcbbd1bdcd49e"
 }
