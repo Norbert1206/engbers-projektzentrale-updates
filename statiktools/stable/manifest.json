@@ -1,8 +1,8 @@
 {
-  "version": "1.20.19",
+  "version": "1.20.20",
   "update_available": true,
-  "notes": "1.20.19: Updatecheck-Cache korrigiert und Engbers-Ausgabedokument Startlogik beibehalten. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_19.json?v=202610071226",
+  "notes": "1.20.20: Ausgabedokument direkt in index.html integriert; keine externe Testscript-Abh\u00e4ngigkeit. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_20.json?v=202610071231",
   "package_format": "base64-json",
-  "sha256": "1a06abe6043f88c986471961bbc53f9a86915d1adebb5c43f7662ecf6f0e12ca"
+  "sha256": "ba9d9ac2231b2b87e84b0f0f7f3c36b8b30a3a887d3c60a17c900ecb3cbd7664"
 }
