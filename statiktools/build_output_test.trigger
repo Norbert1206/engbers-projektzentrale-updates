@@ -1,1 +1,1 @@
-1.20.18 DOM-ready fix
+1.20.19 updater cache fix
