@@ -1,1 +1,1 @@
-build 1.21.0 live-output document retry after event fix
+build 1.21.0 known-working trigger pattern
