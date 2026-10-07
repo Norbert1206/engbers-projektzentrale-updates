@@ -1,5 +1,5 @@
 name: Build Statiktools Output Document
-on:
+'on':
   workflow_dispatch:
   push:
     paths:
