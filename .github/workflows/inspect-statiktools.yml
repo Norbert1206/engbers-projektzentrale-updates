@@ -25,7 +25,7 @@ jobs:
           tag='<script src="js/output_document.js?v=12110"></script>'
           html=re.sub(r'</body\s*>',tag+'\n</body>',html,count=1,flags=re.I) if re.search(r'</body\s*>',html,re.I) else html+'\n'+tag
           files["index.html"]=html.encode("utf-8")
-          files["js/output_document.js"]=Path("statiktools/source/output_document.js").read_bytes()
+          files["js/output_document.js"]=pathlib.Path("statiktools/source/output_document.js").read_bytes()
 
           doc=files["js/output_document.js"].decode("utf-8")
           doc=re.sub(r'const VERSION="[^"]+";', 'const VERSION="1.21.1";', doc)
