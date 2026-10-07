@@ -1,8 +1,8 @@
 {
-  "version": "1.20.20",
+  "version": "1.20.21",
   "update_available": true,
-  "notes": "1.20.20: Ausgabedokument direkt in index.html integriert; keine externe Testscript-Abh\u00e4ngigkeit. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_20.json?v=202610071231",
+  "notes": "1.20.21: Erster eigenst\u00e4ndiger A4-Ausgabedokument-Prototyp \u00f6ffnet in separatem Fenster mit Drucken/PDF. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_21.json?v=202610071234",
   "package_format": "base64-json",
-  "sha256": "ba9d9ac2231b2b87e84b0f0f7f3c36b8b30a3a887d3c60a17c900ecb3cbd7664"
+  "sha256": "7ef668cc441d58972ca97ca250bb81af1dd2fb8337cad58b8699ef08910f028a"
 }
