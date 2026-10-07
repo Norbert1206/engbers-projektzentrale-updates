@@ -1,8 +1,8 @@
 {
-  "version": "1.21.0",
+  "version": "1.21.1",
   "update_available": true,
-  "notes": "1.21.0: Gro\u00dfes Ausgabe-Update: Ausgabedokument direkt an die vorhandene Ausgabeansicht gekoppelt: echte Projektdaten, aktuelle Ergebnis-Tabellen und vorhandene SVG-Fachgrafiken werden unver\u00e4ndert \u00fcbernommen. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_21_0.json?v=202610071530",
+  "notes": "1.21.1: Achtseitige Original-Ausgabeansicht: Ausgabedokument direkt an die vorhandene Ausgabeansicht gekoppelt: echte Projektdaten, aktuelle Ergebnis-Tabellen und vorhandene SVG-Fachgrafiken werden unver\u00e4ndert \u00fcbernommen. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_21_1.json?v=202610071625",
   "package_format": "base64-json",
-  "sha256": "2eb17105fb43c1529acfe61cf83dfe7501f000f870c62f910cf779bc1f718bbb"
+  "sha256": "3ada64cec5864dfcb21706e613f49d58a2f9bf29881fa7b42b70ddf1762a30ee"
 }
