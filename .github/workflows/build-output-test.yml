@@ -40,7 +40,7 @@ jobs:
           doc=doc.replace('min-height:297mm', 'height:297mm;min-height:297mm')
           files["js/output_document.js"]=doc.encode("utf-8")
           files.pop("js/output_test.js",None)
-          files["VERSION.txt"]=b"1.21.0\n"
+          files["VERSION.txt"]=b"1.21.0\\n"
           out=io.BytesIO()
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as q:
               for n,b in files.items(): q.writestr(n,b)
