@@ -1,0 +1,79 @@
+name: Build Statiktools Output Test
+on:
+  push:
+    paths:
+      - 'statiktools/build_output_test.trigger'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build 1.20.14
+        shell: python
+        run: |
+          import base64, io, json, zipfile, hashlib, pathlib
+          root=pathlib.Path("statiktools/stable")
+          src=json.loads((root/"package_1_20_13.json").read_text(encoding="utf-8"))
+          z=zipfile.ZipFile(io.BytesIO(base64.b64decode(src["data_base64"])))
+          files={n:z.read(n) for n in z.namelist()}
+          html=files["index.html"].decode("utf-8")
+          if "js/output_test.js" not in html:
+              html=html.replace("</body>",'<script src="js/output_test.js"></script>\n</body>')
+          files["index.html"]=html.encode()
+          files["VERSION.txt"]=b"1.20.14\n"
+          js=r'''(() => {
+            const mm = n => n + "mm";
+            function largestSvg(){
+              return [...document.querySelectorAll("svg")].sort((a,b)=>(b.getBoundingClientRect().width*b.getBoundingClientRect().height)-(a.getBoundingClientRect().width*a.getBoundingClientRect().height))[0] || null;
+            }
+            function printWindow(mode){
+              const svg=largestSvg();
+              if(!svg){ alert("Keine Ausgabegrafik gefunden. Bitte zuerst die Trägerbohlwand-Ausgabe öffnen."); return; }
+              const w=window.open("","_blank");
+              const clone=svg.cloneNode(true);
+              clone.removeAttribute("width"); clone.removeAttribute("height");
+              const fit=mode==="fit" ? "width:190mm;height:auto;" : "width:100%;height:100%;";
+              w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Engbers Drucktest</title><style>@page{size:A4 portrait;margin:10mm}html,body{margin:0;padding:0;background:white}.page{box-sizing:border-box;width:190mm;min-height:277mm;margin:0 auto;overflow:hidden}.page svg{'+fit+'} @media print{.bar{display:none!important}.page{margin:0}}</style></head><body><div class="bar" style="font:13px Segoe UI;padding:8px;border-bottom:1px solid #bbb">Engbers Ausgabetest 1.20.14 – '+(mode==="fit"?"B: A4 Seitenbreite":"C: A4 Seitenfläche")+' &nbsp; <button onclick="print()">Drucken…</button></div><div class="page" id="p"></div></body></html>');
+              w.document.getElementById("p").appendChild(w.document.adoptNode(clone));
+              w.document.close();
+            }
+            function openPanel(){
+              let d=document.getElementById("eng-output-test");
+              if(d){d.remove();return}
+              d=document.createElement("div"); d.id="eng-output-test";
+              d.style.cssText="position:fixed;right:18px;top:92px;z-index:999999;background:#fff;border:1px solid #9aa7b1;border-radius:8px;box-shadow:0 8px 30px #0003;padding:12px;font:13px Segoe UI;min-width:260px";
+              d.innerHTML='<b>Ausgabe-Test 1.20.14</b><div style="margin-top:8px;display:grid;gap:7px"><button id="eA">A · Windows-Druckdialog</button><button id="eB">B · A4 – Seitenbreite</button><button id="eC">C · A4 – Seitenfläche</button><button id="eOld">D · bisherige PDF-Ausgabe</button></div><div style="margin-top:8px;font-size:11px;color:#566">Rechenkern unverändert. Nur Ausgabewege.</div>';
+              document.body.appendChild(d);
+              d.querySelector("#eA").onclick=()=>window.print();
+              d.querySelector("#eB").onclick=()=>printWindow("fit");
+              d.querySelector("#eC").onclick=()=>printWindow("page");
+              d.querySelector("#eOld").onclick=()=>{ const bs=[...document.querySelectorAll("button,a")]; const b=bs.find(x=>/PDF öffnen|PDF|Ausgabe/i.test((x.innerText||"").trim()) && x!==btn); if(b)b.click(); else alert("Bisheriger PDF-Button nicht gefunden."); };
+            }
+            const btn=document.createElement("button"); btn.type="button"; btn.textContent="🖨 Ausgabe-Test";
+            btn.title="Vier Ausgabewege vergleichen";
+            btn.style.cssText="position:fixed;right:18px;top:48px;z-index:999998;padding:8px 12px;border:1px solid #9aa7b1;border-radius:6px;background:#fff;font:13px Segoe UI;cursor:pointer";
+            btn.onclick=openPanel;
+            window.addEventListener("DOMContentLoaded",()=>document.body.appendChild(btn));
+          })();'''
+          files["js/output_test.js"]=js.encode("utf-8")
+          out=io.BytesIO()
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as q:
+              for n,b in files.items(): q.writestr(n,b)
+          raw=out.getvalue(); sha=hashlib.sha256(raw).hexdigest()
+          pkg={"format":"base64-json","version":"1.20.14","sha256":sha,"data_base64":base64.b64encode(raw).decode()}
+          (root/"package_1_20_14.json").write_text(json.dumps(pkg,separators=(",",":")),encoding="utf-8")
+          manifest={
+            "version":"1.20.14","update_available":True,
+            "notes":"Ausgabe-Testpaket: vier Wege in einem Update – A Windows-Druckdialog, B A4 Seitenbreite, C A4 Seitenfläche, D bisherige PDF-Ausgabe. Rechenkern unverändert. Automatische Sicherung bleibt aktiv.",
+            "package_url":"https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_14.json?v=202610071155",
+            "package_format":"base64-json","sha256":sha}
+          (root/"manifest.json").write_text(json.dumps(manifest,indent=2),encoding="utf-8")
+      - name: Commit update
+        run: |
+          git config user.name "Engbers Update Builder"
+          git config user.email "actions@users.noreply.github.com"
+          git add statiktools/stable/package_1_20_14.json statiktools/stable/manifest.json
+          git commit -m "Statiktools 1.20.14 output test" || exit 0
+          git push
