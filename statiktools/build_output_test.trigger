@@ -1,1 +1,1 @@
-build 1.21.0 normalized actions syntax
+build 1.21.0 live-output document
