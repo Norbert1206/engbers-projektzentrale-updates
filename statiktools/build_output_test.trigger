@@ -1,1 +1,1 @@
-1.20.22 feed cache fix
+1.20.23 structured output document
