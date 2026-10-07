@@ -1,8 +1,8 @@
 {
-  "version": "1.20.23",
+  "version": "1.20.25",
   "update_available": true,
-  "notes": "1.20.23: Erster strukturierter Engbers-Dokumentkern f\u00fcr VB1. Keine Kopie der Bedienoberfl\u00e4che mehr; A4-Ausgabe wird aus einem definierten Ausgabemodell aufgebaut. Rechenkern unver\u00e4ndert.",
-  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_23.json?v=202610071251",
+  "notes": "1.20.25: VB1-Ausgabedokument im technischen Engbers-Ausgabestil mit Systemgrafik, Berechnungsansatz, Ergebnis-/Nachweisblock und fester Fusszeile. Rechenkern unver\u00e4ndert.",
+  "package_url": "https://raw.githubusercontent.com/Norbert1206/engbers-projektzentrale-updates/main/statiktools/stable/package_1_20_25.json?v=202610071415",
   "package_format": "base64-json",
-  "sha256": "4d4d41681d191bb6e180e7b5921cdeccff8478831bc5602035a8d97b213905f6"
+  "sha256": "88aab00e1c553237ccf1a13df478c733553ec1e7a9f4221873e73e77d9c3eb6a"
 }
